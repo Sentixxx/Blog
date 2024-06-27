@@ -1,0 +1,49 @@
+services:
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "8090:8090"
+    expose:
+      - "8090"
+    networks:
+      - database
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=ctb
+      - DB_USER=ctb
+      - DB_NAME=ctb_db
+      - DB_PORT=3306
+    volumes:
+      - .:/app
+
+  db:
+    image: mysql:5.7
+    platform: linux/amd64
+    container_name: db
+    networks:
+      - database
+    ports:
+      - "3306:3306"
+    expose: 
+      - "3306"
+    environment:
+      TZ: Aisa/Shanghai
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ctb_db
+      MYSQL_USER: ctb
+      MYSQL_PASSWORD: ctb
+    command: --default-authentication-plugin=mysql_native_password
+
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
+
+networks:
+  database:
+    driver: bridge
+    external: true
