@@ -24,3 +24,6 @@ pnpm-debug.log*
 
 package-lock.json
 yarn.lock
+
+backend/data/*
+backend/backend
