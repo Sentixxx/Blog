@@ -11,5 +11,5 @@ EXPOSE 8090
 
 RUN go get backend
 
-CMD ["sh"]
+CMD ["bee","run"]
 

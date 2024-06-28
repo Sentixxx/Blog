@@ -1,0 +1,64 @@
+version: '3'
+services:
+  # frontend:
+  #   container_name: frontend
+  #   build: 
+  #     context: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - database
+  #   depends_on:
+  #     - app
+  #   volumes:
+  #     - frontend:/vue
+
+  app:
+    container_name: app
+    build: 
+      context: ./backend
+    ports:
+      - "8090:8090"
+    networks:
+      - database
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=post
+      - DB_USER=post
+      - DB_NAME=postgres
+      - DB_PORT=5432
+    volumes:
+      - backend:/go/src/WEB
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:16.3
+    container_name: db
+    restart: always
+    networks:
+      - database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USER: post
+      POSTGRES_PASSWORD: post
+
+    volumes:
+      - backend/data:/var/lib/postgresql/data
+
+volumes:
+  data:
+
+networks:
+  database:
+    driver: bridge
+    external: true
