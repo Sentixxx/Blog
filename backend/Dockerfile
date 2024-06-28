@@ -1,12 +1,15 @@
 FROM golang:1.22.4 as builder
 
-WORKDIR /app
+WORKDIR /go/src/WEB
 
-COPY go.mod go.sum ./
+COPY . /go/src/WEB/
 
-RUN go mod download
 
-COPY . /app
+RUN go get github.com/astaxie/beego && go install github.com/beego/bee/v2@latest && go get -u github.com/lib/pq
 
-CMD ["sh", "-c", "CGO_ENABLED=0 GOOS=linux go build -v -a -installsuffix cgo -o backend . && ./backend"]
+EXPOSE 8090
+
+RUN go get backend
+
+CMD ["sh"]
 

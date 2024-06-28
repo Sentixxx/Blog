@@ -1,47 +1,49 @@
+version: '3'
 services:
+
   app:
     container_name: app
     build: .
     ports:
       - "8090:8090"
-    expose:
-      - "8090"
     networks:
       - database
     depends_on:
-      - db
+      - postgres
+      - redis
     environment:
       - DB_HOST=db
-      - DB_PASSWORD=ctb
-      - DB_USER=ctb
-      - DB_NAME=ctb_db
-      - DB_PORT=3306
+      - DB_PASSWORD=post
+      - DB_USER=post
+      - DB_NAME=postgres
+      - DB_PORT=5432
     volumes:
-      - .:/app
+      - .:/go/src/WEB
 
-  db:
-    image: mysql:5.7
-    platform: linux/amd64
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:9.5
     container_name: db
+    restart: always
     networks:
       - database
     ports:
-      - "3306:3306"
-    expose: 
-      - "3306"
+      - "5432:5432"
     environment:
-      TZ: Aisa/Shanghai
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ctb_db
-      MYSQL_USER: ctb
-      MYSQL_PASSWORD: ctb
-    command: --default-authentication-plugin=mysql_native_password
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USER: post
+      POSTGRES_PASSWORD: post
 
     volumes:
-      - db-data:/var/lib/mysql
+      - ./data:/var/lib/postgresql/data
 
 volumes:
-  db-data:
+  data:
 
 networks:
   database:
