@@ -2,7 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import Elementplus from 'element-plus'
-import axios from '@/plugins/axios'
+import axios from '@/api/plugins/axios'
+
 
 const app = createApp(App)
 

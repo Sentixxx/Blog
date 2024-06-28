@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="registerview">
         <el-card class="box-card">
             <h2>注册</h2>
             <el-form
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import request from '@/plugins/axios';
+import request from '@/api/plugins/axios';
 export default {
     data() {
         var validatePass = (rule, value, callback) => {
@@ -99,12 +99,23 @@ export default {
 </script>
 
 <style scoped>
+#registerview {
+    display: flex;
+    align-items: center; /* 在垂直方向上居中对齐 */
+    justify-content: center; /* 在水平方向上居中对齐 */
+    height: 100vh; /* 使元素的高度全屏 */
+    overflow: hidden; /* 隐藏溢出的内容 */
+
+    /*设置半透明*/
+}
 .box-card {
     margin: 0 auto;
     width: 400px;
     border-style: solid;
-    border-width: 5px;
-    border-color: #409eff;
+    /* bsorder-width: 2px; */
+    /* border-color: #409eff; */
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
 }
 .login-from {
     margin: auto auto;
