@@ -46,5 +46,15 @@ export default defineConfig({
         alias: {
             '@': rootDir + '/src'
         }
+    },
+    css: {
+        // CSS 预处理器
+        preprocessorOptions: {
+            //define global scss variable
+            scss: {
+                javascriptEnabled: true,
+                additionalData: `@use "@/styles/variables.scss" as *;`
+            }
+        }
     }
 })
