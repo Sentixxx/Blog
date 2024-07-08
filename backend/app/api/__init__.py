@@ -1,9 +1,11 @@
 from .admin import admin
 
 DEFAULT_BLUEPRINTS = [
-    (admin,'/api/admin'),
+    (admin,''),
 ]
 
 def config_blueprint(app):
     for blueprint,url_prefix in DEFAULT_BLUEPRINTS:
-        app.register_blueprint(blueprint,url_prefix=url_prefix)
+        print(f'Registering blueprint `{blueprint.name}` with url prefix {url_prefix}')
+        app.register_blueprint(blueprint,url_prefix='')
+
