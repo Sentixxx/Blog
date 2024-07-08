@@ -1,15 +1,13 @@
-FROM golang:1.22.4 as builder
+FROM python:3.11
 
-WORKDIR /go/src/WEB
+WORKDIR /app
 
-COPY . /go/src/WEB/
+COPY . /app
 
 
-RUN go get github.com/astaxie/beego && go install github.com/beego/bee/v2@latest && go get -u github.com/lib/pq
+RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8090
 
-RUN go get backend
-
-CMD ["bee","run"]
+CMD ["python","manage.py"]
 

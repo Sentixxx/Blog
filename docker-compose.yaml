@@ -31,7 +31,7 @@ services:
       - DB_NAME=postgres
       - DB_PORT=5432
     volumes:
-      - backend:/go/src/WEB
+      - backend:/app
 
   redis:
     image: redis:latest

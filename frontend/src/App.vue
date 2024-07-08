@@ -29,7 +29,7 @@ html {
     overflow: hidden;
 }
 #bg {
-    background-image: url('./assets/background.png');
+    background-image: url('./assets/pics/background.png');
     background-size: cover;
     position: fixed; /* 将背景层固定定位 */
     width: 100%;
