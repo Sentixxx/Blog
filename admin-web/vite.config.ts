@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
+import { defineConfig, UserConfig, ConfigEnv, loadEnv } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -15,49 +15,64 @@ import UnoCSS from 'unocss/vite'
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url))
 // https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [
-        vue(),
-        vueJsx(),
-        vueDevTools(),
-        AutoImport({
-            imports: ['vue'],
-            eslintrc: {
-                enabled: false,
-                filepath: './.eslintrc-auto-import.json'
-            },
-            resolvers: [ElementPlusResolver(), IconsResolver({})],
-            dts: fileURLToPath(new URL('./src/types/auto-imports.d.ts', import.meta.url))
-        }),
-        Components({
-            resolvers: [ElementPlusResolver(), IconsResolver({ enabledCollections: ['ep'] })],
-            dts: fileURLToPath(new URL('./src/types/components.d.ts', import.meta.url))
-        }),
-        Icons({
-            autoInstall: true
-        }),
-        createSvgIconsPlugin({
-            // 指定需要缓存的图标文件夹
-            iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
-            // 指定symbolId格式
-            symbolId: 'icon-[dir]-[name]'
-        }),
-        UnoCSS({
-            /* options */
-        })
-    ],
-    resolve: {
-        alias: {
-            '@': rootDir + '/src'
-        }
-    },
-    css: {
-        // CSS 预处理器
-        preprocessorOptions: {
-            //define global scss variable
-            scss: {
-                javascriptEnabled: true,
-                additionalData: `@use "@/styles/variables.scss" as *;`
+export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+    const env = loadEnv(mode, process.cwd())
+    return {
+        plugins: [
+            vue(),
+            vueJsx(),
+            vueDevTools(),
+            AutoImport({
+                imports: ['vue'],
+                eslintrc: {
+                    enabled: false,
+                    filepath: './.eslintrc-auto-import.json'
+                },
+                resolvers: [ElementPlusResolver(), IconsResolver({})],
+                dts: fileURLToPath(new URL('./src/types/auto-imports.d.ts', import.meta.url))
+            }),
+            Components({
+                resolvers: [ElementPlusResolver(), IconsResolver({ enabledCollections: ['ep'] })],
+                dts: fileURLToPath(new URL('./src/types/components.d.ts', import.meta.url))
+            }),
+            Icons({
+                autoInstall: true
+            }),
+            createSvgIconsPlugin({
+                // 指定需要缓存的图标文件夹
+                iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+                // 指定symbolId格式
+                symbolId: 'icon-[dir]-[name]'
+            }),
+            UnoCSS({
+                /* options */
+            })
+        ],
+        resolve: {
+            alias: {
+                '@': rootDir + '/src'
+            }
+        },
+        css: {
+            // CSS 预处理器
+            preprocessorOptions: {
+                //define global scss variable
+                scss: {
+                    javascriptEnabled: true,
+                    additionalData: `@use "@/styles/variables.scss" as *;`
+                }
+            }
+        },
+        server: {
+            host: '0.0.0.0',
+            port: Number(env.VITE_APP_PORT),
+            proxy: {
+                [env.VITE_APP_BASE_API]: {
+                    target: 'http://localhost:7090',
+                    changeOringin: true,
+                    rewrite: (path: string) =>
+                        path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
+                }
             }
         }
     }
