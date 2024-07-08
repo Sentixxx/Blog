@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import request from '@/api/plugins/axios';
+import request from '@/api/axios';
+import { ElMessage } from 'element-plus';
 export default {
     data() {
         var validatePass = (rule, value, callback) => {
@@ -70,29 +71,50 @@ export default {
         };
     },
     methods: {
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    alert('submit!');
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-            request
-                .post('/register', {
-                    username: this.ruleForm.uname,
-                    password: this.ruleForm.pass
-                })
-                .then((res) => {
-                    console.log(res);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
         goBack() {
             this.$router.go(-1);
+        },
+        submitForm(formName) {
+            return new Promise((resolve, reject) => {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        request
+                            .post('/register', {
+                                username: this.ruleForm.uname,
+                                password: this.ruleForm.pass
+                            })
+                            .then((res) => {
+                                console.log(res);
+                                if (res.data.code === 200) {
+                                    ElMessage({
+                                        message: '注册成功',
+                                        type: 'success'
+                                    });
+                                    this.$router.push('/login');
+                                } else {
+                                    ElMessage({
+                                        message: res.data.msg,
+                                        type: 'error'
+                                    });
+                                }
+                            })
+                            .catch((err) => {
+                                ElMessage({
+                                    message: '注册失败，请稍后再试',
+                                    type: 'error'
+                                });
+                                console.log(err);
+                            });
+                    } else {
+                        ElMessage({
+                            message: '注册失败，请稍后再试',
+                            type: 'error'
+                        });
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            });
         }
     }
 };

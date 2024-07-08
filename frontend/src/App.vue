@@ -9,7 +9,7 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router';
-import LoginView from './views/login/Index.vue';
+import LoginView from '@/views/system/login/Index.vue';
 
 export default {
     components: {

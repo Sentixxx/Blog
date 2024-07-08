@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import request from '@/api/plugins/axios';
+import request from '@/api/axios';
+import { ElMessage } from 'element-plus';
 export default {
     data() {
         return {
@@ -61,29 +62,38 @@ export default {
     },
     methods: {
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                } else {
-                    alert('非法输入');
-                    return false;
-                }
-            });
-            request
-                .post('/login', {
-                    username: this.ruleForm.uname,
-                    password: this.ruleForm.password
-                })
-
-                .then((res) => {
-                    console.log(res);
-                    if (res.status === 200) {
-                        this.$router.push('/home');
+            return new Promise((resolve, reject) => {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        resolve();
+                    } else {
+                        ElMessage({
+                            message: '请填写完整信息',
+                            type: 'error'
+                        });
+                        reject();
                     }
-                })
-                .catch((error) => {
-                    alert('登录失败');
-                    console.log(error);
                 });
+            }).then(() => {
+                request
+                    .post('/login', {
+                        username: this.ruleForm.uname,
+                        password: this.ruleForm.password
+                    })
+                    .then((res) => {
+                        console.log(res);
+                        if (res.status === 200) {
+                            this.$router.push('/home');
+                        }
+                    })
+                    .catch((error) => {
+                        ElMessage({
+                            message: '用户名或密码错误',
+                            type: 'error'
+                        });
+                        console.log(error);
+                    });
+            });
         }
     }
 };
