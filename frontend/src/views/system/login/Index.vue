@@ -36,6 +36,7 @@
 import request from '@/api/axios';
 import { ElMessage } from 'element-plus';
 export default {
+    name: 'LoginView',
     data() {
         return {
             ruleForm: {
