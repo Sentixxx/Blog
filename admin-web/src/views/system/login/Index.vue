@@ -67,17 +67,23 @@
 </template>
 
 <script setup lang="ts">
-import { LocationQuery, useRoute } from 'vue-router'
+import { type LocationQuery, useRoute } from 'vue-router'
 import router from '@/router'
-import defaultSetttings from '@/config/settings'
+import defaultSettings from '@/config/settings'
 import { ThemeEnum } from '@/enums/themeEnum'
-import AuthAPI from '@/api/auth'
 import type { LoginData } from '@/api/auth'
 import { ElMessage, type FormInstance } from 'element-plus'
+import { useSettingsStore, useUserStore } from '@/stores'
+import '@/styles/login.scss'
 
+const userStore = useUserStore()
+const settingsStore = useSettingsStore()
 const route = useRoute()
+
 const { height } = useWindowSize()
 const { t } = useI18n()
+const isDark = ref(settingsStore.themeMode === ThemeEnum.DARK)
+
 const loading = ref(false)
 const isCapslock = ref(false)
 const loginFormRef = ref<FormInstance>()
@@ -114,6 +120,15 @@ function handleLoginSubmit() {
     loginFormRef.value?.validate((valid: boolean) => {
         if (valid) {
             loading.value = true
+            userStore
+                .login(loginData.value)
+                .then(() => {
+                    const { path, queryParmas } = parseRedirect()
+                    router.push({ path, query: queryParmas })
+                })
+                .finally(() => {
+                    loading.value = false
+                })
         } else {
             ElMessage({
                 type: 'error',
@@ -121,11 +136,33 @@ function handleLoginSubmit() {
             })
         }
     })
+}
 
-    function checkCapslock(event: KeyboardEvent) {
-        if (event instanceof KeyboardEvent) {
-            isCapslock.value = event.getModifierState('CapsLock')
-        }
+function parseRedirect(): {
+    path: string
+    queryParmas: Record<string, string>
+} {
+    const query: LocationQuery = route.query
+    const redirect = (query.redirect as string) ?? '/'
+    const url = new URL(redirect, window.location.origin)
+    const path = url.pathname
+    const queryParmas: Record<string, string> = {}
+
+    url.searchParams.forEach((value, key) => {
+        queryParmas[key] = value
+    })
+
+    return { path, queryParmas }
+}
+
+const toggleTheme = () => {
+    const newTheme = settingsStore.themeMode === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK
+    settingsStore.setThemeMode(newTheme)
+}
+
+function checkCapslock(event: KeyboardEvent) {
+    if (event instanceof KeyboardEvent) {
+        isCapslock.value = event.getModifierState('CapsLock')
     }
 }
 </script>

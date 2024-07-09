@@ -13,7 +13,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
     const fixedHeader = useStorage<boolean>('fixedHeader', defaultSettings.fixedHeader);
 
-    const navbarLayout = useStorage<string>('navbarLayout', defaultSettings.navbarLayout);
+    const layout = useStorage<string>('layout', defaultSettings.layout);
 
     const themeColor = useStorage<string>('themeColor', defaultSettings.themeColor);
 
@@ -51,7 +51,7 @@ export const useSettingsStore = defineStore('settings', () => {
         fixedHeader,
         tagsView,
         sidebarLogo,
-        navbarLayout,
+        layout,
         watermarkEnabled,
     };
 
@@ -76,8 +76,8 @@ export const useSettingsStore = defineStore('settings', () => {
         themeColor.value = val;
     }
 
-    function setNavbarLayout(val: string) {
-        navbarLayout.value = val;
+    function setLayout(val: string) {
+        layout.value = val;
     }
 
     return {
@@ -85,13 +85,13 @@ export const useSettingsStore = defineStore('settings', () => {
         tagsView,
         fixedHeader,
         sidebarLogo,
-        navbarLayout,
+        layout,
         themeColor,
         themeMode,
         watermarkEnabled,
         setSetting,
         setThemeMode,
         setThemeColor,
-        setNavbarLayout,
+        setLayout,
     };
 });

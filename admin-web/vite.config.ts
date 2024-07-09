@@ -81,6 +81,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
                         path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
                 }
             }
+        },
+        define: {
+            __APP_INFO__: JSON.stringify(__APP_INFO__), // expose app info to client
         }
     }
 })

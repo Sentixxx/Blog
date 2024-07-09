@@ -1,18 +1,22 @@
-import './assets/main.css'
+
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
 import App from './App.vue'
-import router from './router'
 
 import 'virtual:svg-icons-register'
 
+
+import "element-plus/theme-chalk/dark/css-vars.css";
+import "@/styles/index.scss";
+
+
+import 'animate.css'
 import 'uno.css'
+
+import setupPlugins from "@/config/index"
 
 const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
 
+app.use(setupPlugins);
 app.mount('#app')

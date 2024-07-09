@@ -9,7 +9,7 @@ import { SidebarStatusEnum } from "@/enums/sidebarStatusEnum";
 export const useAppStore = defineStore("app", () => {
     const device = useStorage("device",DeviceEnum.DESKTOP);
 
-    const layoutSize = useStorage("layoutSize",defaultSettings.layoutSize);
+    const size = useStorage("size",defaultSettings.size);
 
     const language = useStorage("language",defaultSettings.language);
 
@@ -51,8 +51,8 @@ export const useAppStore = defineStore("app", () => {
     /**
      * @param {string} val 布局大小 default | small | large
      */
-    function setLayoutSize(val: string) {
-        layoutSize.value = val;
+    function setSize(val: string) {
+        size.value = val;
     }
 
     /**
@@ -71,13 +71,13 @@ export const useAppStore = defineStore("app", () => {
         sidebar,
         language,
         locale,
-        layoutSize,
+        size,
         activeTopMenuPath,
         toggleSidebar,
         closeSidebar,
         openSidebar,
         toggleDevice,
-        setLayoutSize,
+        setSize,
         setLanguage,
         setActiveTopMenuPath,
     };

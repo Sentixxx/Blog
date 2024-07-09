@@ -6,40 +6,40 @@ import type { App } from 'vue'
 export const Layout = () => import('@/layout/Index.vue');
 
 export const contantRoutes: RouteRecordRaw[] = [
-    {
-        path: '/redirect',
-        component: Layout,
-        children: [
-            {
-                path: "/redirect/:path(.*)",
-                component: () => import('@/views/redirect/Index.vue'),
-            },
-        ],
-    },
+    // {
+    //     path: '/redirect',
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: "/redirect/:path(.*)",
+    //             component: () => import('@/views/redirect/Index.vue'),
+    //         },
+    //     ],
+    // },
     {
         path: '/login',
         component: () => import('@/views/system/login/Index.vue'),
         meta: { hidden: true },
     },
-    {
-        path: "/",
-        name: "/",
-        component: Layout,
-        redirect: "/dashboard",
-        children: [
-            {
-                path: "dashboard",
-                component: () => import('@/views/dashboard/Index.vue'),
-                name: "Dashboard",
-                meta: {
-                    title: "Dashboard",
-                    icon: "homepage",
-                    affix: true,
-                    KeepAlive: true,
-                },
-            },
-        ]
-    },
+    // {
+    //     path: "/",
+    //     name: "/",
+    //     component: Layout,
+    //     redirect: "/dashboard",
+    //     children: [
+    //         {
+    //             path: "dashboard",
+    //             component: () => import('@/views/dashboard/Index.vue'),
+    //             name: "Dashboard",
+    //             meta: {
+    //                 title: "Dashboard",
+    //                 icon: "homepage",
+    //                 affix: true,
+    //                 KeepAlive: true,
+    //             },
+    //         },
+    //     ]
+    // },
 ];
 
 const router = createRouter({
