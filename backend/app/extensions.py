@@ -4,4 +4,3 @@ db = SQLAlchemy()
 
 def config_extensions(app):
     db.init_app(app)
-    
