@@ -1,7 +1,6 @@
-import axios from 'axios';
-import type {InternalAxiosRequestConfig, AxiosResponse} from 'axios';
-import { ElMessage } from 'element-plus';
-
+import axios from 'axios'
+import type { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import { ElMessage } from 'element-plus'
 
 const service = axios.create({
     baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -9,33 +8,32 @@ const service = axios.create({
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
     }
-});
+})
 
 service.interceptors.request.use(
-    (config : InternalAxiosRequestConfig) => {
+    (config: InternalAxiosRequestConfig) => {
         // do something before request is sent
-        return config;
+        return config
     },
     (error) => {
-        console.log(error);
-        Promise.reject(error);  
+        console.log(error)
+        Promise.reject(error)
     }
-);
-
+)
 
 service.interceptors.response.use(
-    (response : AxiosResponse) => {
+    (response: AxiosResponse) => {
         return Promise.resolve(response)
     },
     (error) => {
         console.log('err' + error)
         ElMessage({
-        message: error.message,
-        type: 'error',
-        duration: 5 * 1000
+            message: error.message,
+            type: 'error',
+            duration: 5 * 1000
         })
         return Promise.reject(error)
-    });
+    }
+)
 
-    
-export default service;
+export default service

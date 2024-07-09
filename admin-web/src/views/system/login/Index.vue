@@ -1,0 +1,133 @@
+<template>
+    <div class="login-container">
+        <!--Top-Tool-Bar-->
+        <div class="top-tool-bar">
+            <el-switch
+                v-model="isDark"
+                inline-prompt
+                active-icon="Moon"
+                inactive-icon="Sunny"
+                @change="toggleTheme"
+            />
+            <lang-select class="ml-2 cursor-pointer" />
+        </div>
+        <!--Login-Form-->
+        <div class="login-card">
+            <div class="text-center relative">
+                <h2>{{ defaultSettings.title }}</h2>
+                <el-tag class="ml-2 absolute-rt">{{ defaultSettings.version }} </el-tag>
+            </div>
+            <el-form ref="loginFormRef" :model="loginData" :rules="loginRules" class="login-form">
+                <!--Username-->
+                <el-form-item prop="username">
+                    <div class="input-wrapper">
+                        <i-ep-user class="mx-2" /><el-input
+                            ref="username"
+                            v-model="loginData.username"
+                            :placeholder="$t('login.username')"
+                            name="username"
+                            size="large"
+                            class="h-[48px]"
+                        />
+                    </div>
+                </el-form-item>
+
+                <!--Password-->
+                <el-tooltip :visible="isCapslock" :content="$t('login.capslock')" placement="right">
+                    <el-form-item prop="password">
+                        <div class="input-wrapper">
+                            <i-ep-lock class="mx-2" />
+                            <el-input
+                                v-model="loginData.password"
+                                :placeholder="$t('login.password')"
+                                type="password"
+                                name="password"
+                                @keyup="checkCapslock"
+                                @keyup.enter="handleLoginSubmit"
+                                size="large"
+                                class="h-[48px] pr-2"
+                                show-password
+                            />
+                        </div>
+                    </el-form-item>
+                </el-tooltip>
+
+                <!--Login-Button-->
+                <el-button
+                    :loading="loading"
+                    type="primary"
+                    size="large"
+                    class="w-full"
+                    @click.prevent="handleLoginSubmit"
+                    >{{ $t('login.login') }}
+                </el-button>
+            </el-form>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { LocationQuery, useRoute } from 'vue-router'
+import router from '@/router'
+import defaultSetttings from '@/config/settings'
+import { ThemeEnum } from '@/enums/themeEnum'
+import AuthAPI from '@/api/auth'
+import type { LoginData } from '@/api/auth'
+import { ElMessage, type FormInstance } from 'element-plus'
+
+const route = useRoute()
+const { height } = useWindowSize()
+const { t } = useI18n()
+const loading = ref(false)
+const isCapslock = ref(false)
+const loginFormRef = ref<FormInstance>()
+const loginData = ref<LoginData>({
+    username: 'admin',
+    password: '123456'
+} as LoginData)
+
+const loginRules = computed(() => {
+    return {
+        username: [
+            {
+                required: true,
+                triggered: 'blur',
+                message: t('login.messgae.username.required')
+            }
+        ],
+        password: [
+            {
+                required: true,
+                triggered: 'blur',
+                message: t('login.messgae.password.required')
+            },
+            {
+                min: 6,
+                triggered: 'blur',
+                message: t('login.messgae.password.min')
+            }
+        ]
+    }
+})
+
+function handleLoginSubmit() {
+    loginFormRef.value?.validate((valid: boolean) => {
+        if (valid) {
+            loading.value = true
+        } else {
+            ElMessage({
+                type: 'error',
+                message: t('login.messgae.loginFailed')
+            })
+        }
+    })
+
+    function checkCapslock(event: KeyboardEvent) {
+        if (event instanceof KeyboardEvent) {
+            isCapslock.value = event.getModifierState('CapsLock')
+        }
+    }
+}
+</script>
+
+<style></style>

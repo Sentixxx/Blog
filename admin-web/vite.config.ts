@@ -12,8 +12,15 @@ import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import UnoCSS from 'unocss/vite'
+import { name, version, dependencies, devDependencies } from './package.json'
+import { tr } from 'element-plus/es/locales.mjs'
 
-const rootDir = fileURLToPath(new URL('.', import.meta.url))
+const __APP_INFO__ = {
+    pkg: {name, version, dependencies, devDependencies},
+    buildTimestamp: Date.now()
+}
+
+const pathSrc = path.resolve(__dirname, 'src');
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const env = loadEnv(mode, process.cwd())
@@ -23,10 +30,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             vueJsx(),
             vueDevTools(),
             AutoImport({
-                imports: ['vue'],
+                imports: ['vue' ,"pinia","vue-router" , "@vueuse/core" , "vue-i18n" ],
                 eslintrc: {
                     enabled: false,
-                    filepath: './.eslintrc-auto-import.json'
+                    filepath: './.eslintrc-auto-import.json',
                 },
                 resolvers: [ElementPlusResolver(), IconsResolver({})],
                 dts: fileURLToPath(new URL('./src/types/auto-imports.d.ts', import.meta.url))
@@ -50,7 +57,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         ],
         resolve: {
             alias: {
-                '@': rootDir + '/src'
+                '@': pathSrc,
             }
         },
         css: {
@@ -69,7 +76,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             proxy: {
                 [env.VITE_APP_BASE_API]: {
                     target: 'http://localhost:7090',
-                    changeOringin: true,
+                    changeOrigin: true,
                     rewrite: (path: string) =>
                         path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
                 }
