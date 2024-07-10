@@ -67,7 +67,6 @@
                             ref="captcha"
                             class="captcha-image"
                             @update-captcha-code="getCaptcha"
-                            @keyup.enter="handleLoginSubmit"
                         />
                     </div>
                 </el-form-item>
@@ -167,7 +166,6 @@ const loginRules = computed(() => {
     }
 })
 
-/** 获取验证码 */
 function getCaptcha(data: string) {
     curCaptchaCode.value = data
 }
