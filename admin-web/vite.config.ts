@@ -13,7 +13,6 @@ import IconsResolver from 'unplugin-icons/resolver'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import UnoCSS from 'unocss/vite'
 import { name, version, dependencies, devDependencies } from './package.json'
-import { tr } from 'element-plus/es/locales.mjs'
 
 const __APP_INFO__ = {
     pkg: {name, version, dependencies, devDependencies},
@@ -40,7 +39,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             }),
             Components({
                 resolvers: [ElementPlusResolver(), IconsResolver({ enabledCollections: ['ep'] })],
-                dts: fileURLToPath(new URL('./src/types/components.d.ts', import.meta.url))
+                dts: fileURLToPath(new URL('./src/types/components.d.ts', import.meta.url)),
+                dirs: ["src/components", "src/**/components"],
             }),
             Icons({
                 autoInstall: true
