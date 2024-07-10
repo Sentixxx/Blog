@@ -51,7 +51,21 @@
                         </div>
                     </el-form-item>
                 </el-tooltip>
-
+                <!-- 验证码 -->
+                <el-form-item prop="captchaCode">
+                    <div class="input-wrapper">
+                        <svg-icon icon-class="captcha" class="mx-2" />
+                        <el-input
+                            v-model="loginData.captchaCode"
+                            auto-complete="off"
+                            size="large"
+                            class="flex-1"
+                            :placeholder="$t('login.captchaCode')"
+                            @keyup.enter="handleLoginSubmit"
+                        />
+                        <el-image @click="getCaptcha" :src="captchaBase64" class="captcha-image" />
+                    </div>
+                </el-form-item>
                 <!--Login-Button-->
                 <el-button
                     :loading="loading"
@@ -61,6 +75,10 @@
                     @click.prevent="handleLoginSubmit"
                     >{{ $t('login.login') }}
                 </el-button>
+                <div class="mt-10 text-sm">
+                    <span>{{ $t('login.username') }}: admin</span>
+                    <span class="ml-4"> {{ $t('login.password') }}: 123456</span>
+                </div>
             </el-form>
         </el-card>
     </div>
@@ -75,6 +93,7 @@ import type { LoginData } from '@/api/auth'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { useSettingsStore, useUserStore } from '@/stores'
 import '@/styles/login.scss'
+import AuthAPI from '@/api/auth'
 
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
@@ -88,6 +107,7 @@ const isDark = ref(settingsStore.themeMode === ThemeEnum.DARK)
 const loading = ref(false)
 const isCapslock = ref(false)
 const loginFormRef = ref<FormInstance>()
+const captchaBase64 = ref()
 const loginData = ref<LoginData>({
     username: 'admin',
     password: '123456'
@@ -113,28 +133,52 @@ const loginRules = computed(() => {
                 triggered: 'blur',
                 message: t('login.messgae.password.min')
             }
+        ],
+        captchaCode: [
+            {
+                required: true,
+                trigger: 'blur',
+                message: t('login.message.captchaCode.required')
+            }
         ]
     }
 })
 
+/** 获取验证码 */
+function getCaptcha() {
+    AuthAPI.getCaptcha().then((data) => {
+        loginData.value.captchaKey = data.captchaKey
+        captchaBase64.value = data.captchaBase64
+        console.log(captchaBase64.value)
+    })
+}
+
 function handleLoginSubmit() {
     loginFormRef.value?.validate((valid: boolean) => {
-        if (valid) {
-            loading.value = true
-            userStore
-                .login(loginData.value)
-                .then(() => {
-                    const { path, queryParmas } = parseRedirect()
-                    router.push({ path, query: queryParmas })
-                })
-                .finally(() => {
-                    loading.value = false
-                })
+        if (import.meta.env.VITE_APP_BASE_API === '/dev-api') {
+            router.push({ path: '/dashboard', query: {} })
+            console.log('111')
         } else {
-            ElMessage({
-                type: 'error',
-                message: t('login.messgae.loginFailed')
-            })
+            if (valid) {
+                loading.value = true
+                userStore
+                    .login(loginData.value)
+                    .then(() => {
+                        const { path, queryParmas } = parseRedirect()
+                        router.push({ path, query: queryParmas })
+                    })
+                    .catch(() => {
+                        getCaptcha()
+                    })
+                    .finally(() => {
+                        loading.value = false
+                    })
+            } else {
+                ElMessage({
+                    type: 'error',
+                    message: t('login.messgae.loginFailed')
+                })
+            }
         }
     })
 }
@@ -166,6 +210,9 @@ function checkCapslock(event: KeyboardEvent) {
         isCapslock.value = event.getModifierState('CapsLock')
     }
 }
+onMounted(() => {
+    getCaptcha()
+})
 </script>
 
 <style></style>
