@@ -1,69 +1,69 @@
-import defaultSettings from "@/config/settings";
+import defaultSettings from '@/config/settings'
 
-import zhcn from "element-plus/es/locale/lang/zh-cn"
-import en from "element-plus/es/locale/lang/en"
-import { store } from "@/stores"
-import { DeviceEnum } from "@/enums/deviceEnum";
-import { SidebarStatusEnum } from "@/enums/sidebarStatusEnum";
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
+import { store } from '@/stores'
+import { DeviceEnum } from '@/enums/deviceEnum'
+import { SidebarStatusEnum } from '@/enums/sidebarStatusEnum'
 
-export const useAppStore = defineStore("app", () => {
-    const device = useStorage("device",DeviceEnum.DESKTOP);
+export const useAppStore = defineStore('app', () => {
+    const device = useStorage('device', DeviceEnum.DESKTOP)
 
-    const size = useStorage("size",defaultSettings.size);
+    const size = useStorage('size', defaultSettings.size)
 
-    const language = useStorage("language",defaultSettings.language);
+    const language = useStorage('language', defaultSettings.language)
 
-    const sidebarStatus = useStorage("sidebarStatus",SidebarStatusEnum.OPENED);
+    const sidebarStatus = useStorage('sidebarStatus', SidebarStatusEnum.OPENED)
     const sidebar = reactive({
-        opened: sidebarStatus.value === SidebarStatusEnum.OPENED,withoutAnimation: false,
-    });
+        opened: sidebarStatus.value === SidebarStatusEnum.OPENED,
+        withoutAnimation: false
+    })
 
-    const activeTopMenuPath = useStorage("activeTopMenuPath","");
+    const activeTopMenuPath = useStorage('activeTopMenuPath', '')
 
     const locale = computed(() => {
-        if(language?.value == "en") {
-            return en;
+        if (language?.value == 'en') {
+            return en
+        } else {
+            return zhCn
         }
-        else {
-            return zhcn;
-        }
-    });
+    })
 
     function toggleSidebar() {
-        sidebar.opened = !sidebar.opened;
-        sidebarStatus.value = sidebar.opened ? SidebarStatusEnum.OPENED : SidebarStatusEnum.CLOSED;
+        sidebar.opened = !sidebar.opened
+        sidebarStatus.value = sidebar.opened ? SidebarStatusEnum.OPENED : SidebarStatusEnum.CLOSED
     }
 
     function closeSidebar() {
-        sidebar.opened = false;
-        sidebarStatus.value = SidebarStatusEnum.CLOSED;
+        sidebar.opened = false
+        sidebarStatus.value = SidebarStatusEnum.CLOSED
     }
 
     function openSidebar() {
-        sidebar.opened = true;
-        sidebarStatus.value = SidebarStatusEnum.OPENED;
+        sidebar.opened = true
+        sidebarStatus.value = SidebarStatusEnum.OPENED
     }
 
     function toggleDevice(val: string) {
-        device.value = val;
+        device.value = val
     }
 
     /**
      * @param {string} val 布局大小 default | small | large
      */
     function setSize(val: string) {
-        size.value = val;
+        size.value = val
     }
 
     /**
      * @param {string} val 语言
      */
     function setLanguage(val: string) {
-        language.value = val;
+        language.value = val
     }
 
     function setActiveTopMenuPath(val: string) {
-        activeTopMenuPath.value = val;
+        activeTopMenuPath.value = val
     }
 
     return {
@@ -79,10 +79,10 @@ export const useAppStore = defineStore("app", () => {
         toggleDevice,
         setSize,
         setLanguage,
-        setActiveTopMenuPath,
-    };
-});
+        setActiveTopMenuPath
+    }
+})
 
 export function useAppStoreHook() {
-    return useAppStore(store);
+    return useAppStore(store)
 }

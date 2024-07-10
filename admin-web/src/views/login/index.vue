@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <!--Top-Tool-Bar-->
-        <div class="top-tool-bar">
+        <div class="top-bar">
             <el-switch
                 v-model="isDark"
                 inline-prompt
@@ -12,7 +12,7 @@
             <lang-select class="ml-2 cursor-pointer" />
         </div>
         <!--Login-Form-->
-        <div class="login-card">
+        <el-card class="login-card">
             <div class="text-center relative">
                 <h2>{{ defaultSettings.title }}</h2>
                 <el-tag class="ml-2 absolute-rt">{{ defaultSettings.version }} </el-tag>
@@ -62,7 +62,7 @@
                     >{{ $t('login.login') }}
                 </el-button>
             </el-form>
-        </div>
+        </el-card>
     </div>
 </template>
 
@@ -81,6 +81,7 @@ const settingsStore = useSettingsStore()
 const route = useRoute()
 
 const { height } = useWindowSize()
+
 const { t } = useI18n()
 const isDark = ref(settingsStore.themeMode === ThemeEnum.DARK)
 

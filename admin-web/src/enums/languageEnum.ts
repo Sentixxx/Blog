@@ -1,5 +1,4 @@
-
 export const enum LanguageEnum {
-    ZH_CN = "zh-cn",
-    EN = "en",
+    ZH_CN = 'zh-cn',
+    EN = 'en'
 }

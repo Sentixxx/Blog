@@ -8,7 +8,7 @@ import { usePermissionStore, useUserStore } from '@/stores'
 export function setupPermission() {
     // 白名单路由
     const whiteList = ['/login']
-
+    console.log(whiteList)
     router.beforeEach(async (to, from, next) => {
         NProgress.start()
         const hasToken = localStorage.getItem(TOKEN_KEY)
