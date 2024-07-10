@@ -34,20 +34,18 @@
       align-items: center;
       width: 100%;
     }
+    .flex-1 {
+      flex: 1;
+      min-width: 200px;
+    }
 
     .captcha-image {
       height: 48px;
       cursor: pointer;
+      flex-shrink: 0;
       border-top-right-radius: 6px;
       border-bottom-right-radius: 6px;
     }
-  }
-
-  .icp-info {
-    position: absolute;
-    bottom: 4px;
-    font-size: 12px;
-    text-align: center;
   }
 
   .el-form-item {

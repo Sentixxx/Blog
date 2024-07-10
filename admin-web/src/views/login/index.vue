@@ -63,7 +63,12 @@
                             :placeholder="$t('login.captchaCode')"
                             @keyup.enter="handleLoginSubmit"
                         />
-                        <el-image @click="getCaptcha" :src="captchaBase64" class="captcha-image" />
+                        <CaptchaCode
+                            ref="captcha"
+                            class="captcha-image"
+                            @update-captcha-code="getCaptcha"
+                            @keyup.enter="handleLoginSubmit"
+                        />
                     </div>
                 </el-form-item>
                 <!--Login-Button-->
@@ -93,13 +98,14 @@ import type { LoginData } from '@/api/auth'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { useSettingsStore, useUserStore } from '@/stores'
 import '@/styles/login.scss'
-import AuthAPI from '@/api/auth'
+import CaptchaCode from '@/components/Captcha/index.vue'
 
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const route = useRoute()
 
 const { height } = useWindowSize()
+const captcha = ref()
 
 const { t } = useI18n()
 const isDark = ref(settingsStore.themeMode === ThemeEnum.DARK)
@@ -107,11 +113,24 @@ const isDark = ref(settingsStore.themeMode === ThemeEnum.DARK)
 const loading = ref(false)
 const isCapslock = ref(false)
 const loginFormRef = ref<FormInstance>()
-const captchaBase64 = ref()
+let curCaptchaCode = ref()
 const loginData = ref<LoginData>({
     username: 'admin',
     password: '123456'
 } as LoginData)
+
+const validateCaptchaCode = (rule: any, value: string, callback: any) => {
+    value = value.toUpperCase()
+    if (value !== curCaptchaCode.value) {
+        console.log('value: ' + value)
+        console.log('curCaptchaCode: ' + curCaptchaCode.value)
+        // callback(new Error(t('login.message.captcha.error')))
+        captcha.value.refreshCode()
+    } else {
+        callback()
+        // callback()
+    }
+}
 
 const loginRules = computed(() => {
     return {
@@ -138,26 +157,29 @@ const loginRules = computed(() => {
             {
                 required: true,
                 trigger: 'blur',
-                message: t('login.message.captchaCode.required')
+                message: t('login.message.captcha.required')
+            },
+            {
+                validator: validateCaptchaCode,
+                trigger: 'blur'
             }
         ]
     }
 })
 
 /** 获取验证码 */
-function getCaptcha() {
-    AuthAPI.getCaptcha().then((data) => {
-        loginData.value.captchaKey = data.captchaKey
-        captchaBase64.value = data.captchaBase64
-        console.log(captchaBase64.value)
-    })
+function getCaptcha(data: string) {
+    curCaptchaCode.value = data
 }
 
 function handleLoginSubmit() {
     loginFormRef.value?.validate((valid: boolean) => {
         if (import.meta.env.VITE_APP_BASE_API === '/dev-api') {
+            if (valid) {
+                console.log('valid')
+            }
+            console.log()
             router.push({ path: '/dashboard', query: {} })
-            console.log('111')
         } else {
             if (valid) {
                 loading.value = true
@@ -168,7 +190,7 @@ function handleLoginSubmit() {
                         router.push({ path, query: queryParmas })
                     })
                     .catch(() => {
-                        getCaptcha()
+                        captcha.value.refreshCode()
                     })
                     .finally(() => {
                         loading.value = false
@@ -210,9 +232,7 @@ function checkCapslock(event: KeyboardEvent) {
         isCapslock.value = event.getModifierState('CapsLock')
     }
 }
-onMounted(() => {
-    getCaptcha()
-})
+onMounted(() => {})
 </script>
 
 <style></style>
