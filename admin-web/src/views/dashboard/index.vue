@@ -1,3 +1,9 @@
 <template>
-    <div class="dashboard-container">测试</div>
+    <div class="dashboard-container">{{ layout }}</div>
 </template>
+
+<script setup lang="ts">
+import { useSettingsStore } from '@/stores'
+const settingsStore = useSettingsStore()
+const layout = computed(() => settingsStore.layout)
+</script>
