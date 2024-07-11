@@ -38,6 +38,16 @@ export const constantRoutes: RouteRecordRaw[] = [
                 }
             },
             {
+                path: 'book',
+                component: () => import('@/views/book/index.vue'),
+                meta: {
+                    title: 'Book',
+                    icon: 'book',
+                    affix: true,
+                    KeepAlive: true
+                }
+            },
+            {
                 path: '401',
                 component: () => import('@/views/error-page/401.vue'),
                 meta: { hidden: true }

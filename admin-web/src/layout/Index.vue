@@ -9,6 +9,7 @@
 
         <!--侧边栏-->
         <Sidebar class="sidebar-container" />
+
         <!--混合布局-->
         <div v-if="layout === LayoutEnum.MIX" class="mix-container">
             <div class="mix-container-left"></div>

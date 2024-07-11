@@ -7,11 +7,15 @@
             :background-color="variables['menu-background']"
             :text-color="variables['menu-text']"
             :active-text-color="variables['menu-active-text']"
+            @open="handleOpen"
+            @close="handleClose"
             @select="handleMenuSelect"
         >
             <el-menu-item v-for="route in mixTopMenus" :key="route.path" :index="route.path">
                 <template #title>
+                    <h1>111</h1>
                     <svg-icon v-if="route.meta && route.meta.icon" :icon-class="route.meta.icon" />
+
                     <span v-if="route.path === '/'"> 首页 </span>
                     <template v-else>
                         <span v-if="route.meta && route.meta.title" class="ml-1">
@@ -54,7 +58,12 @@ const handleMenuSelect = (routePath: string) => {
     const mixLeftMenus = permissionStore.mixLeftMenus
     goToFirstMenu(mixLeftMenus)
 }
-
+const handleOpen = (key: String, keyPath: String[]) => {
+    console.log(key, keyPath)
+}
+const handleClose = (key: String, keyPath: String[]) => {
+    console.log(key, keyPath)
+}
 /**
  * 默认跳转到左侧第一个菜单
  */

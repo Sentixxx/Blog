@@ -8,6 +8,34 @@
         :unique-opened="false"
         :collapse-transition="false"
         :mode="mode"
+        :router="true"
+    >
+        <el-menu-item index="/dashboard" @select="handleDashboard">
+            <el-icon><House /></el-icon>
+            <template #title><span>首页</span> </template>
+        </el-menu-item>
+        <el-menu-item index="/book" @select="handleBook">
+            <el-icon><Notebook /></el-icon>
+            <template #title><span>图书管理</span> </template>
+        </el-menu-item>
+        <el-menu-item index="/user" @select="handleUser">
+            <el-icon><User /></el-icon>
+            <template #title><span>个人信息</span> </template>
+        </el-menu-item>
+        <el-menu-item index="/system" @select="handleSystem">
+            <el-icon><Setting /></el-icon>
+            <template #title><span>系统管理</span> </template>
+        </el-menu-item>
+    </el-menu>
+    <!-- <el-menu
+        :default-active="currentRoute.path"
+        :collapse="!appStore.sidebar.opened"
+        :background-color="variables['menu-background']"
+        :text-color="variables['menu-text']"
+        :active-text-color="variables['menu-active-text']"
+        :unique-opened="false"
+        :collapse-transition="false"
+        :mode="mode"
     >
         <SidebarMenuItem
             v-for="route in menuList"
@@ -15,7 +43,7 @@
             :item="route"
             :basePath="resolvePath(route.path, basePath)"
         />
-    </el-menu>
+    </el-menu> -->
 </template>
 
 <script setup lang="ts">
@@ -25,6 +53,10 @@ import { LayoutEnum } from '@/enums/layoutEnum'
 import { computed } from 'vue'
 import { resolvePath } from '@/utils/path'
 import variables from '@/styles/variables.module.scss'
+import { House, Setting, Notebook, User } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const settingsStore = useSettingsStore()
 const appStore = useAppStore()
@@ -45,4 +77,21 @@ const props = defineProps({
     }
 })
 const mode = computed(() => (settingsStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'))
+
+function handleDashboard() {
+    router.push('/dashboard')
+}
+
+function handleBook() {
+    router.push('/book')
+}
+
+function handleUser() {
+    router.push('/user')
+    console.log('user')
+}
+
+function handleSystem() {
+    router.push('/system')
+}
 </script>

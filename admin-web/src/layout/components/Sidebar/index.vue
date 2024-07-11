@@ -1,6 +1,6 @@
 <template>
     <div :class="{ 'has-logo': sidebarLogo }">
-        <div class="flex w-full" v-if="layout == LayoutEnum.LEFT">
+        <div class="flex w-full" v-if="layout == LayoutEnum.MIX">
             <SidebarLogo v-if="sidebarLogo" :collapse="!appStore.sidebar.opened" />
             <SidebarMixTopMenu class="flex-1" />
         </div>
