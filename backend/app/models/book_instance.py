@@ -13,11 +13,6 @@ class BookInstance(BaseModel):
     borrow_id = db.Column(db.Integer, comment="借阅ID",nullable=True)
     book_instance_status = db.Column(db.Integer, comment="借阅状态 0:馆藏 1:借出 2:遗失 3:未知状态",nullable=False,default=0)
     book_instance_location = db.Column(db.String(255), comment="馆藏地点",nullable=False)
-    book_instance_create_time = db.Column(db.DateTime, comment="创建时间",nullable=False,default=datetime.now)
-    book_instance_update_time = db.Column(db.DateTime, comment="更新时间",nullable=False,default=datetime.now)
-    book_instance_is_deleted = db.Column(db.Integer, comment="是否删除",nullable=False,default=False)
-    note1 = db.Column(db.String(255), comment="备注1",nullable=True)
-    note2 = db.Column(db.String(255), comment="备注2",nullable=True)
 
 
 
