@@ -27,3 +27,14 @@ def add_book(data,sess):
         result = Book(book_name=data.get('name'),book_author=data.get('author'),book_press=data.get('press'),book_isbn_code=data.get('isbn'),book_type=data.get('type'),book_cur_stock_num=1)
         sess = result.add(sess)
         return sess , result
+
+def delete_book(sess, book_id):
+    result = Book.query.filter_by(book_id=book_id).first()
+    if(result):
+        if result.cur_stock_num < 0:
+            return sess , False
+        result.cur_stock_num -= 1
+        sess = result.add(sess)
+        return sess , result.cur_stock_num
+    else:
+        return sess , False

@@ -24,5 +24,12 @@ def add_book_instance(data,result,sess):
 
     return sess , code
 
-
+def delete_book_instance(sess,code):
+    result = BookInstance.query.filter_by(book_instance_id=code).first()
+    if(result):
+        result.is_deleted = 1
+        sess = result.add(sess)
+        return sess , result
+    else:
+        return sess , False
 

@@ -21,11 +21,11 @@ class BaseModel(db.Model):
             return session
         return session
     
-    def save(self, session):
-        try:
-            session.commit()
-        except Exception as e:
-            traceback.print_exc()
-            session.rollback()
-            return False
-        return True
+    # def save(self, session):
+    #     try:
+    #         session.commit()
+    #     except Exception as e:
+    #         traceback.print_exc()
+    #         session.rollback()
+    #         return False
+    #     return True
