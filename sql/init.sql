@@ -1,3 +1,9 @@
+/*
+ * @Author: Sentix 
+ * @Date: 2024-07-11 14:19:11 
+ * @Last Modified by:   Sentix 
+ * @Last Modified time: 2024-07-11 14:19:11 
+ */
 -- Active: 1720076927509@@127.0.0.1@3306@goadmin
 
 -- ----------------------------
@@ -14,80 +20,12 @@ use admin_boot;
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
-
--- ----------------------------
--- Table structure for sys_dict
--- ----------------------------
-DROP TABLE IF EXISTS `sys_dict`;
-CREATE TABLE `sys_dict` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键: ID',
-    `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '类型名称',
-    `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '类型编码',
-    `status` tinyint(1) NULL DEFAULT 0 COMMENT '状态(0:正常,1:停用)',
-    `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
-    `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `is_deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除(0:未删除,1:已删除)',
-    
-    `note0` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段0',
-    `note1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段1',
-    `note2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段2',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `uk_code`(`code` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
-
-
--- ----------------------------
--- Table structure for sys_dict_item
--- ----------------------------
-DROP TABLE IF EXISTS `sys_dict_item`;
-CREATE TABLE `sys_dict_item` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键: ID',
-    `dict_id` bigint NULL DEFAULT NULL COMMENT '字典ID',
-    `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '字典项名称',
-    `value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '字典项值',
-    `status` tinyint(1) NULL DEFAULT 0 COMMENT '状态(0:正常,1:停用)',
-    `sort` int NULL DEFAULT 0 COMMENT '排序',
-    `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
-    `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `is_deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除(0:未删除,1:已删除)',
-    
-    `note0` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段0',
-    `note1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段1',
-    `note2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段2',
-    PRIMARY KEY (`id`) USING BTREE,
-) ENGINE = InnoDB AUTO_INCREMENT = 70 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC; 
-
-
--- ----------------------------
--- Table structure for sys_log
--- ----------------------------
-DROP TABLE IF EXISTS `sys_log`;
-CREATE TABLE `sys_log`  (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `type` tinyint NULL DEFAULT NULL COMMENT '日志类型(1-操作日志 2-登录日志)',
-    `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '日志标题',
-    `ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'IP地址',
-    `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '日志内容',
-    `create_by` bigint NULL DEFAULT NULL COMMENT '创建人ID',
-    `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
-    `update_by` bigint NULL DEFAULT NULL COMMENT '修改人ID',
-    `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-    `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标识(1-已删除 0-未删除)',
-    `note0` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段0',
-    `note1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段1',
-    `note2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段2',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统日志' ROW_FORMAT = DYNAMIC;
-
-
 -- ----------------------------
 -- Table structure for sys_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `menu_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `parent_id` bigint NOT NULL COMMENT '父菜单ID',
     `tree_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父节点ID路径',
     `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '菜单名称',
@@ -116,7 +54,7 @@ CREATE TABLE `sys_menu`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_message`;
 CREATE TABLE `sys_message`  (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `message_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
     `create_by` bigint NULL DEFAULT NULL COMMENT '创建人ID',
     `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
     `update_by` bigint NULL DEFAULT NULL COMMENT '修改人ID',
@@ -135,7 +73,7 @@ CREATE TABLE `sys_message`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
-    `id` int NOT NULL AUTO_INCREMENT,
+    `user_id` int NOT NULL AUTO_INCREMENT,
     `username` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
     `nickname` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
     `gender` tinyint(1) NULL DEFAULT 1 COMMENT '性别((1-男 2-女 0-保密)',
@@ -154,31 +92,61 @@ CREATE TABLE `sys_user`  (
     UNIQUE INDEX `login_name`(`username` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 288 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
-
 -- ----------------------------
--- Table structure for sys_log
+-- Table structure for book_info
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_log`;
-CREATE TABLE `sys_log` (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `module` enum('LOGIN','USER','ROLE','DEPT','MENU','DICT','OTHER') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '日志模块',
-    `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '日志内容',
-    `request_uri` varchar(255) COLLATE utf8_general_ci DEFAULT NULL COMMENT '请求路径',
-    `ip` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'IP地址',
-    `province` varchar(100) COLLATE utf8_general_ci DEFAULT NULL COMMENT '省份',
-    `city` varchar(100) COLLATE utf8_general_ci DEFAULT NULL COMMENT '城市',
-    `execution_time` bigint DEFAULT NULL COMMENT '执行时间(ms)',
-    `browser` varchar(100) COLLATE utf8_general_ci DEFAULT NULL COMMENT '浏览器',
-    `browser_version` varchar(100) COLLATE utf8_general_ci DEFAULT NULL COMMENT '浏览器版本',
-    `os` varchar(100) COLLATE utf8_general_ci DEFAULT NULL COMMENT '终端系统',
-    `create_by` bigint DEFAULT NULL COMMENT '创建人ID',
-    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-    `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT '逻辑删除标识(1-已删除 0-未删除)',
+DROP TABLE IF EXISTS `book_info`;
+CREATE TABLE `book_info`  (
+    `book_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键：ISBN书号',
+    `book_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '书名',
+    `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
+    `book_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图书编码',
+    `book_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型',
+    `book_stock` int NULL DEFAULT NULL COMMENT '库存',
+    `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+    `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标识(1-已删除 0-未删除)',
     `note0` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段0',
     `note1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段1',
     `note2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段2',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC COMMENT='系统日志表';
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
+-- ----------------------------
+-- Table structure for book_instance
+-- ----------------------------
+DROP TABLE IF EXISTS `book_instance`;
+CREATE TABLE `book_instance` (
+    `book_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'ISBN书号',
+    `instance_id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '实体编码',
+    `book_status` tinyint NOT NULL COMMENT '图书状态(1-在库 2-借出 3-遗失 4-损坏)',
+    `location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '存放位置',
+    `borrow_id` bigint NULL DEFAULT NULL COMMENT '借阅记录ID',
+    `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+    `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标识(1-已删除 0-未删除)',
+    `note0` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段0',
+    `note1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段1',
+    `note2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段2',
+    PRIMARY KEY (`instance_id`) USING BTREE
+)
+
+-- ----------------------------
+-- Table structure for borrow_log
+-- ----------------------------
+DROP TABLE IF EXISTS `borrow_log`;
+CREATE TABLE `borrow_log` (
+    `borrow_id` bigint NOT NULL AUTO_INCREMENT COMMENT '借阅记录ID',
+    `intance_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '实体编码',
+    `user_id` int NOT NULL COMMENT '借阅人ID',
+    `borrow_time` datetime NOT NULL COMMENT '借阅时间',
+    `return_time` datetime NULL DEFAULT NULL COMMENT '归还时间',
+    `is_completed` tinyint NOT NULL DEFAULT 0 COMMENT '是否归还(1-是 0-否)',
+    `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标识(1-已删除 0-未删除)',
+    `note0` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段0',
+    `note1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段1',
+    `note2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '扩展字段2',
+    PRIMARY KEY (`borrow_id`) USING BTREE
+)
 
 SET FOREIGN_KEY_CHECKS = 1;

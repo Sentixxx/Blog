@@ -8,14 +8,3 @@ def index():
     return 'admin'
 
 
-@admin.route('/login',methods=['POST'])
-def on_login():
-    print('login')
-    print('post')
-    data = request.args.to_dict()
-    print(data)
-    username = data.get('uname')
-    password = data.get('password')
-    
-    userid = select_user(username,password)
-    return "login page" , 200
