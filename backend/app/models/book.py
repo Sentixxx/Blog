@@ -2,6 +2,8 @@
 from app.extensions import db
 from datetime import datetime
 from app.models.base_model import BaseModel
+from uuid import uuid4
+
 
 class Book(BaseModel):
     __tablename__ = "book"
@@ -13,3 +15,15 @@ class Book(BaseModel):
     book_isbn_code = db.Column(db.String(255), comment="ISBN编码",nullable=False)
     book_type = db.Column(db.String(255), comment="类型",nullable=True)
     book_cur_stock_num = db.Column(db.Integer, comment="当前库存",nullable=False)
+
+
+def add_book(data,sess):
+    result = Book.query.filter_by(book_isbn_code=data.get('isbn')).first()
+    if(result):
+        result.book_cur_stock_num += 1
+        sess = result.add(sess)
+        return sess , result
+    else:
+        result = Book(book_name=data.get('name'),book_author=data.get('author'),book_press=data.get('press'),book_isbn_code=data.get('isbn'),book_type=data.get('type'),book_cur_stock_num=1)
+        sess = result.add(sess)
+        return sess , result

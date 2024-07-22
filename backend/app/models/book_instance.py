@@ -3,7 +3,7 @@ from datetime import datetime
 from app.extensions import db
 from app.models.base_model import BaseModel
 import sys
-
+from uuid import uuid4
 
 
 class BookInstance(BaseModel):
@@ -13,6 +13,16 @@ class BookInstance(BaseModel):
     borrow_id = db.Column(db.Integer, comment="借阅ID",nullable=True)
     book_instance_status = db.Column(db.Integer, comment="借阅状态 0:馆藏 1:借出 2:遗失 3:未知状态",nullable=False,default=0)
     book_instance_location = db.Column(db.String(255), comment="馆藏地点",nullable=False)
+
+def add_book_instance(data,result,sess):
+    code = uuid4()
+    while BookInstance.query.filter_by(book_instance_id=code).first():
+        code = uuid4()
+    
+    newBookInstance = BookInstance(book_instance_id = code,book_id=result.book_id,book_instance_location=data.get('location'))
+    sess = newBookInstance.add(sess)
+
+    return sess , code
 
 
 
