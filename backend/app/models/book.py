@@ -31,10 +31,11 @@ def add_book(data,sess):
 def delete_book(sess, book_id):
     result = Book.query.filter_by(book_id=book_id).first()
     if(result):
-        if result.cur_stock_num < 0:
+        if result.book_cur_stock_num < 0:
             return sess , False
-        result.cur_stock_num -= 1
+        result.book_cur_stock_num -= 1
         sess = result.add(sess)
-        return sess , result.cur_stock_num
+        return sess , result.book_cur_stock_num
     else:
         return sess , False
+    

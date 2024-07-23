@@ -1,6 +1,5 @@
 from app.extensions import db
 from datetime import datetime
-import sys
 import traceback
 
 class BaseModel(db.Model):
@@ -20,6 +19,9 @@ class BaseModel(db.Model):
             session.rollback()
             return session
         return session
+    
+    def to_dict(self):
+        return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
     
     # def save(self, session):
     #     try:
