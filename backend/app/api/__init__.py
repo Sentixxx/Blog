@@ -1,11 +1,13 @@
 from .admin import admin
 from .system import system
 from .book import book
+from .user import user
 
 DEFAULT_BLUEPRINTS = [
     (admin,''),
     (system,''),
-    (book,'/book')
+    (book,'/book'),
+    (user,'/user')
 ]
 
 def config_blueprint(app):

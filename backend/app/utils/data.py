@@ -15,3 +15,9 @@ def to_json(results):
     for result in results:
         ret.append(result.to_dict())
     return jsonify(ret)
+
+def to_dict(results):
+    ret = []
+    for result in results:
+        ret.append(result.to_dict())
+    return ret

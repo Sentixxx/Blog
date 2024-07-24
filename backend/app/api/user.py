@@ -1,24 +1,48 @@
 
 from flask import Blueprint , request
-from app.models import UserInstance
-from uuid import uuid4
+from app.extensions import db
+from app.models import *
+from flask import jsonify
+from app.utils import submit
+
 user = Blueprint('user',__name__)
 
 
-@user.route('/search',methods=['GET'])
-def on_login():
+@user.route('/return',methods=['POST'])
+def on_return():
     data = request.args.to_dict()
-    email = data.get('email')
-    password = data.get('password')
-    print(email)
-    print(password)
-    result = UserInstance.query.filter_by(user_instance_email=email).first()
-    print(result)
-    if(result):
-        if(result.user_instance_password == password):
-            return "login success" , 200
-        else:
-            return "password error" , 200
-    else:
-        return "email error" , 200
+    sess = db.session()
 
+    ret = {}
+    ret['results'] = {}
+    sess, ret['results'] = return_book_instance(data,sess,ret['results'])
+    if ret['results'].get('error_msg') is not None:
+        sess.rollback()
+        ret['msg'] = "归还失败：" + ret['results']['error_msg']
+        ret['results'].pop('error_msg')
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    
+    sess,ret['results'] = return_book(data,sess,ret['results'])
+    if ret['results'].get('error_msg') is not None:
+        sess.rollback()
+        ret['msg'] = "归还失败：" + ret['results']['error_msg']
+        ret['results'].pop('error_msg')
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    
+    sess,ret['results'] = delete_borrow(data,sess,ret['results'])
+    if ret['results'].get('error_msg') is not None:
+        sess.rollback()
+        ret['msg'] = "归还失败：" + ret['results']['error_msg']
+        ret['results'].pop('error_msg')
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    
+    if not submit(sess):
+        ret['msg'] = "归还失败"
+        ret['status'] = -2
+    else:
+        ret['msg'] = "归还成功"
+        ret['status'] = 200
+    return jsonify(ret) , 200

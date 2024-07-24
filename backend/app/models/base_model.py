@@ -13,6 +13,7 @@ class BaseModel(db.Model):
 
     def add(self, session):
         try:
+            self.update_at = datetime.now()
             session.add(self)
         except Exception as e:
             traceback.print_exc()
