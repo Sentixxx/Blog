@@ -16,7 +16,7 @@ def create_app():
     config_extensions(app)
 
     config_blueprint(app)
-    with app.app_context():
-        init_db_table()
+    # with app.app_context():
+    #     init_db_table()
 
     return app
