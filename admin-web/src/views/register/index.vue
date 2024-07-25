@@ -51,6 +51,24 @@
                         </div>
                     </el-form-item>
                 </el-tooltip>
+                                <el-tooltip :visible="isCapslock" :content="$t('login.capslock')" placement="right">
+                    <el-form-item prop="password">
+                        <div class="input-wrapper">
+                            <i-ep-lock class="mx-2" />
+                            <el-input
+                                v-model="loginData.password"
+                                :placeholder="$t('login.password')"
+                                type="password"
+                                name="password"
+                                @keyup="checkCapslock"
+                                @keyup.enter="handleLoginSubmit"
+                                size="large"
+                                class="h-[48px] pr-2"
+                                show-password
+                            />
+                        </div>
+                    </el-form-item>
+                </el-tooltip>
                 <!-- 验证码 -->
                 <el-form-item prop="captchaCode">
                     <div class="input-wrapper">
@@ -72,22 +90,22 @@
                 </el-form-item>
                 <!--Login-Button-->
                 <div class="flex justify-between">
-                    <el-button
-                        :loading="loading"
-                        type="primary"
-                        size="large"
-                        class="w-1/2"
-                        @click.prevent="handleLoginSubmit"
-                        >{{ $t('login.login') }}
-                    </el-button>
-                    <el-button
-                        :loading="loading"
-                        type="primary"
-                        size="large"
-                        class="w-1/2"
-                        @click.prevent="handleregister"
-                        >{{ $t('login.register') }}
-                    </el-button>
+                <el-button
+                    :loading="loading"
+                    type="primary"
+                    size="large"
+                    class="w-1/2"
+                    @click.prevent="handleLoginSubmit"
+                    >{{ $t('login.back') }}
+                </el-button>
+                <el-button
+                    :loading="loading"
+                    type="primary"
+                    size="large"
+                    class="w-1/2"
+                    @click.prevent="handleregister"
+                    >{{ $t('login.register') }}
+                </el-button>
                 </div>
                 <div class="mt-10 text-sm">
                     <span>{{ $t('login.username') }}: admin</span>

@@ -11,6 +11,6 @@ export default {
         setupI18n(app)
         setupRouter(app)
         setupElIcons(app)
-        // setupPermission()
+        setupPermission()
     }
 }

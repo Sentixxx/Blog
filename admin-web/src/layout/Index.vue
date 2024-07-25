@@ -10,18 +10,18 @@
         <!--侧边栏-->
         <Sidebar class="sidebar-container" />
 
-        <!--混合布局-->
-        <div v-if="layout === LayoutEnum.MIX" class="mix-container">
-            <div class="mix-container-left"></div>
-            <SidebarMenu :menuList="mixLeftMenus" :basePath="activeTopMenuPath" />
-            <div class="sidebar-toggle"></div>
-        </div>
-        <div v-else :class="{ hasTagsView: showTagsView }" class="main-container">
+        <!-- 左侧和顶部布局 -->
+        <div :class="{ hasTagsView: showTagsView }" class="main-container">
             <div :class="{ 'fixed-header': fixedHeader }">
-                <!-- <NavBar v-if="layout === LayoutEnum.LEFT" /> -->
-                <!-- <TagsView v-if="showTagsView" /> -->
+                <NavBar v-if="layout === LayoutEnum.LEFT" />
+                <TagsView v-if="showTagsView" />
             </div>
             <AppMain />
+            <Settings v-if="defaultSettings.showSettings" />
+            <!-- 返回顶部 -->
+            <el-backtop target=".main-container">
+                <svg-icon icon-class="backtop" size="24px" />
+            </el-backtop>
         </div>
     </div>
 </template>
@@ -31,28 +31,30 @@ import { useAppStore, useSettingsStore, usePermissionStore } from '@/stores'
 import defaultSettings from '@/config/settings'
 import { DeviceEnum } from '@/enums/deviceEnum'
 import { LayoutEnum } from '@/enums/layoutEnum'
-import { set } from '@vueuse/core'
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
 const permissionStore = usePermissionStore()
-
 const width = useWindowSize().width
+
 const WIDTH_DESKTOP = 992 // 响应式布局容器固定宽度  大屏（>=1200px） 中屏（>=992px） 小屏（>=768px）
 const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE)
 const isOpenSidebar = computed(() => appStore.sidebar.opened)
-const fixedHeader = computed(() => settingsStore.fixedHeader)
-const showTagsView = computed(() => settingsStore.tagsView)
-const layout = computed(() => settingsStore.layout)
-const activeTopMenuPath = computed(() => appStore.activeTopMenuPath)
+const fixedHeader = computed(() => settingsStore.fixedHeader) // 是否固定header
+const showTagsView = computed(() => settingsStore.tagsView) // 是否显示tagsView
+const layout = computed(() => settingsStore.layout) // 布局模式 left top mix
+const activeTopMenuPath = computed(() => appStore.activeTopMenuPath) // 顶部菜单激活path
 const mixLeftMenus = computed(() => permissionStore.mixLeftMenus) // 混合布局左侧菜单
 
 watch(
     () => activeTopMenuPath.value,
-    (newVal: any) => {
+    (newVal) => {
         permissionStore.setMixLeftMenus(newVal)
     },
-    { deep: true, immediate: true }
+    {
+        deep: true,
+        immediate: true
+    }
 )
 
 const classObj = computed(() => ({
@@ -74,6 +76,7 @@ watchEffect(() => {
 function handleOutsideClick() {
     appStore.closeSidebar()
 }
+
 function toggleSidebar() {
     appStore.toggleSidebar()
 }
@@ -96,6 +99,7 @@ watch(route, () => {
     width: $sidebar-width;
     background-color: $menu-background;
     transition: width 0.28s;
+
     :deep(.el-menu) {
         border: none;
     }
@@ -174,7 +178,7 @@ watch(route, () => {
         height: 100%;
         padding-top: $navbar-height;
 
-        .mix-container__left {
+        .mix-container_left {
             position: relative;
             width: $sidebar-width;
             height: 100%;

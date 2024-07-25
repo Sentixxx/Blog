@@ -21,6 +21,11 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: { hidden: true }
     },
     {
+        path: '/register',
+        component: () => import('@/views/register/index.vue'),
+        meta: { hidden: true }
+    },
+    {
         path: '/',
         name: '/',
         component: Layout,
@@ -38,11 +43,21 @@ export const constantRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: 'book',
+                path: '/book',
                 component: () => import('@/views/book/index.vue'),
                 meta: {
                     title: 'Book',
                     icon: 'book',
+                    affix: true,
+                    KeepAlive: true
+                }
+            },
+            {
+                path: '/user',
+                component: () => import('@/views/user/index.vue'),
+                meta: {
+                    title: 'User',
+                    icon: 'user',
                     affix: true,
                     KeepAlive: true
                 }

@@ -29,10 +29,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             vueJsx(),
             vueDevTools(),
             AutoImport({
-                imports: ['vue' ,"pinia","vue-router" , "@vueuse/core" , "vue-i18n" ],
+                imports: ['vue', 'pinia', 'vue-router', '@vueuse/core', 'vue-i18n'],
                 eslintrc: {
                     enabled: false,
-                    filepath: './.eslintrc-auto-import.json',
+                    filepath: './.eslintrc-auto-import.json'
                 },
                 resolvers: [ElementPlusResolver(), IconsResolver({})],
                 dts: fileURLToPath(new URL('./src/types/auto-imports.d.ts', import.meta.url))
@@ -40,7 +40,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             Components({
                 resolvers: [ElementPlusResolver(), IconsResolver({ enabledCollections: ['ep'] })],
                 dts: fileURLToPath(new URL('./src/types/components.d.ts', import.meta.url)),
-                dirs: ["src/components", "src/**/components"],
+                dirs: ['src/components', 'src/**/components']
             }),
             Icons({
                 autoInstall: true
@@ -57,7 +57,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         ],
         resolve: {
             alias: {
-                '@': pathSrc,
+                '@': path.join(__dirname, './src')
             }
         },
         css: {
@@ -75,7 +75,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             port: Number(env.VITE_APP_PORT),
             proxy: {
                 [env.VITE_APP_BASE_API]: {
-                    target: 'http://localhost:7090',
+                    target: 'http://0.0.0.0:8090',
                     changeOrigin: true,
                     rewrite: (path: string) =>
                         path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
@@ -83,7 +83,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             }
         },
         define: {
-            __APP_INFO__: JSON.stringify(__APP_INFO__), // expose app info to client
+            __APP_INFO__: JSON.stringify(__APP_INFO__) // expose app info to client
         }
     }
 })

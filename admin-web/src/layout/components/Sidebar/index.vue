@@ -1,14 +1,11 @@
 <template>
     <div :class="{ 'has-logo': sidebarLogo }">
-        <div class="flex w-full" v-if="layout == LayoutEnum.MIX">
-            <SidebarLogo v-if="sidebarLogo" :collapse="!appStore.sidebar.opened" />
-            <SidebarMixTopMenu class="flex-1" />
-        </div>
-        <template v-else>
-            <el-scrollbar>
-                <SidebarMenu :menuList="permissionStore.routes" basePath="" />
-            </el-scrollbar>
-        </template>
+        <!--layout-left || layout top -->
+        <SidebarLogo v-if="sidebarLogo" :collapse="!appStore.sidebar.opened" />
+        <el-scrollbar>
+            <SidebarMenu :menuList="permissionStore.routes" basePath="" />
+        </el-scrollbar>
+        <NavbarAction v-if="layout === LayoutEnum.TOP" />
     </div>
 </template>
 

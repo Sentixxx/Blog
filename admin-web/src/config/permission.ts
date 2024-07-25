@@ -6,9 +6,9 @@ import router from '@/router'
 import { usePermissionStore, useUserStore } from '@/stores'
 
 export function setupPermission() {
-    // 白名单路由
-    const whiteList = ['/login']
-    console.log(whiteList)
+    // 黑名单路由
+    const blackList = ['/borrow','/info']
+    console.log(blackList)
     router.beforeEach(async (to, from, next) => {
         NProgress.start()
         const hasToken = localStorage.getItem(TOKEN_KEY)
@@ -51,10 +51,9 @@ export function setupPermission() {
             }
         } else {
             // 未登录
-            if (whiteList.includes(to.path)) {
+            if (!blackList.includes(to.path)) {
                 next() // 在白名单，直接进入
             } else {
-                // 不在白名单，重定向到登录页
                 redirectToLogin(to, next)
                 NProgress.done()
             }
