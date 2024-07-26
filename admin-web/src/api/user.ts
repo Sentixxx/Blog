@@ -7,49 +7,47 @@ class UserAPI {
      * @returns 用户名称，头像，角色，权限等
      */
     static getInfo() {
-        return request<any,UserInfo>({
+        return request<any, UserInfo>({
             url: `${USER_BASE_URL}/info`,
             method: 'get'
-        });
-
-
+        })
     }
 }
 
-export default UserAPI;
+export default UserAPI
 
 export interface UserInfo {
     /** 用户ID */
-    userId?: number;
+    userId?: number
     /** 用户名 */
-    username?: string;
+    username?: string
     /** 昵称 */
-    nickname?: string;
+    nickname?: string
     /** 头像URL */
-    avatar?: string;
+    avatar?: string
     /** 角色 */
-    roles: string[];
+    roles: string[]
     /** 权限 */
-    perms: string[];
+    perms: string[]
 }
 
 export interface UserForm {
     /** 用户头像 */
-    avatar?: string;
+    avatar?: string
     /** 邮箱 */
-    email?: string;
+    email?: string
     /** 性别 */
-    gender?: number;
+    gender?: number
     /** 用户ID */
-    id?: number;
+    id?: number
     /** 手机号 */
-    mobile?: string;
+    mobile?: string
     /** 昵称 */
-    nickname?: string;
+    nickname?: string
     /** 角色ID集合 */
-    roleIds?: number[];
+    roleIds?: number[]
     /** 用户状态(1:正常;0:禁用) */
-    status?: number;
+    status?: number
     /** 用户名 */
-    username?: string;
+    username?: string
 }

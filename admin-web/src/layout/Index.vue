@@ -13,8 +13,7 @@
         <!-- 左侧和顶部布局 -->
         <div :class="{ hasTagsView: showTagsView }" class="main-container">
             <div :class="{ 'fixed-header': fixedHeader }">
-                <NavBar />
-                <!-- <h1>{{ layout }}</h1> -->
+                <NavBar v-if="layout === LayoutEnum.LEFT" />
                 <TagsView v-if="showTagsView" />
             </div>
             <AppMain />

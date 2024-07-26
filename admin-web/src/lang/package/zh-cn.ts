@@ -1,7 +1,7 @@
 export default {
     route: {
         Home: '首页',
-        Book: '图书',
+        Books: '图书',
         User: '个人信息'
     },
     login: {

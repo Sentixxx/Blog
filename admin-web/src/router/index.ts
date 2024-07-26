@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import type { App } from 'vue'
+import request from '@/utils/request'
+import { AxiosResponse } from 'axios'
 
 export const Layout = () => import('@/layout/index.vue')
 
-export const constantRoutes: RouteRecordRaw[] = [
+export const constantRoutes: Array<RouteRecordRaw> = [
     {
         path: '/redirect',
         component: Layout,
@@ -43,17 +45,47 @@ export const constantRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: '/book',
+                path: '/books',
                 component: () => import('@/views/book/index.vue'),
                 meta: {
-                    title: 'Book',
+                    title: 'Books',
                     icon: 'book',
                     affix: true,
                     KeepAlive: true
-                }
+                },
+                children: [
+                    {
+                        path: 'info/:id',
+                        component: () => import('@/views/book/info.vue'),
+                        meta: {
+                            title: 'default_book_id',
+                            affix: true,
+                            keepAlive: true
+                        },
+                        beforeEnter: async (to, from, next) => {
+                            try {
+                                console.log(to.params.id)
+                                const res: [any] = await request({
+                                    url: '/book/info',
+                                    params: { book_id: to.params.id },
+                                    method: 'get'
+                                })
+                                if (res.length > 0) {
+                                    to.meta.title = res[0].book_name
+                                    next()
+                                } else {
+                                    next({ path: '/404' })
+                                }
+                            } catch (error) {
+                                console.error(error)
+                                next({ path: '/404' })
+                            }
+                        }
+                    }
+                ]
             },
             {
-                path: '/user',
+                path: '/self',
                 component: () => import('@/views/user/index.vue'),
                 meta: {
                     title: 'User',

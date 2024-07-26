@@ -31,14 +31,24 @@ const pathCompile = (path: string) => {
 const breadcrumbs = ref<Array<RouteLocationMatched>>([])
 
 function getBreadcrumb() {
+    console.log("currentRoute")
+    console.log(currentRoute.meta.title)
+    console.log(currentRoute.meta)
     let matched = currentRoute.matched.filter((item) => item.meta && item.meta.title)
+    for (const item of matched) {
+        console.log(item)
+    }
     const first = matched[0]
     if (!isHome(first)) {
         matched = [{ path: '/home', meta: { title: 'Home' } } as any].concat(matched)
     }
     breadcrumbs.value = matched.filter((item) => {
+        if (item.meta && item.meta.title == 'default_book_id') {
+            item.meta.title = currentRoute.meta.title
+        }
         return item.meta && item.meta.title && item.meta.breadcrumb !== false
     })
+    // console.log(breadcrumbs)
 }
 
 function isHome(route: RouteLocationMatched) {
@@ -46,6 +56,7 @@ function isHome(route: RouteLocationMatched) {
     if (!name) {
         return false
     }
+    console.log(name.toString().trim().toLocaleLowerCase())
     return name.toString().trim().toLocaleLowerCase() === 'Home'.toLocaleLowerCase()
 }
 

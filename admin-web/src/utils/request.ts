@@ -36,9 +36,12 @@ service.interceptors.response.use(
             return response
         }
 
-        const { code, data, msg } = response.data
-        if (code === ResultEnum.SUCCESS) {
-            return data
+        // console.log(response.data)
+
+        const { status, results, msg } = response.data
+        // console.log(results)
+        if (status === ResultEnum.SUCCESS) {
+            return results
         }
 
         ElMessage.error(msg || '系统出错')
@@ -48,8 +51,8 @@ service.interceptors.response.use(
         console.log('err' + error)
         // 异常处理
         if (error.response.data) {
-            const { code, msg } = error.response.data
-            if (code === ResultEnum.TOKEN_INVALID) {
+            const { status, msg } = error.response.data
+            if (status === ResultEnum.TOKEN_INVALID) {
                 ElNotification({
                     title: '提示',
                     message: '您的会话已过期，请重新登录',

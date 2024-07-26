@@ -18,11 +18,11 @@
             <el-icon><House /></el-icon>
             <template #title><span>首页</span> </template>
         </el-menu-item>
-        <el-menu-item index="/book" @select="handleBook">
+        <el-menu-item index="/books" @select="handleBook">
             <el-icon><Notebook /></el-icon>
             <template #title><span>图书</span> </template>
         </el-menu-item>
-        <el-menu-item index="/user" @select="handleUser">
+        <el-menu-item index="/self" @select="handleUser">
             <el-icon><User /></el-icon>
             <template #title><span>个人信息</span> </template>
         </el-menu-item>
@@ -34,9 +34,8 @@ import { useAppStore, useSettingsStore } from '@/stores'
 
 import { LayoutEnum } from '@/enums/layoutEnum'
 import { computed } from 'vue'
-import { resolvePath } from '@/utils/path'
 import variables from '@/styles/variables.module.scss'
-import { House, Setting, Notebook, User } from '@element-plus/icons-vue'
+import { House, Notebook, User } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -45,20 +44,6 @@ const settingsStore = useSettingsStore()
 const appStore = useAppStore()
 const currentRoute = useRoute()
 
-// const props = defineProps({
-//     menuList: {
-//         required: true,
-//         default: () => {
-//             return []
-//         },
-//         type: Array<any>
-//     },
-//     basePath: {
-//         required: true,
-//         default: '',
-//         type: String
-//     }
-// })
 const mode = computed(() => (settingsStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'))
 
 function handleHome() {

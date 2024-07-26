@@ -1,8 +1,8 @@
 export default {
     route: {
         Home: 'Home',
-        Book: 'Book',
-        User: 'User'
+        Books: 'Books',
+        User: 'Self Page'
     },
     login: {
         username: 'Username',

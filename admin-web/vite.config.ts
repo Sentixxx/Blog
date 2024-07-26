@@ -74,10 +74,25 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             port: Number(env.VITE_APP_PORT),
             proxy: {
                 [env.VITE_APP_BASE_API]: {
-                    target: env.VITE_APP_API_URL,
+                    target: 'http://0.0.0.0:8090',
                     changeOrigin: true,
-                    rewrite: (path: string) =>
-                        path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
+                    rewrite: (path: string) => {
+                        const newPath = path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
+                        console.log(env.VITE_APP_BASE_API)
+                        console.log(`Rewriting path from ${path} to ${newPath}`)
+                        return newPath
+                    },
+                    configure: (proxy, options) => {
+                        // Add a logging middleware
+                        proxy.on('proxyReq', (proxyReq, req, res) => {
+                            console.log(`[Proxy] ${req.method} ${req.url} -> ${proxyReq.path}`)
+                        })
+                        proxy.on('proxyRes', (proxyRes, req, res) => {
+                            console.log(
+                                `[Proxy] Response from target: ${proxyRes.statusCode} ${req.url}`
+                            )
+                        })
+                    }
                 }
             }
         },

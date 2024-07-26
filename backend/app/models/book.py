@@ -8,6 +8,7 @@ from uuid import uuid4
 class Book(BaseModel):
     __tablename__ = "book"
     book_id = db.Column(db.Integer, primary_key=True, autoincrement=True,comment="书籍ID")
+    book_introduce = db.Column(db.String(255), comment="简介",nullable=True)
     book_name = db.Column(db.String(255), comment="书籍名",nullable=False)
     book_author = db.Column(db.String(255), comment="作者",nullable=False)
     book_press = db.Column(db.String(255), comment="出版社",nullable=False)
@@ -31,6 +32,7 @@ def add_book(data, sess, ret):
     book_author = data.get('book_author')
     book_press = data.get('book_press')
     book_type = data.get('book_type')
+    book_introduce = data.get('book_introduce')
     if(result is not None):
         if book_name is not None and book_name != result.book_name:
             ret['error_msg'] = "book name is not match"
@@ -44,6 +46,9 @@ def add_book(data, sess, ret):
         if book_type is not None and book_type != result.book_type:
             ret['error_msg'] = "book type is not match"
             return sess , ret
+        if book_introduce is not None and book_introduce != result.book_introduce:
+            ret['error_msg'] = "book introduce is not match"
+            return sess , ret
         if result.book_name is None:
             result.book_name = book_name
         if result.book_author is None:
@@ -52,12 +57,14 @@ def add_book(data, sess, ret):
             result.book_press = book_press
         if result.book_type is None:
             result.book_type = book_type
+        if result.book_introduce is None:
+            result.book_introduce = result.book_introduce
         result.book_cur_stock_num += 1
         ret['book_id'] = result.book_id
         sess = result.add(sess)
         return sess , result
     else:
-        result = Book(book_name=data.get('book_name'),book_author=data.get('book_author'),book_press=data.get('book_press'),book_isbn_code=data.get('book_isbn_code'),book_type=data.get('book_type'),book_cur_stock_num=1)
+        result = Book(book_name=data.get('book_name'),book_author=data.get('book_author'),book_press=data.get('book_press'),book_isbn_code=data.get('book_isbn_code'),book_type=data.get('book_type'),book_cur_stock_num=1,book_introduce=data.get('book_introduce'))
         sess = result.add(sess)
         sess.flush()
         ret['book_id'] = result.book_id

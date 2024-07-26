@@ -30,6 +30,15 @@ def on_search():
     ret['msg'] = "查询成功"
     return jsonify(ret) , 200
     
+@book.route('/info',methods=['GET'])
+def on_info():
+    data = request.args.to_dict()
+    ret = {}
+    results = Book.query.filter_by(book_id=data.get('book_id')).all()
+    ret['results'] = to_dict(results)
+    ret['status'] = 200
+    ret['msg'] = "查询成功"
+    return jsonify(ret) , 200
 
 @book.route('/detail',methods=['GET'])
 def on_detail():
