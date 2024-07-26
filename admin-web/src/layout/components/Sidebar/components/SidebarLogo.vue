@@ -48,17 +48,4 @@ const logo = ref(new URL(`@/assets/logo.svg`, import.meta.url).href)
         color: white;
     }
 }
-
-.layout-top,
-.layout-mix {
-    .logo-container {
-        width: $sidebar-width;
-    }
-
-    &.hideSidebar {
-        .logo-container {
-            width: $sidebar-width-collapsed;
-        }
-    }
-}
 </style>

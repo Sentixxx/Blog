@@ -81,9 +81,6 @@ const changeTheme = (val: any) => {
 /** 切换布局 */
 function changeLayout(layout: string) {
     settingsStore.setLayout(layout)
-    if (layout === LayoutEnum.MIX) {
-        route.name && againActiveTop(route.name as string)
-    }
 }
 
 /** 重新激活顶部菜单 */

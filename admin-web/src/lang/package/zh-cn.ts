@@ -1,6 +1,6 @@
 export default {
     route: {
-        Dashboard: '首页',
+        Home: '首页',
         Book: '图书',
         User: '个人信息'
     },
@@ -58,7 +58,7 @@ export default {
                 success: '系统设置成功'
             }
         },
-        dashboard: '首页',
+        home: '首页',
         logout: '退出登录'
     }
 }

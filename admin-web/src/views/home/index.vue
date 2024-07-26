@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard-container">{{ layout }}</div>
+    <div class="home-container">{{ layout }}</div>
 </template>
 
 <script setup lang="ts">

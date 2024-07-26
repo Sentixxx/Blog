@@ -29,14 +29,14 @@ export const constantRoutes: RouteRecordRaw[] = [
         path: '/',
         name: '/',
         component: Layout,
-        redirect: '/dashboard',
+        redirect: '/home',
         children: [
             {
-                path: 'dashboard',
-                component: () => import('@/views/dashboard/index.vue'),
-                name: 'Dashboard',
+                path: 'home',
+                component: () => import('@/views/home/index.vue'),
+                name: 'Home',
                 meta: {
-                    title: 'Dashboard',
+                    title: 'Home',
                     icon: 'homepage',
                     affix: true,
                     KeepAlive: true

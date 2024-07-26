@@ -13,7 +13,8 @@
         <!-- 左侧和顶部布局 -->
         <div :class="{ hasTagsView: showTagsView }" class="main-container">
             <div :class="{ 'fixed-header': fixedHeader }">
-                <NavBar v-if="layout === LayoutEnum.LEFT" />
+                <NavBar />
+                <!-- <h1>{{ layout }}</h1> -->
                 <TagsView v-if="showTagsView" />
             </div>
             <AppMain />
@@ -42,15 +43,12 @@ const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE)
 const isOpenSidebar = computed(() => appStore.sidebar.opened)
 const fixedHeader = computed(() => settingsStore.fixedHeader) // 是否固定header
 const showTagsView = computed(() => settingsStore.tagsView) // 是否显示tagsView
-const layout = computed(() => settingsStore.layout) // 布局模式 left top mix
+const layout = computed(() => settingsStore.layout) // 布局模式 left top
 const activeTopMenuPath = computed(() => appStore.activeTopMenuPath) // 顶部菜单激活path
-const mixLeftMenus = computed(() => permissionStore.mixLeftMenus) // 混合布局左侧菜单
 
 watch(
     () => activeTopMenuPath.value,
-    (newVal) => {
-        permissionStore.setMixLeftMenus(newVal)
-    },
+    (newVal) => {},
     {
         deep: true,
         immediate: true
@@ -151,72 +149,6 @@ watch(route, () => {
     }
 }
 
-.layout-mix {
-    .sidebar-container {
-        width: 100% !important;
-        height: $navbar-height;
-
-        :deep(.el-scrollbar) {
-            flex: 1;
-            height: $navbar-height;
-        }
-
-        :deep(.el-menu-item),
-        :deep(.el-sub-menu__title),
-        :deep(.el-menu--horizontal) {
-            height: $navbar-height;
-            line-height: $navbar-height;
-        }
-
-        :deep(.el-menu--horizontal.el-menu) {
-            border: none;
-        }
-    }
-
-    .mix-container {
-        display: flex;
-        height: 100%;
-        padding-top: $navbar-height;
-
-        .mix-container_left {
-            position: relative;
-            width: $sidebar-width;
-            height: 100%;
-
-            :deep(.el-menu) {
-                height: 100%;
-                border: none;
-            }
-
-            .sidebar-toggle {
-                position: absolute;
-                bottom: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height: 50px;
-                line-height: 50px;
-                box-shadow: 0 0 6px -2px var(--el-color-primary);
-
-                div:hover {
-                    background-color: var(--menu-background);
-                }
-
-                :deep(svg) {
-                    color: var(--el-color-primary) !important;
-                }
-            }
-        }
-
-        .main-container {
-            flex: 1;
-            min-width: 0;
-            margin-left: 0;
-        }
-    }
-}
-
 .hideSidebar {
     .main-container {
         margin-left: $sidebar-width-collapsed;
@@ -225,18 +157,6 @@ watch(route, () => {
     &.layout-top {
         .main-container {
             margin-left: 0;
-        }
-    }
-
-    &.layout-mix {
-        .sidebar-container {
-            width: 100% !important;
-        }
-
-        .mix-container {
-            .mix-container__left {
-                width: $sidebar-width-collapsed;
-            }
         }
     }
 }

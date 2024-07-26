@@ -12,6 +12,7 @@
     "sourceMap": true,
     "noImplicitThis": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "lib": ["esnext", "dom", "dom.iterable", "scriptHost"],
     "allowJs": true,
     "skipLibCheck": true,

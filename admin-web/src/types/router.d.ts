@@ -6,7 +6,7 @@ declare module 'vue-router' {
     interface RouteMeta {
         /**
          * 菜单名称
-         * @example 'Dashboard'
+         * @example 'Home'
          */
         title?: string
 

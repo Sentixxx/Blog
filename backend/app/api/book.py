@@ -8,10 +8,23 @@ from flask import jsonify
 book = Blueprint('book',__name__)
 
 @book.route('/search',methods=['GET'])
-def on_login():
+def on_search():
     data = request.args.to_dict()
+    book_name = data.get('book_name')
+    book_author = data.get('book_author')
+    book_press = data.get('book_press')
+    book_isbn_code = data.get('book_isbn_code')
     ret = {}
-    results = Book.query.filter(Book.book_name.like('%' + data.get('book_name') + '%')).all()
+    query = Book.query
+    if book_name is not None:
+        query = query.filter(Book.book_name.like('%' + book_name + '%'))
+    if book_author is not None:
+        query = query.filter(Book.book_author.like('%' + book_author + '%'))
+    if book_press is not None:
+        query = query.filter(Book.book_press.like('%' + book_press + '%'))
+    if book_isbn_code is not None:
+        query = query.filter(Book.book_isbn_code.like('%' + book_isbn_code + '%'))
+    results = query.all()
     ret['results'] = to_dict(results)
     ret['status'] = 200
     ret['msg'] = "查询成功"
@@ -147,8 +160,8 @@ def on_delete():
 
 
 
-@book.route('/modify',methods=['POST'])
-def on_modify():
+@book.route('/update',methods=['POST'])
+def on_update():
     data = request.args.to_dict()
 
     sess = db.session()

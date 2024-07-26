@@ -12,7 +12,7 @@ const defaultSettings: AppSettings = {
     tagsView: true,
     fixedHeader: true,
     sidebarLogo: true,
-    layout: LayoutEnum.MIX,
+    layout: LayoutEnum.LEFT,
     themeMode: ThemeEnum.LIGHT,
     size: SizeEnum.DEFAULT,
     themeColor: '#409eff',

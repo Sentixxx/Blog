@@ -209,7 +209,7 @@ function handleLoginSubmit() {
                 console.log('valid')
             }
             console.log()
-            router.push({ path: '/dashboard', query: {} })
+            router.push({ path: '/home', query: {} })
         } else {
             if (valid) {
                 loading.value = true

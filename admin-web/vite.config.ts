@@ -15,11 +15,10 @@ import UnoCSS from 'unocss/vite'
 import { name, version, dependencies, devDependencies } from './package.json'
 
 const __APP_INFO__ = {
-    pkg: {name, version, dependencies, devDependencies},
+    pkg: { name, version, dependencies, devDependencies },
     buildTimestamp: Date.now()
 }
 
-const pathSrc = path.resolve(__dirname, 'src');
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const env = loadEnv(mode, process.cwd())
@@ -75,7 +74,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             port: Number(env.VITE_APP_PORT),
             proxy: {
                 [env.VITE_APP_BASE_API]: {
-                    target: 'http://0.0.0.0:8090',
+                    target: env.VITE_APP_API_URL,
                     changeOrigin: true,
                     rewrite: (path: string) =>
                         path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')

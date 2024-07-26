@@ -1,6 +1,6 @@
 export default {
     route: {
-        Dashboard: 'Dashboard',
+        Home: 'Home',
         Book: 'Book',
         User: 'User'
     },
@@ -57,7 +57,7 @@ export default {
                 success: 'System settings success'
             }
         },
-        dashboard: 'dashboard',
+        home: 'home',
         logout: 'logout'
     }
 }

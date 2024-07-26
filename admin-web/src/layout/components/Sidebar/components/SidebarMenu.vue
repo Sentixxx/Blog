@@ -10,7 +10,11 @@
         :mode="mode"
         :router="true"
     >
-        <el-menu-item index="/dashboard" @select="handleDashboard">
+        <el-menu-item
+            index="/home"
+            @select="handleHome"
+            :class="{ 'submenu-title-noDropdown': true }"
+        >
             <el-icon><House /></el-icon>
             <template #title><span>首页</span> </template>
         </el-menu-item>
@@ -57,8 +61,8 @@ const currentRoute = useRoute()
 // })
 const mode = computed(() => (settingsStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'))
 
-function handleDashboard() {
-    router.push('/dashboard')
+function handleHome() {
+    router.push('/home')
 }
 
 function handleBook() {
@@ -74,3 +78,5 @@ function handleSystem() {
     router.push('/system')
 }
 </script>
+
+<style lang="scss"></style>
