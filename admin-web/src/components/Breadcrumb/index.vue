@@ -31,9 +31,6 @@ const pathCompile = (path: string) => {
 const breadcrumbs = ref<Array<RouteLocationMatched>>([])
 
 function getBreadcrumb() {
-    console.log("currentRoute")
-    console.log(currentRoute.meta.title)
-    console.log(currentRoute.meta)
     let matched = currentRoute.matched.filter((item) => item.meta && item.meta.title)
     for (const item of matched) {
         console.log(item)
