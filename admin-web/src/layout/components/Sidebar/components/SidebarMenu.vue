@@ -10,12 +10,8 @@
         :mode="mode"
         :router="true"
     >
-        <el-menu-item
-            index="/home"
-            @select="handleHome"
-            :class="{ 'submenu-title-noDropdown': true }"
-        >
-            <el-icon><House /></el-icon>
+        <el-menu-item index="/home" @select="handleHome">
+            <el-icon class="icon"><House /></el-icon>
             <template #title><span>首页</span> </template>
         </el-menu-item>
         <el-menu-item index="/books" @select="handleBook">
@@ -64,4 +60,7 @@ function handleSystem() {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.hideSidebar {
+    
+}</style>
