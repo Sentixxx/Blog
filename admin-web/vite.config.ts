@@ -30,7 +30,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             AutoImport({
                 imports: ['vue', 'pinia', 'vue-router', '@vueuse/core', 'vue-i18n'],
                 eslintrc: {
-                    enabled: false,
+                    enabled: true,
                     filepath: './.eslintrc-auto-import.json'
                 },
                 resolvers: [ElementPlusResolver(), IconsResolver({})],

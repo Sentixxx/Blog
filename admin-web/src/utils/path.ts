@@ -5,8 +5,8 @@
  * @returns {Boolean}
  */
 export function isExternal(path: string) {
-    const isExternal = /^(https?:|http?:|mailto:|tel:)/.test(path);
-    return isExternal;
+    const isExternal = /^(https?:|http?:|mailto:|tel:)/.test(path)
+    return isExternal
 }
 
 /**
@@ -15,15 +15,15 @@ export function isExternal(path: string) {
  * @param {string} basePath 基础路径 http://www.xxx.com
  * @return {string} 完整路由地址 http://www.xxx.com/user
  */
-export function resolvePath(routePath: string , basePath: string) {
+export function resolvePath(routePath: string, basePath: string) {
     if (isExternal(routePath)) {
         return routePath
     }
     if (isExternal(basePath)) {
         return basePath
     }
-    const base = new URL(basePath,window.location.origin)
-
-    const fullpath = new URL(routePath,base);
-    return fullpath.href
+    const base = new URL(basePath, window.location.origin)
+    console.log('newroutePath', routePath)
+    const fullpath = new URL(routePath, base)
+    return fullpath.toString()
 }

@@ -48,14 +48,13 @@
 </template>
 
 <script setup lang="ts">
-import { useSettingsStore, usePermissionStore, useAppStore } from '@/stores'
+import { useSettingsStore, useAppStore } from '@/stores'
 import { LayoutEnum } from '@/enums/layoutEnum'
 import { ThemeEnum } from '@/enums/themeEnum'
 
 const route = useRoute()
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
-const permissionStore = usePermissionStore()
 
 const settingsVisible = computed({
     get() {
@@ -81,14 +80,6 @@ const changeTheme = (val: any) => {
 /** 切换布局 */
 function changeLayout(layout: string) {
     settingsStore.setLayout(layout)
-}
-
-/** 重新激活顶部菜单 */
-function againActiveTop(newVal: string) {
-    const parent = findOutermostParent(permissionStore.routes, newVal)
-    if (appStore.activeTopMenuPath !== parent.path) {
-        appStore.setActiveTopMenuPath(parent.path)
-    }
 }
 
 /** 递归查找最外层父节点 */

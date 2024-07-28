@@ -3,11 +3,11 @@ import { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vu
 import NProgress from '@/utils/nprogress'
 import { TOKEN_KEY } from '@/enums/cacheEnum'
 import router from '@/router'
-import { usePermissionStore, useUserStore } from '@/stores'
+import { useUserStore } from '@/stores'
 
 export function setupPermission() {
     // 黑名单路由
-    const blackList = ['/borrow','/info']
+    const blackList = ['/borrow', '/info']
     console.log(blackList)
     router.beforeEach(async (to, from, next) => {
         NProgress.start()
@@ -20,9 +20,9 @@ export function setupPermission() {
                 NProgress.done()
             } else {
                 const userStore = useUserStore()
-                const hasRoles = userStore.user.roles && userStore.user.roles.length > 0
+                const hasgroup = userStore.user.group
 
-                if (hasRoles) {
+                if (hasgroup) {
                     // 如果未匹配到任何路由，跳转到404页面
                     if (to.matched.length === 0) {
                         next(from.name ? { name: from.name } : '/404')
@@ -35,11 +35,8 @@ export function setupPermission() {
                         next()
                     }
                 } else {
-                    const permissionStore = usePermissionStore()
                     try {
                         await userStore.getUserInfo()
-                        const dynamicRoutes = await permissionStore.generateRoutes()
-                        dynamicRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route))
                         next({ ...to, replace: true })
                     } catch (error) {
                         // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
@@ -71,19 +68,4 @@ function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext)
     const queryString = params.toString()
     const redirect = queryString ? `${to.path}?${queryString}` : to.path
     next(`/login?redirect=${encodeURIComponent(redirect)}`)
-}
-
-/** 判断是否有权限 */
-export function hasAuth(value: string | string[], type: 'button' | 'role' = 'button') {
-    const { roles, perms } = useUserStore().user
-
-    // 超级管理员 拥有所有权限
-    if (type === 'button' && roles.includes('ROOT')) {
-        return true
-    }
-
-    const auths = type === 'button' ? perms : roles
-    return typeof value === 'string'
-        ? auths.includes(value)
-        : value.some((perm) => auths.includes(perm))
 }

@@ -44,11 +44,16 @@
                 <el-table-column prop="Edit" label="edit">
                     <div class="edit_btn">
                         <el-tooltip
-                            :content="$t('book.edit.search')"
+                            :content="$t('book.edit.info')"
                             effect="dark"
                             placement="bottom"
                         >
-                            <el-button type="primary" :icon="Search" circle></el-button>
+                            <el-button
+                                type="primary"
+                                :icon="Search"
+                                circle
+                                @click="handleInfoClick"
+                            ></el-button>
                         </el-tooltip>
                         <el-tooltip
                             :content="$t('book.edit.edit')"
@@ -64,7 +69,13 @@
                         >
                             <el-button type="primary" :icon="Delete" circle></el-button>
                         </el-tooltip>
-                        <el-button type="primary" :icon="Delete" circle></el-button>
+                        <el-tooltip
+                            :content="$t('book.edit.borrow')"
+                            effect="dark"
+                            placement="bottom"
+                        >
+                            <el-button type="primary" :icon="Ticket" circle></el-button>
+                        </el-tooltip>
                     </div>
                 </el-table-column>
             </el-table>
@@ -78,22 +89,27 @@
                 />
             </div>
         </div>
-        <!-- <el-image :src="require('@/assets/images/404_cloud.png')" fit="cover" /> -->
+        <div class="book-info-container">
+            <el-dialog v-model="bookInfoVisible" width="800">
+                <el-image :src="currentData.book_pic" fit="cover" />
+            </el-dialog>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Delete, Check, Edit, Message } from '@element-plus/icons-vue'
-import { Search } from '@element-plus/icons-vue'
+import { Delete, Edit, Search, Ticket } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/stores'
 import request from '@/utils/request'
 import { useUserStore } from '@/stores'
+import { info } from 'console'
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const userStore = useUserStore()
 
 const layout = computed(() => settingsStore.layout)
 const input = ref('')
+let bookInfoVisible = ref(false)
 
 const select = ref('book_name')
 let allTableData: Array<any> = [
@@ -113,6 +129,14 @@ const state = reactive({
     total: allTableData.length
 })
 
+const currentData = reactive({
+    book_id: '1',
+    book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+    book_name: 'The Da Vinci Code',
+    book_author: 'Dan Brown',
+    book_introduce: '这是一个',
+    book_cur_stock_num: '10'
+})
 const tableData = computed(() => {
     return allTableData.filter(
         (item, index) => index < state.page * state.limit && index >= (state.page - 1) * state.limit
@@ -139,6 +163,10 @@ function handleCurrentChange(val: number) {
     state.page = val
 }
 
+function handleInfoClick() {
+    bookInfoVisible.value = true
+}
+
 function handleSizeChange(val: number) {
     state.limit = val
 }
@@ -155,10 +183,5 @@ function handleSizeChange(val: number) {
 }
 .search-container {
     border: 40 40 40 40x;
-}
-.edit_btn {
-    /* display: flex;
-    flex-direction: column;
-    gap: 10px; */
 }
 </style>

@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppMain: typeof import('./../layout/components/AppMain/index.vue')['default']
+    bookInfo: typeof import('./../views/book/components/bookInfo.vue')['default']
+    BookInfo: typeof import('./../views/book/components/bookInfo.vue')['default']
     Breadcrumb: typeof import('./../components/Breadcrumb/index.vue')['default']
     Captcha: typeof import('./../components/Captcha/index.vue')['default']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
@@ -17,6 +19,7 @@ declare module 'vue' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
@@ -48,8 +51,6 @@ declare module 'vue' {
     IconTooling: typeof import('./../components/icons/IconTooling.vue')['default']
     IEpBell: typeof import('~icons/ep/bell')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
-    Index: typeof import('./../components/SvgIcon/Index.vue')['default']
-    Info: typeof import('./../views/book/components/info.vue')['default']
     LangSelect: typeof import('./../components/LangSelect/index.vue')['default']
     LayoutSelect: typeof import('./../layout/components/Settings/components/LayoutSelect.vue')['default']
     NavBar: typeof import('./../layout/components/NavBar/index.vue')['default']
@@ -64,6 +65,7 @@ declare module 'vue' {
     SidebarMenuItem: typeof import('./../layout/components/Sidebar/components/SidebarMenuItem.vue')['default']
     SidebarMenuItemTitle: typeof import('./../layout/components/Sidebar/components/SidebarMenuItemTitle.vue')['default']
     SizeSelect: typeof import('./../components/SizeSelect/index.vue')['default']
+    SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
     TagsView: typeof import('./../layout/components/TagsView/index.vue')['default']
     ThemeColorPicker: typeof import('./../layout/components/Settings/components/ThemeColorPicker.vue')['default']
   }

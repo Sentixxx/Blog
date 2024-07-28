@@ -27,14 +27,13 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useSettingsStore, usePermissionStore } from '@/stores'
+import { useAppStore, useSettingsStore } from '@/stores'
 import defaultSettings from '@/config/settings'
 import { DeviceEnum } from '@/enums/deviceEnum'
 import { LayoutEnum } from '@/enums/layoutEnum'
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
-const permissionStore = usePermissionStore()
 const width = useWindowSize().width
 
 const WIDTH_DESKTOP = 992 // 响应式布局容器固定宽度  大屏（>=1200px） 中屏（>=992px） 小屏（>=768px）

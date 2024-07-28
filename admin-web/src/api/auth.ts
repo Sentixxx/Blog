@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const AUTH_BASE_URL = '/api/auth'
+const AUTH_BASE_URL = '/auth'
 
 class AuthAPI {
     static login(data: LoginData) {

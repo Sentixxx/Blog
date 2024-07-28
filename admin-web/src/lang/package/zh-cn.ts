@@ -3,7 +3,14 @@ export default {
         author: '作者',
         name: '书名',
         isbn: 'ISBN',
-        please_input: '请输入搜索内容'
+        please_input: '请输入搜索内容',
+        edit: {
+            edit: '编辑',
+            add: '添加',
+            delete: '删除',
+            info: '详情',
+            borrow: '借阅'
+        }
     },
     route: {
         Home: '首页',

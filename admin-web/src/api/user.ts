@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
-const USER_BASE_URL = import.meta.env.VITE_APP_BASE_API + '/user'
+const USER_BASE_URL = '/user'
 
 class UserAPI {
     /**
      * @returns 用户名称，头像，权限等
      */
-    static getInfo() {
+    static getUserInfo(): Promise<UserInfo> {
         return request<any, UserInfo>({
             url: `${USER_BASE_URL}/info`,
             method: 'get'
