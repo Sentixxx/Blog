@@ -4,6 +4,7 @@ from app.extensions import db
 from app.models import *
 from flask import jsonify
 from app.utils import submit
+from app.services.user import get_user_info
 
 user = Blueprint('user',__name__)
 
@@ -46,3 +47,11 @@ def on_return():
         ret['msg'] = "归还成功"
         ret['status'] = 200
     return jsonify(ret) , 200
+
+@user.route('/info',methods=['GET'])
+def onInfo():
+    data = request.args.to_dict()
+    sess = db.session()
+    ret = {}
+
+    sess,ret['results'] = get_user_info(data,sess,ret['results'])

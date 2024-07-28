@@ -10,14 +10,7 @@ import 'animate.css'
 import 'uno.css'
 
 import setupPlugins from '@/config/index'
-import cors from 'cors'
 const app = createApp(App)
 
-// const corsOptions = {
-//     origin: 'http://127.0.0.1/', // 允许的域名
-//     optionsSuccessStatus: 200
-// }
-
 app.use(setupPlugins)
-// app.use(cors(corsOptions))
 app.mount('#app')

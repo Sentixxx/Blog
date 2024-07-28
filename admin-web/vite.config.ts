@@ -70,6 +70,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             }
         },
         server: {
+            fs: {
+                cachedChecks: false
+            },
             host: '0.0.0.0',
             port: Number(env.VITE_APP_PORT),
             proxy: {

@@ -4,7 +4,7 @@
             <el-input
                 v-model="input"
                 style="width: 100%"
-                placeholder="Please input"
+                :placeholder="$t('book.please_input')"
                 class="input-with-select"
                 size="large"
             >
@@ -15,13 +15,13 @@
                         style="width: 115px"
                         size="large"
                     >
-                        <el-option label="Bookname" value="1" />
-                        <el-option label="ISBN" value="2" />
-                        <el-option label="Autor" value="3" />
+                        <el-option :label="$t('book.name')" value="book_name" />
+                        <el-option :label="$t('book.isbn')" value="book_isbn_code" />
+                        <el-option :label="$t('book.author')" value="book_author" />
                     </el-select>
                 </template>
                 <template #append>
-                    <el-button :icon="Search" />
+                    <el-button :icon="Search" @click="handleSearch" />
                 </template>
             </el-input>
         </div>
@@ -41,13 +41,38 @@
                 <el-table-column prop="book_name" label="Name" />
                 <el-table-column prop="book_author" label="Author" />
                 <el-table-column prop="book_introduce" label="introduce" />
-                <el-table-column prop="book_cur_stock_num" label="Stock" />
+                <el-table-column prop="Edit" label="edit">
+                    <div class="edit_btn">
+                        <el-tooltip
+                            :content="$t('book.edit.search')"
+                            effect="dark"
+                            placement="bottom"
+                        >
+                            <el-button type="primary" :icon="Search" circle></el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            :content="$t('book.edit.edit')"
+                            effect="dark"
+                            placement="bottom"
+                        >
+                            <el-button type="primary" :icon="Edit" circle></el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            :content="$t('book.edit.delete')"
+                            effect="dark"
+                            placement="bottom"
+                        >
+                            <el-button type="primary" :icon="Delete" circle></el-button>
+                        </el-tooltip>
+                        <el-button type="primary" :icon="Delete" circle></el-button>
+                    </div>
+                </el-table-column>
             </el-table>
             <div class="flex justify-center">
                 <el-pagination
                     background
                     layout="prev, pager, next"
-                    :total="10000"
+                    :total="state.total"
                     @current-change="handleCurrentChange"
                     @size-change="handleSizeChange"
                 />
@@ -58,119 +83,20 @@
 </template>
 
 <script setup lang="ts">
+import { Delete, Check, Edit, Message } from '@element-plus/icons-vue'
 import { Search } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/stores'
-import { table } from 'console'
+import request from '@/utils/request'
+import { useUserStore } from '@/stores'
+const { t } = useI18n()
 const settingsStore = useSettingsStore()
+const userStore = useUserStore()
+
 const layout = computed(() => settingsStore.layout)
 const input = ref('')
 
-const select = ref('1')
-const allTableData = [
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
-    {
-        book_id: '1',
-        book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        book_name: 'The Da Vinci Code',
-        book_author: 'Dan Brown',
-        book_introduce: '这是一个',
-        book_cur_stock_num: '10'
-    },
+const select = ref('book_name')
+let allTableData: Array<any> = [
     {
         book_id: '1',
         book_pic: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -193,6 +119,22 @@ const tableData = computed(() => {
     )
 })
 
+async function handleSearch() {
+    try {
+        const res = await request({
+            url: '/book/search',
+            method: 'get',
+            params: {
+                [select.value]: input.value
+            }
+        })
+        console.log(res)
+        allTableData = res.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 function handleCurrentChange(val: number) {
     state.page = val
 }
@@ -213,5 +155,10 @@ function handleSizeChange(val: number) {
 }
 .search-container {
     border: 40 40 40 40x;
+}
+.edit_btn {
+    /* display: flex;
+    flex-direction: column;
+    gap: 10px; */
 }
 </style>

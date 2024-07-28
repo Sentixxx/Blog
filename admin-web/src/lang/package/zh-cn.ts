@@ -1,4 +1,10 @@
 export default {
+    book: {
+        author: '作者',
+        name: '书名',
+        isbn: 'ISBN',
+        please_input: '请输入搜索内容'
+    },
     route: {
         Home: '首页',
         Books: '图书',
