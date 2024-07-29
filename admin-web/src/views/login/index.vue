@@ -185,34 +185,17 @@ function getCaptcha(data: string) {
 }
 
 function handleLoginSubmit() {
-    loginFormRef.value?.validate((valid: boolean) => {
-        if (import.meta.env.VITE_APP_BASE_API === '/dev-api') {
-            if (valid) {
-                console.log('valid')
-            }
-            console.log()
-            router.push({ path: '/home', query: {} })
+    loginFormRef.value?.validate(async (valid: boolean) => {
+        if (valid) {
+            loading.value = true
+            const res = await userStore.login(loginData.value)
+            console.log('res: ' + res)
+            loading.value = false
         } else {
-            if (valid) {
-                loading.value = true
-                userStore
-                    .login(loginData.value)
-                    .then(() => {
-                        const { path, queryParmas } = parseRedirect()
-                        router.push({ path, query: queryParmas })
-                    })
-                    .catch(() => {
-                        captcha.value.refreshCode()
-                    })
-                    .finally(() => {
-                        loading.value = false
-                    })
-            } else {
-                ElMessage({
-                    type: 'error',
-                    message: t('login.messgae.loginFailed')
-                })
-            }
+            ElMessage({
+                type: 'error',
+                message: t('login.messgae.loginFailed')
+            })
         }
     })
 }

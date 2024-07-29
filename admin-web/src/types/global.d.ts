@@ -2,28 +2,18 @@ declare global {
     /**
      * 响应数据
      */
+
+    interface BasicAPI {
+        create_time?: string
+        update_time?: string
+        is_deleted?: number
+        note1?: string
+        note2?: string
+    }
     interface ResponseData<T = any> {
         status: string
         results: T
         msg: string
-    }
-
-    /**
-     * 分页查询参数
-     */
-    interface PageQuery {
-        pageNum: number
-        pageSize: number
-    }
-
-    /**
-     * 分页响应对象
-     */
-    interface PageResult<T> {
-        /** 数据列表 */
-        list: T
-        /** 总数 */
-        total: number
     }
 
     /**
@@ -64,18 +54,6 @@ declare global {
         language: string
         watermarkEnabled: boolean
         watermarkContent: string
-    }
-
-    /**
-     * 组件数据源
-     */
-    interface OptionType {
-        /** 值 */
-        value: string | number
-        /** 文本 */
-        label: string
-        /** 子列表  */
-        children?: OptionType[]
     }
 }
 

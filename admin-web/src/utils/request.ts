@@ -28,19 +28,10 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     (response: AxiosResponse) => {
-        // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
-        if (
-            response.config.responseType === 'blob' ||
-            response.config.responseType === 'arraybuffer'
-        ) {
-            return response
-        }
-
-        // console.log(response.data)
-
         const { status, results, msg } = response.data
         // console.log(results)
         if (status === ResultEnum.SUCCESS) {
+            ElMessage.success(msg || '操作成功')
             return results
         }
 

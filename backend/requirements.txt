@@ -14,3 +14,4 @@ SQLAlchemy==2.0.31
 typing_extensions==4.12.2
 Werkzeug==3.0.3
 pymysql
+flask_jwt_extended

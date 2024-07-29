@@ -1,5 +1,6 @@
 
 from flask import Blueprint , request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.extensions import db
 from app.models import *
 from flask import jsonify
@@ -10,6 +11,7 @@ user = Blueprint('user',__name__)
 
 
 @user.route('/return',methods=['POST'])
+@jwt_required()
 def on_return():
     data = request.args.to_dict()
     sess = db.session()
@@ -48,10 +50,26 @@ def on_return():
         ret['status'] = 200
     return jsonify(ret) , 200
 
-@user.route('/info',methods=['GET'])
-def onInfo():
-    data = request.args.to_dict()
-    sess = db.session()
+@user.route('/info/cur',methods=['GET'])
+@jwt_required()
+def on_info():
+    current_user = get_jwt_identity()
+    print(current_user)
+    
     ret = {}
+    ret['results'] = {}
 
-    sess,ret['results'] = get_user_info(data,sess,ret['results'])
+    ret['results'] = get_user_info(current_user,ret['results'])
+
+    if ret['results'].get('error_msg') is not None:
+        ret['msg'] = "获取用户信息失败：" + ret['results']['error_msg']
+        ret['results'].pop('error_msg')
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    else:
+        ret['msg'] = "获取用户信息成功"
+        ret['status'] = 200
+        return jsonify(ret) , 200
+    
+
+

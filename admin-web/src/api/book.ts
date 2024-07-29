@@ -1,112 +1,67 @@
 import request from '@/utils/request'
 
 const BOOK_BASE_URL = '/book'
-
-const BOOK_INSTANCE_URL = '/book_instance'
-
 class BookAPI {
     /**
      * @returns 图书信息
      */
-    static getBookInfoAll(): Promise<BookInfo[]> {
+    static getAll(): Promise<BookInfo[]> {
         return request<any, BookInfo[]>({
             url: `${BOOK_BASE_URL}/info/all`,
             method: 'get'
         })
     }
 
-    static getBookInstanceAll(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_BASE_URL}/instance/all`,
+    static get(book_id: number): Promise<BookInfo> {
+        return request<any, BookInfo>({
+            url: `${BOOK_BASE_URL}/info/${book_id}`,
             method: 'get'
         })
     }
 
-    static getBookInfo(): Promise<BookInfo[]> {
+    static search(search_option: string, search_value: string): Promise<BookInfo[]> {
+        console.log(search_option)
+        console.log(search_value)
         return request<any, BookInfo[]>({
-            url: `${BOOK_BASE_URL}/info`,
-            method: 'get'
+            url: `${BOOK_BASE_URL}/search`,
+            method: 'get',
+            params: {
+                [search_option]: search_value
+            }
         })
     }
 
-    static getBookInstance(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_BASE_URL}/instance`,
-            method: 'get'
-        })
-    }
-
-    static addBookInfo(): Promise<BookInfo[]> {
-        return request<any, BookInfo[]>({
+    static add(): Promise<BookInfo> {
+        return request<any, BookInfo>({
             url: `${BOOK_BASE_URL}/add`,
             method: 'post'
         })
     }
 
-    static addBookInstance(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_BASE_URL}/add`,
-            method: 'post'
-        })
-    }
-
-    static deleteBookInfo(): Promise<BookInfo[]> {
+    static delete(book_id: number): Promise<BookInfo[]> {
         return request<any, BookInfo[]>({
-            url: `${BOOK_BASE_URL}/delete`,
+            url: `${BOOK_BASE_URL}/delete/${book_id}`,
             method: 'delete'
         })
     }
 
-    static deleteBookInstance(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_BASE_URL}/delete`,
-            method: 'delete'
-        })
-    }
-
-    static updateBookInfo(): Promise<BookInfo[]> {
+    static updateBook(book_id: number): Promise<BookInfo[]> {
         return request<any, BookInfo[]>({
-            url: `${BOOK_BASE_URL}/update`,
+            url: `${BOOK_BASE_URL}/update/${book_id}`,
             method: 'put'
-        })
-    }
-
-    static updateBookInstance(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_BASE_URL}/update`,
-            method: 'put'
-        })
-    }
-
-    static borrowBookInstance(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_URL}/borrow`,
-            method: 'post'
-        })
-    }
-
-    static returnBookInstance(): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_URL}/return`,
-            method: 'post'
         })
     }
 }
 
 export default BookAPI
 
-export interface BookInfo {
-    book_id: string
+export interface BookInfo extends BasicAPI {
+    book_id: number
     book_name: string
     book_author?: string
     book_isbn_code: string
     book_press?: string
-}
-
-export interface BookInstance {
-    book_id: string
-    book_instance_id: string
-    book_instance_status: string
-    borrow_id?: string
-    book_instance_location: string
+    book_introduce?: string
+    book_pic?: string
+    book_cur_stock_num: number
 }

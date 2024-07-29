@@ -1,20 +1,18 @@
 import request from '@/utils/request'
 
-const AUTH_BASE_URL = '/auth'
+const AUTH_BASE_URL = ''
 
 class AuthAPI {
     static login(data: LoginData) {
-        const formData = new FormData()
-        formData.append('username', data.username)
-        formData.append('password', data.password)
-        formData.append('captchaKey', data.captchaKey)
-        formData.append('captchaCode', data.captchaCode)
         return request<any, LoginResult>({
             url: `${AUTH_BASE_URL}/login`,
             method: 'POST',
-            data: formData,
             headers: {
                 'Content-Type': 'multipart/form-data'
+            },
+            params: {
+                user_instance_name: data.username,
+                user_instance_password: data.password
             }
         })
     }
@@ -44,7 +42,7 @@ export interface LoginData {
     captchaCode: string
 }
 export interface LoginResult {
-    acessToken?: string
+    accessToken?: string
     expires?: number
     refreshToken?: string
     tokenType?: string

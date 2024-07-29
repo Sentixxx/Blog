@@ -8,7 +8,8 @@ import { TOKEN_KEY } from '@/enums/cacheEnum'
 
 export const useUserStore = defineStore('user', () => {
     const user = ref<UserInfo>({
-        group: ''
+        user_instance_group_name: 'user',
+        user_instance_id: 0
     })
 
     /**
@@ -16,35 +17,26 @@ export const useUserStore = defineStore('user', () => {
      * @param {LoginData} data 登录数据
      * @returns {Promise<void>}
      */
-    function login(loginData: LoginData): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            AuthAPI.login(loginData)
-                .then((data: any) => {
-                    const { tokenType, accessToken } = data
-                    localStorage.setItem(TOKEN_KEY, tokenType + ' ' + accessToken)
-                    resolve()
-                })
-                .catch((error: any) => {
-                    reject(error)
-                })
-        })
+    async function login(loginData: LoginData): Promise<void> {
+        try {
+            const data = await AuthAPI.login(loginData)
+            const { tokenType, accessToken } = data
+            localStorage.setItem(TOKEN_KEY, `${tokenType} ${accessToken}`)
+            // console.log('store sucess')
+        } catch (error) {
+            console.error(error)
+        }
     }
-
-    function getUserInfo(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            UserAPI.getInfo()
-                .then((data: any) => {
-                    if (!data) {
-                        reject(new Error('Verification failed, please Login again.'))
-                        return
-                    }
-                    Object.assign(user.value, { ...data })
-                    resolve(data)
-                })
-                .catch((error: any) => {
-                    reject(error)
-                })
-        })
+    async function getUserInfo(): Promise<void> {
+        try {
+            const data = await UserAPI.getInfo()
+            if (!data) {
+                throw new Error('Verification failed, please Login again.')
+            }
+            Object.assign(user.value, { ...data })
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     function logout(): Promise<void> {

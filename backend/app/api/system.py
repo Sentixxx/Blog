@@ -3,33 +3,38 @@ from flask import Blueprint , request
 from app.models import UserInstance,SysLog
 from uuid import uuid4
 from flask import jsonify
-from app.utils import submit
+from app.utils import submit,hash_password
+from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 from app.extensions import db
+from app.config import Config
 system = Blueprint('system',__name__)
-
 
 @system.route('/login',methods=['POST'])
 def on_login():
     data = request.args.to_dict()
-    email = data.get('user_instance_email')
-    password = data.get('user_instance_password')
+
+    name = data.get('user_instance_name')
+    password = hash_password(data.get('user_instance_password'))
     ret = {}
-    # print(email)
-    # print(password)
-    result = UserInstance.query.filter_by(user_instance_email=email).first()
-    # print(result)
+    ret['results'] = {}
+
+    result = UserInstance.query.filter_by(user_instance_name=name).first()
+    print(name)
     
     if(result):
         if(result.user_instance_password == password):
             ret['msg'] = "登录成功"
             ret['status'] = 200
+            ret['results']['accessToken'] = create_access_token(identity=result.user_instance_id)
+            ret['results']['tokenType'] = 'Bearer'
+            ret['results']['expires']= Config.JWT_ACCESS_TOKEN_EXPIRES.total_seconds()
             return jsonify(ret) , 200
         else:
             ret['msg'] = "密码错误"
             ret['status'] = -1
             return jsonify(ret) , 200
     else:
-        ret['msg'] = "邮箱未注册"
+        ret['msg'] = "用户不存在"
         ret['status'] = -1
         return jsonify(ret), 200
 
@@ -38,12 +43,24 @@ def on_register():
     data = request.args.to_dict()
 
     sess = db.session()
-    email = data.get('user_instance_email')
-    password = data.get('user_instance_password')
-    username = 'user_'+str(uuid4())
-    newUser = UserInstance(user_instance_name = username,user_instance_password=password,user_instance_email=email,user_instance_group_id=1,user_group_name='user')
-    sess.add(newUser)
+    name = data.get('user_instance_name')
+    if UserInstance.query.filter_by(user_instance_name=name).first():
+        ret = {}
+        ret['msg'] = "用户已存在"
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    password = hash_password(data.get('user_instance_password'))
     ret = {}
+    # print(password)
+    # username = 'user_'+str(uuid4())
+    newUser = UserInstance(user_instance_password=password,user_instance_name=name,user_instance_group_name='user')
+
+    sess.add(newUser)
+    # sess.flush()
+
+    ret['results'] = {}
+    # ret['results']['user_instance_id'] = newUser.user_instance_id
+    
     if not submit(sess):
         ret['msg'] = "注册失败,请稍后再试"
         ret['status'] = -2
