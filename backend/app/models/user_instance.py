@@ -16,6 +16,3 @@ class UserInstance(BaseModel):
     user_instance_email = db.Column(db.String(255), comment="邮箱",nullable=True)
     user_instance_group_name = db.Column(db.String(255), comment="用户组名",nullable=False)
     user_instance_status = db.Column(db.Integer, comment="状态",nullable=False,default=True)
-
-
-

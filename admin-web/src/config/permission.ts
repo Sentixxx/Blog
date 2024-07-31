@@ -20,7 +20,7 @@ export function setupPermission() {
                 NProgress.done()
             } else {
                 const userStore = useUserStore()
-                const hasgroup = userStore.user.user_instance_group_name
+                const hasgroup = userStore.user.user_instance_id
 
                 if (hasgroup) {
                     // 如果未匹配到任何路由，跳转到404页面

@@ -4,6 +4,7 @@ import { setupRouter } from '@/router'
 import { setupElIcons } from './icons'
 import type { App } from 'vue'
 import { setupPermission } from './permission'
+import setupUserInfo from './user'
 
 export default {
     install(app: App<Element>) {
@@ -12,5 +13,6 @@ export default {
         setupRouter(app)
         setupElIcons(app)
         setupPermission()
+        setupUserInfo(app)
     }
 }

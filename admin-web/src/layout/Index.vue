@@ -27,11 +27,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useSettingsStore } from '@/stores'
+import { useAppStore, useSettingsStore, useUserStore } from '@/stores'
 import defaultSettings from '@/config/settings'
 import { DeviceEnum } from '@/enums/deviceEnum'
 import { LayoutEnum } from '@/enums/layoutEnum'
-
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
 const width = useWindowSize().width

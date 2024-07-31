@@ -3,8 +3,8 @@ from app.extensions import db
 from app.models import *
 from app.utils import to_dict , submit
 from flask import jsonify
-from app.services.book_instance import add_book_instance , delete_book_instance, update_book_instance, borrow_book
-from app.services.book import reduce_stock_num
+from app.services.book_instance import add_book_instance, delete_book_instance, update_book_instance, borrow_book, return_book
+from app.services.book import reduce_stock_num, add_stock_num
 
 book_instance = Blueprint('book_instance',__name__)
 
@@ -70,6 +70,7 @@ def on_borrow():
         ret['results'].pop('error_msg')
         ret['status'] = -1
         return jsonify(ret) , 200
+    
 
     sess, ret['results'] = reduce_stock_num(data.get('book_id'),sess,ret['results'])
     if ret['results'].get('error_msg') is not None:
@@ -86,6 +87,35 @@ def on_borrow():
     
     ret['msg'] = "借阅成功"
     ret['status'] = 200
+    return jsonify(ret) , 200
+
+@book_instance.route('/return',methods=['POST'])
+def on_return():
+    data = request.args.to_dict()
+
+    sess = db.session()
+
+    ret = {}
+    ret['results'] = {}
+
+    sess , ret['results'] = return_book(data,sess,ret['results'])
+
+    if ret['results'].get('error_msg') is not None:
+        sess.rollback()
+        ret['msg'] = "归还失败：" + ret['results']['error_msg']
+        ret['results'].pop('error_msg')
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    
+    if not submit(sess):
+        ret['msg'] = "归还失败，请稍后再试"
+        ret['status'] = -2
+        return jsonify(ret) , 200
+    
+    ret['msg'] = "归还成功"
+    ret['status'] = 200
+    return jsonify(ret) , 200
+    
 
 @book_instance.route('/add',methods=['POST'])
 def on_add():
@@ -98,6 +128,15 @@ def on_add():
 
     sess , ret['results'] = add_book_instance(data,sess,ret['results'])
     
+    if ret['results'].get('error_msg') is not None:
+        sess.rollback()
+        ret['msg'] = "添加失败：" + ret['results']['error_msg']
+        ret['results'].pop('error_msg')
+        ret['status'] = -1
+        return jsonify(ret) , 200
+    
+    sess, ret['results'] = add_stock_num(data.get('book_id'),sess,ret['results'])
+
     if ret['results'].get('error_msg') is not None:
         sess.rollback()
         ret['msg'] = "添加失败：" + ret['results']['error_msg']

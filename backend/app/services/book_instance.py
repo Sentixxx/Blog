@@ -1,5 +1,6 @@
 from app.models import BookInstance,Borrow
 from uuid import uuid4
+from datetime import datetime
 
 
 def add_book_instance(data: dict,sess: any,ret: dict) -> tuple:
@@ -51,6 +52,7 @@ def add_book_instance(data: dict,sess: any,ret: dict) -> tuple:
 
     newBookInstance = BookInstance(book_instance_id = code,book_id = book_id,book_instance_location = book_instance_location)
     sess = newBookInstance.add(sess)
+    ret['book_instance_id'] = code
     
     return sess , ret
 
@@ -120,13 +122,74 @@ def borrow_book(data: dict, sess: any, ret: dict) -> tuple:
         return sess , ret
 
     result.book_instance_status = 1
-    sess = result.add(sess)
+    
 
-    newBorrow = Borrow(user_instance_id = user_instance_id,book_instance_id = book_instance_id,is_completed = 0)
+    should_return_time = data.get('should_return_time')
+    if should_return_time is None:
+        ret['error_msg'] = "缺少应还时间"
+        return sess , ret
+    
+    # print(should_return_time)
+    if datetime.strptime(should_return_time,"%Y-%m-%dT%H:%M:%S.%fZ") < datetime.now():
+        ret['error_msg'] = "应还时间不合法"
+        return sess , ret
+
+    should_return_time_mysql = datetime.strptime(should_return_time,"%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y-%m-%d %H:%M:%S")
+    newBorrow = Borrow(user_instance_id = user_instance_id,book_instance_id = book_instance_id,is_completed = 0,should_return_time = should_return_time_mysql)
 
     sess = newBorrow.add(sess)
     sess.flush()
 
+    result.borrow_id = newBorrow.borrow_id
+    result.add(sess)
+
     ret['borrow_id'] = newBorrow.borrow_id
+
+    return sess , ret
+
+def return_book(data:dict, sess:any, ret:dict) -> tuple:
+    '''
+    归还书籍实体，传入(data,sess,ret)三个参数，返回(sess,ret)两个参数
+    '''
+    book_instance_id = data.get('book_instance_id')
+    if book_instance_id is None:
+        ret['error_msg'] = "缺少书籍实体ID"
+        return sess , ret
+
+    ret['book_instance_id'] = book_instance_id
+
+    result = BookInstance.query.filter(BookInstance.is_deleted == 0,BookInstance.book_instance_id == book_instance_id).first()
+    if result is None:
+        ret['error_msg'] = "书籍不存在"
+        return sess , ret
+
+    if result.book_instance_status != 1:
+        ret['error_msg'] = "书籍不可归还"
+        return sess , ret
+
+    result.book_instance_status = 0
+    sess = result.add(sess)
+
+
+    if data.get('borrow_id') is None:
+        ret['error_msg'] = "缺少借阅记录ID"
+        return sess , ret
+    
+    if str(result.borrow_id) != data.get('borrow_id'):
+        ret['error_msg'] = "借阅记录ID不匹配" + str(result.borrow_id) + " " + str(data.get('borrow_id'))
+        return sess , ret
+    
+    borrow_result = Borrow.query.filter(Borrow.is_completed == 0,Borrow.borrow_id == data.get('borrow_id')).first()
+    if borrow_result is None:
+        ret['error_msg'] = "借阅记录不存在"
+        return sess , ret
+    
+    if book_instance_id != borrow_result.book_instance_id:
+        ret['error_msg'] = "借阅记录ID不匹配"
+        return sess , ret
+
+    borrow_result.is_completed = 1
+    borrow_result.exact_return_time = datetime.now()
+    sess = borrow_result.add(sess)
 
     return sess , ret

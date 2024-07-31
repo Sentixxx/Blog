@@ -3,13 +3,15 @@ from .system import system
 from .book import book
 from .user import user
 from .book_instance import book_instance
+from .borrow import borrow
 
 DEFAULT_BLUEPRINTS = [
     (admin,''),
     (system,''),
     (book,'/book'),
     (user,'/user'),
-    (book_instance,'/book_instance')
+    (book_instance,'/book_instance'),
+    (borrow,'/borrow')
 ]
 
 def config_blueprint(app):

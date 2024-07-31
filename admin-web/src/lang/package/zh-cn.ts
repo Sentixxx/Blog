@@ -1,16 +1,31 @@
 export default {
+    system: {
+        jump: '跳过'
+    },
     book: {
         author: '作者',
         name: '书名',
         isbn: 'ISBN',
+        cover: '封面',
+        introduce: '简介',
         please_input: '请输入搜索内容',
         edit: {
-            edit: '编辑',
+            name: '编辑',
             add: '添加',
             delete: '删除',
             info: '详情',
-            borrow: '借阅'
-        }
+            borrow: '借阅',
+            return: '归还'
+        },
+        confirm: '确认',
+        code: '条码',
+        borrow_time: '借阅时间',
+        return_time: '归还时间',
+        is_completed: '是否归还',
+        is_complete: '已归还',
+        not_complete: '未归还',
+        press: '出版社',
+        stock: '库存'
     },
     route: {
         Home: '首页',
@@ -40,6 +55,8 @@ export default {
         }
     },
     navbar: {
+        login: '登录',
+        self: '个人中心',
         notice: '消息通知',
         langSelect: {
             tooltip: '语言选择',
@@ -73,5 +90,13 @@ export default {
         },
         home: '首页',
         logout: '退出登录'
+    },
+    user: {
+        nickname: '昵称',
+        email: '邮箱',
+        mobile: '手机',
+        name: '用户名',
+        password: '密码',
+        gender: '性别'
     }
 }

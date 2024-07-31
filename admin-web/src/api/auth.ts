@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { UserInfo } from './user'
 
 const AUTH_BASE_URL = ''
 
@@ -16,21 +17,6 @@ class AuthAPI {
             }
         })
     }
-
-    static logout() {
-        return request({
-            url: `${AUTH_BASE_URL}/logout`,
-            method: 'delete'
-        })
-    }
-
-    /** 获取验证码 接口*/
-    static getCaptcha() {
-        return request<any, CaptchaResult>({
-            url: `${AUTH_BASE_URL}/captcha`,
-            method: 'get'
-        })
-    }
 }
 
 export default AuthAPI
@@ -46,6 +32,7 @@ export interface LoginResult {
     expires?: number
     refreshToken?: string
     tokenType?: string
+    user_info?: UserInfo
 }
 
 /** 验证码响应 */

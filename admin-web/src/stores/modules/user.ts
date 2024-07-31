@@ -9,7 +9,7 @@ import { TOKEN_KEY } from '@/enums/cacheEnum'
 export const useUserStore = defineStore('user', () => {
     const user = ref<UserInfo>({
         user_instance_group_name: 'user',
-        user_instance_id: 0
+        user_instance_id: -1
     })
 
     /**
@@ -22,14 +22,15 @@ export const useUserStore = defineStore('user', () => {
             const data = await AuthAPI.login(loginData)
             const { tokenType, accessToken } = data
             localStorage.setItem(TOKEN_KEY, `${tokenType} ${accessToken}`)
+            await getUserInfo()
             // console.log('store sucess')
         } catch (error) {
-            console.error(error)
+            return Promise.reject(error)
         }
     }
     async function getUserInfo(): Promise<void> {
         try {
-            const data = await UserAPI.getInfo()
+            const data = await UserAPI.getInfoCur()
             if (!data) {
                 throw new Error('Verification failed, please Login again.')
             }
@@ -41,15 +42,9 @@ export const useUserStore = defineStore('user', () => {
 
     function logout(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            AuthAPI.logout()
-                .then(() => {
-                    localStorage.setItem(TOKEN_KEY, '')
-                    location.reload()
-                    resolve()
-                })
-                .catch((error: any) => {
-                    reject(error)
-                })
+            localStorage.setItem(TOKEN_KEY, '')
+            location.reload()
+            resolve()
         })
     }
 

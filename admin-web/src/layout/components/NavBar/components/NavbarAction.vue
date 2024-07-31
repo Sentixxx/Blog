@@ -8,12 +8,12 @@
                 </el-tooltip>
             </div>
             <!-- 布局大小 -->
-            <el-tooltip :content="$t('navbar.sizeSelect')" effect="dark" placement="bottom">
+            <el-tooltip :content="$t('navbar.sizeSelect.tooltip')" effect="dark" placement="bottom">
                 <size-select class="nav-action-item" />
             </el-tooltip>
 
             <!-- 语言选择 -->
-            <el-tooltip :content="$t('navbar.langSelect')" effect="dark" placement="bottom">
+            <el-tooltip :content="$t('navbar.langSelect.tooltip')" effect="dark" placement="bottom">
                 <lang-select class="nav-action-item" />
             </el-tooltip>
 
@@ -67,21 +67,23 @@
         <el-dropdown class="nav-action-item" trigger="click">
             <div class="flex-center h100% p10px">
                 <img
-                    :src="userStore.user.avatar + '?imageView2/1/w/80/h/80'"
+                    :src="userStore.user.user_instance_avatar + '?imageView2/1/w/80/h/80'"
                     class="rounded-full mr-10px w24px w24px"
                 />
-                <span>{{ userStore.user.username }}</span>
+                <span>{{ userStore.user.user_instance_name }}</span>
             </div>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <a target="_blank" href="https://gitee.com/youlaiorg/vue3-element-admin">
-                        <el-dropdown-item>{{ $t('navbar.gitee') }}</el-dropdown-item>
-                    </a>
-                    <a target="_blank" href="https://juejin.cn/post/7228990409909108793">
-                        <el-dropdown-item>{{ $t('navbar.document') }}</el-dropdown-item>
-                    </a>
-                    <el-dropdown-item divided @click="logout">
-                        {{ $t('navbar.logout') }}
+                    <div v-if="accessToken">
+                        <el-dropdown-item @click="self">
+                            {{ $t('navbar.self') }}
+                        </el-dropdown-item>
+                        <el-dropdown-item divided @click="logout">
+                            {{ $t('navbar.logout') }}
+                        </el-dropdown-item>
+                    </div>
+                    <el-dropdown-item @click="login" v-else>
+                        {{ $t('navbar.login') }}
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </template>
@@ -101,7 +103,9 @@ import defaultSettings from '@/config/settings'
 import { DeviceEnum } from '@/enums/deviceEnum'
 import { MessageTypeEnum, MessageTypeLabels } from '@/enums/messageTypeEnum'
 import { ElMessageBox } from 'element-plus'
+import { TOKEN_KEY } from '@/enums/cacheEnum'
 
+const accessToken = ref(localStorage.getItem(TOKEN_KEY))
 const appStore = useAppStore()
 const tagsViewStore = useTagsViewStore()
 const userStore = useUserStore()
@@ -128,23 +132,24 @@ const getFilteredMessages = (type: MessageTypeEnum) => {
     return messages.value.filter((message: any) => message.type === type)
 }
 
+function login() {
+    router.push(`/login?redirect=${route.fullPath}`)
+}
+
+function self() {
+    router.push(`/self`)
+}
+
 /* 注销 */
 function logout() {
-    ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        lockScroll: false
-    }).then(() => {
-        userStore
-            .logout()
-            .then(() => {
-                tagsViewStore.delAllViews()
-            })
-            .then(() => {
-                router.push(`/login?redirect=${route.fullPath}`)
-            })
-    })
+    userStore
+        .logout()
+        .then(() => {
+            tagsViewStore.delAllViews()
+        })
+        .then(() => {
+            router.push(`/login?redirect=${route.fullPath}`)
+        })
 }
 </script>
 <style lang="scss" scoped>

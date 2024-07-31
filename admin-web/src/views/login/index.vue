@@ -15,7 +15,11 @@
         <el-card class="login-card">
             <div class="text-center relative">
                 <h2>{{ defaultSettings.title }}</h2>
-                <el-tag class="ml-2 absolute-rt">{{ defaultSettings.version }} </el-tag>
+                <div class="ml-2 absolute-rt">
+                    <el-button type="primary" link @click="handlejump">
+                        {{ $t('system.jump') }}
+                    </el-button>
+                </div>
             </div>
             <el-form ref="loginFormRef" :model="loginData" :rules="loginRules" class="login-form">
                 <!--Username-->
@@ -108,6 +112,7 @@ import { ElMessage, type FormInstance } from 'element-plus'
 import { useSettingsStore, useUserStore } from '@/stores'
 import '@/styles/login.scss'
 import CaptchaCode from '@/components/Captcha/index.vue'
+import { fa } from 'element-plus/es/locale'
 
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
@@ -131,10 +136,10 @@ const loginData = ref<LoginData>({
 const validateCaptchaCode = (rule: any, value: string, callback: any) => {
     value = value.toUpperCase()
     if (value !== curCaptchaCode.value) {
-        console.log('value: ' + value)
-        console.log('curCaptchaCode: ' + curCaptchaCode.value)
+        // console.log('value: ' + value)
+        // console.log('curCaptchaCode: ' + curCaptchaCode.value)
         // callback(new Error(t('login.message.captcha.error')))
-        captcha.value.refreshCode()
+        // captcha.value.refreshCode()
     } else {
         callback()
         // callback()
@@ -176,6 +181,10 @@ const loginRules = computed(() => {
     }
 })
 
+function handlejump() {
+    router.push({ path: '/home', query: {} })
+}
+
 function handleregister() {
     router.push({ path: '/register', query: {} })
 }
@@ -188,14 +197,20 @@ function handleLoginSubmit() {
     loginFormRef.value?.validate(async (valid: boolean) => {
         if (valid) {
             loading.value = true
-            const res = await userStore.login(loginData.value)
-            console.log('res: ' + res)
-            loading.value = false
+            try {
+                const res = await userStore.login(loginData.value)
+                loading.value = false
+                router.push('/home')
+            } catch (error) {
+                console.log(error)
+                loading.value = false
+            }
         } else {
             ElMessage({
                 type: 'error',
                 message: t('login.messgae.loginFailed')
             })
+            captcha.value.refreshCode()
         }
     })
 }

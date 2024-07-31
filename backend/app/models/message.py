@@ -11,4 +11,3 @@ class Message(BaseModel):
     message_to = db.Column(db.String(255), comment="消息接收者",nullable=False)
     message_from = db.Column(db.String(255), comment="消息发送者",nullable=False)
     message_content = db.Column(db.String(255), comment="消息内容",nullable=False)
-

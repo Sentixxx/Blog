@@ -15,6 +15,3 @@ class SysLog(BaseModel):
     log_ip = db.Column(db.String(255), comment="IP",nullable=False)
     log_request_url = db.Column(db.String(255), comment="请求URL",nullable=False)
     log_create_by = db.Column(db.String(255), comment="创建人",nullable=False)
-
-
-

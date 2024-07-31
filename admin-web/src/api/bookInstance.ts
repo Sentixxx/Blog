@@ -52,7 +52,8 @@ class BookInstanceAPI {
     static borrow(
         book_instance_id: string,
         user_instance_id: any,
-        should_return_time: any
+        should_return_time: any,
+        book_id: number
     ): Promise<BookInstance> {
         return request<any, BookInstance>({
             url: `${BOOK_INSTANCE_BASE_URL}/borrow`,
@@ -60,15 +61,20 @@ class BookInstanceAPI {
             params: {
                 user_instance_id: user_instance_id,
                 should_return_time: should_return_time,
-                book_instance_id: book_instance_id
+                book_instance_id: book_instance_id,
+                book_id: book_id
             }
         })
     }
 
-    static returnBookInstance(book_instance_id: string): Promise<BookInstance> {
+    static returnBookInstance(borrow_id: number, book_instance_id: string): Promise<BookInstance> {
         return request<any, BookInstance>({
-            url: `${BOOK_INSTANCE_BASE_URL}/return/${book_instance_id}`,
-            method: 'post'
+            url: `${BOOK_INSTANCE_BASE_URL}/return`,
+            method: 'post',
+            params: {
+                borrow_id: borrow_id,
+                book_instance_id: book_instance_id
+            }
         })
     }
 }

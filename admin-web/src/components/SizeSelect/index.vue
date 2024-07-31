@@ -25,9 +25,9 @@ import { useAppStore } from '@/stores/modules/app'
 const { t } = useI18n()
 const sizeOptions = computed(() => {
     return [
-        { label: t('sizeSelect.default'), value: SizeEnum.DEFAULT },
-        { label: t('sizeSelect.large'), value: SizeEnum.LARGE },
-        { label: t('sizeSelect.small'), value: SizeEnum.SMALL }
+        { label: t('navbar.sizeSelect.default'), value: SizeEnum.DEFAULT },
+        { label: t('navbar.sizeSelect.large'), value: SizeEnum.LARGE },
+        { label: t('navbar.sizeSelect.small'), value: SizeEnum.SMALL }
     ]
 })
 

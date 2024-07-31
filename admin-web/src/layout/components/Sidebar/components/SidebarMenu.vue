@@ -10,18 +10,36 @@
         :mode="mode"
         :router="true"
     >
-        <el-menu-item index="/home" @select="handleHome">
+        <el-menu-item index="/home">
             <el-icon class="icon"><House /></el-icon>
             <template #title><span>首页</span> </template>
         </el-menu-item>
-        <el-menu-item index="/books" @select="handleBook">
+        <el-menu-item index="/books">
             <el-icon><Notebook /></el-icon>
             <template #title><span>图书</span> </template>
         </el-menu-item>
-        <el-menu-item index="/self" @select="handleUser">
+        <el-menu-item index="/borrow" v-if="userStore.user.user_instance_id != -1">
             <el-icon><User /></el-icon>
-            <template #title><span>个人信息</span> </template>
+            <template #title><span>借阅记录</span> </template>
         </el-menu-item>
+        <el-sub-menu index="">
+            <template #title>
+                <el-icon><Setting /></el-icon>
+                <span>管理</span>
+            </template>
+            <el-menu-item index="/manage/user" v-if="isAdmin()">
+                <template #title>
+                    <el-icon><User /></el-icon>
+                    <span>用户管理</span>
+                </template>
+            </el-menu-item>
+            <el-menu-item index="/manage/book" v-if="isAdmin()">
+                <template #title>
+                    <el-icon><Notebook /></el-icon>
+                    <span>图书管理</span>
+                </template>
+            </el-menu-item>
+        </el-sub-menu>
     </el-menu>
 </template>
 
@@ -31,36 +49,29 @@ import { useAppStore, useSettingsStore } from '@/stores'
 import { LayoutEnum } from '@/enums/layoutEnum'
 import { computed } from 'vue'
 import variables from '@/styles/variables.module.scss'
-import { House, Notebook, User } from '@element-plus/icons-vue'
+import { House, Notebook, User, Setting } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/stores'
 
 const router = useRouter()
 
 const settingsStore = useSettingsStore()
+const userStore = useUserStore()
 const appStore = useAppStore()
 const currentRoute = useRoute()
 
 const mode = computed(() => (settingsStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'))
 
-function handleHome() {
-    router.push('/home')
-}
-
-function handleBook() {
-    router.push('/book')
-}
-
-function handleUser() {
-    router.push('/user')
-    console.log('user')
-}
-
-function handleSystem() {
-    router.push('/system')
+function isAdmin() {
+    if (userStore.user.user_instance_group_name.includes('admin')) {
+        // console.log(userStore.user.user_instance_group_name.includes('admin'))
+        return true
+    }
+    return false
 }
 </script>
 
 <style lang="scss">
 .hideSidebar {
-    
-}</style>
+}
+</style>

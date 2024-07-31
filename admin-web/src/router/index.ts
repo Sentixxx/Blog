@@ -95,6 +95,36 @@ export const constantRoutes: Array<RouteRecordRaw> = [
                 }
             },
             {
+                path: '/borrow',
+                component: () => import('@/views/borrow/index.vue'),
+                meta: {
+                    title: 'Borrow',
+                    icon: 'borrow',
+                    affix: true,
+                    KeepAlive: true
+                }
+            },
+            {
+                path: '/manage/user',
+                component: () => import('@/views/manage/userManage.vue'),
+                meta: {
+                    title: 'User Manage',
+                    icon: 'manage',
+                    affix: true,
+                    KeepAlive: true
+                }
+            },
+            {
+                path: '/manage/book',
+                component: () => import('@/views/manage/bookManage.vue'),
+                meta: {
+                    title: 'Book Manage',
+                    icon: 'manage',
+                    affix: true,
+                    KeepAlive: true
+                }
+            },
+            {
                 path: '401',
                 component: () => import('@/views/error-page/401.vue'),
                 meta: { hidden: true }

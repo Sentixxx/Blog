@@ -1,30 +1,35 @@
 <template>
     <div id="book">
         <div class="search-container">
-            <el-input
-                v-model="input"
-                style="width: 100%"
-                :placeholder="$t('book.please_input')"
-                class="input-with-select"
-                size="large"
-                @keyup.enter="handleSearch"
-            >
-                <template #prepend>
-                    <el-select
-                        v-model="select"
-                        placeholder="Select"
-                        style="width: 115px"
-                        size="large"
-                    >
-                        <el-option :label="$t('book.name')" value="book_name" />
-                        <el-option :label="$t('book.isbn')" value="book_isbn_code" />
-                        <el-option :label="$t('book.author')" value="book_author" />
-                    </el-select>
-                </template>
-                <template #append>
-                    <el-button :icon="Search" @click="handleSearch" />
-                </template>
-            </el-input>
+            <div>
+                <el-input
+                    v-model="input"
+                    style="width: 100%"
+                    :placeholder="$t('book.please_input')"
+                    class="input-with-select"
+                    size="large"
+                    @keyup.enter="handleSearch"
+                >
+                    <template #prepend>
+                        <el-select
+                            v-model="select"
+                            placeholder="Select"
+                            style="width: 115px"
+                            size="large"
+                        >
+                            <el-option :label="$t('book.name')" value="book_name" />
+                            <el-option :label="$t('book.isbn')" value="book_isbn_code" />
+                            <el-option :label="$t('book.author')" value="book_author" />
+                        </el-select>
+                    </template>
+                    <template #append>
+                        <el-button :icon="Search" @click="handleSearch" />
+                    </template>
+                </el-input>
+            </div>
+            <div>
+                <el-button type="primary" @click="initTable">{{ $t('book.add') }}</el-button>
+            </div>
         </div>
         <div class="show-container">
             <el-table :data="tableData">
@@ -65,7 +70,7 @@
                                 />
                             </el-tooltip>
                             <el-tooltip
-                                :content="$t('book.edit.edit')"
+                                :content="$t('book.edit.name')"
                                 effect="dark"
                                 placement="bottom"
                             >
@@ -310,9 +315,6 @@ function handleBorrowOpen(id: any) {
     margin-left: auto;
     margin-right: auto;
     padding: 0 0 0 0;
-    border: 0 0 0 0;
-}
-.search-container {
     border: 40 40 40 40x;
 }
 .book-info-dialog {

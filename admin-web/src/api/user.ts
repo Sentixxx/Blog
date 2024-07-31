@@ -12,6 +12,12 @@ class UserAPI {
             method: 'get'
         })
     }
+    static getInfoCur(): Promise<UserInfo> {
+        return request<any, UserInfo>({
+            url: `${USER_BASE_URL}/info/cur`,
+            method: 'get'
+        })
+    }
     static getInfo(): Promise<UserInfo> {
         return request<any, UserInfo>({
             url: `${USER_BASE_URL}/info`,
