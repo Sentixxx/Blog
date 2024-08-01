@@ -3,9 +3,12 @@ import request from '@/utils/request'
 const USER_BASE_URL = '/user'
 
 class UserAPI {
-    /**
-     * @returns 用户名称，头像，权限等
-     */
+    static getAll(): Promise<UserInfo[]> {
+        return request<any, UserInfo[]>({
+            url: `${USER_BASE_URL}/info/all`,
+            method: 'get'
+        })
+    }
     static getInfCur(): Promise<UserInfo> {
         return request<any, UserInfo>({
             url: `${USER_BASE_URL}/info/cur`,
@@ -22,6 +25,13 @@ class UserAPI {
         return request<any, UserInfo>({
             url: `${USER_BASE_URL}/info`,
             method: 'get'
+        })
+    }
+    static search(params: any): Promise<UserInfo[]> {
+        return request<any, UserInfo[]>({
+            url: `${USER_BASE_URL}/search`,
+            method: 'get',
+            params
         })
     }
 }

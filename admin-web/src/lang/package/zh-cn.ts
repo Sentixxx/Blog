@@ -17,7 +17,9 @@ export default {
             borrow: '借阅',
             return: '归还'
         },
+        type: '类型',
         confirm: '确认',
+        cancel: '取消',
         code: '条码',
         borrow_time: '借阅时间',
         return_time: '归还时间',
@@ -25,7 +27,20 @@ export default {
         is_complete: '已归还',
         not_complete: '未归还',
         press: '出版社',
-        stock: '库存'
+        stock: '库存',
+        require_name: '请输入书名',
+        require_author: '请输入作者',
+        require_isbn: '请输入ISBN',
+        require_press: '请输入出版社',
+        require_stock: '请输入库存',
+        require_type: '请输入类型',
+        require_introduce: '请输入简介',
+        invalid_form: '表单填写有误',
+        add_success: '添加成功',
+        add_fail: '添加失败',
+        location: '位置',
+        book_instance_id: '书籍码',
+        is_complete_status: '是否归还'
     },
     route: {
         Home: '首页',
@@ -97,6 +112,9 @@ export default {
         mobile: '手机',
         name: '用户名',
         password: '密码',
-        gender: '性别'
+        gender: '性别',
+        group_name: '用户组',
+        avatar: '头像',
+        status: '状态'
     }
 }

@@ -51,7 +51,7 @@ class BookInstanceAPI {
 
     static borrow(
         book_instance_id: string,
-        user_instance_id: any,
+        user_instance_id: number,
         should_return_time: any,
         book_id: number
     ): Promise<BookInstance> {

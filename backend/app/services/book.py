@@ -2,7 +2,7 @@ from app.models import Book
 
 def add_book(data, sess, ret):
     optional_attrs = ['book_pic','book_type']
-    must_attrs = ['book_name','book_author','book_press','book_isbn_code']
+    must_attrs = ['book_name','book_author','book_press','book_isbn_code','book_introduce']
 
     result = Book.query.filter(Book.is_deleted==0,Book.book_isbn_code==data.get('book_isbn_code')).first()
 
@@ -84,8 +84,17 @@ def update_book(book_id,data,sess,ret):
         ret['error_msg'] = "图书ID不存在"
         return sess , ret
     
-    for attr in data.keys():
-        if hasattr(result,attr) and getattr(result,attr) is not None:
+    optional_attrs = ['book_pic','book_type']
+    must_attrs = ['book_name','book_author','book_press','book_isbn_code','book_introduce']
+
+    for attr in must_attrs:
+        if data.get(attr) is not None:
+            setattr(result,attr,data.get(attr))
+        else:
+            ret['error_msg'] = "缺少必要信息"
+            return sess , ret
+    for attr in optional_attrs:
+        if data.get(attr) is not None:
             setattr(result,attr,data.get(attr))
     
     sess = result.add(sess)

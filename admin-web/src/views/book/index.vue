@@ -65,20 +65,6 @@
                                 />
                             </el-tooltip>
                             <el-tooltip
-                                :content="$t('book.edit.edit')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button type="primary" :icon="Edit" circle />
-                            </el-tooltip>
-                            <el-tooltip
-                                :content="$t('book.edit.delete')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button type="primary" :icon="Delete" circle />
-                            </el-tooltip>
-                            <el-tooltip
                                 :content="$t('book.edit.borrow')"
                                 effect="dark"
                                 placement="bottom"
@@ -105,77 +91,14 @@
             </div>
         </div>
         <div class="book-info-container">
-            <el-dialog v-model="bookInfoVisible" width="800" :title="currentBookData.book_name">
-                <div class="book-info-dialog">
-                    <el-row>
-                        <!-- 图书封面 -->
-                        <el-col :span="8" class="book-cover">
-                            <el-image
-                                :src="currentBookData.book_pic"
-                                fit="cover"
-                                v-if="currentBookData.book_pic"
-                            />
-                            <el-image
-                                src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                                fit="cover"
-                                preview-teleported
-                                v-else
-                            />
-                            <div>
-                                {{ $t('book.stock') }}: {{ currentBookData.book_cur_stock_num }}
-                            </div>
-                        </el-col>
-
-                        <!-- 图书简介 -->
-                        <el-col :span="16" class="book-introduction">
-                            <p>{{ currentBookData.book_introduce }}</p>
-                            <el-divider />
-                            <h3>{{ $t('book.author') }}: {{ currentBookData.book_author }}</h3>
-                            <h3>{{ $t('book.isbn') }}: {{ currentBookData.book_isbn_code }}</h3>
-                            <h3>{{ $t('book.press') }}: {{ currentBookData.book_press }}</h3>
-                        </el-col>
-                    </el-row>
-                </div>
-            </el-dialog>
+            <book-info-dialog v-model:visible="bookInfoVisible" :data="currentBookData" />
         </div>
         <div class="book-borrow-container">
-            <el-dialog v-model="borrowListVisible" width="800">
-                <el-table :data="bookInstanceData">
-                    <el-table-column type="index" label="No" width="50" />
-                    <el-table-column prop="book_instance_id" label="ID" />
-                    <el-table-column prop="book_instance_location" label="Location" />
-                    <el-table-column label="Borrow">
-                        <template #default="{ row }">
-                            <el-button
-                                type="primary"
-                                @click="handleBorrowOpen(row.book_instance_id)"
-                            >
-                                {{ $t('book.borrow') }}
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-dialog>
-            <el-dialog v-model="innerBorrowVisible" width="500" append-to-body center>
-                <div class="time-container">
-                    <h1>{{ $t('book.return_time') }}</h1>
-                    <el-date-picker
-                        type="datetime"
-                        :placeholder="$t('book.return_time')"
-                        v-model="time1"
-                    />
-                </div>
-                <template #footer>
-                    <div class="dialog-footer">
-                        <el-button @click="innerBorrowVisible = false">
-                            {{ $t('system.cancel') }}
-                        </el-button>
-                        <el-button type="primary" @click="handleBorrowConfirm">
-                            {{ $t('system.confirm') }}
-                        </el-button>
-                    </div>
-                </template>
-            </el-dialog>
+            <book-borrow-dialog
+                v-model:visible="borrowListVisible"
+                :data="bookInstanceData"
+                :userId="userStore.user.user_instance_id"
+            />
         </div>
     </div>
 </template>
@@ -193,9 +116,6 @@ const userStore = useUserStore()
 const layout = computed(() => settingsStore.layout)
 const input = ref('')
 const bookInfoVisible = ref(false)
-const innerBorrowVisible = ref(false)
-const curBookInstance = ref<any>()
-const time1 = ref('')
 const select = ref('book_name')
 const allTableData = ref<any[]>([])
 const currentBookData = ref<BookInfo>({
@@ -279,28 +199,6 @@ async function handleBorrowClick(book_id: number) {
     bookInstanceData.value = res
     borrowListVisible.value = true
 }
-
-async function handleBorrowConfirm() {
-    console.log(time1.value)
-    try {
-        await BookInstanceAPI.borrow(
-            curBookInstance.value,
-            userStore.user.user_instance_id,
-            time1.value,
-            currentBookData.value.book_id
-        )
-        innerBorrowVisible.value = false
-        borrowListVisible.value = false
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-function handleBorrowOpen(id: any) {
-    time1.value = ''
-    innerBorrowVisible.value = true
-    curBookInstance.value = id
-}
 </script>
 
 <style scoped>
@@ -314,33 +212,6 @@ function handleBorrowOpen(id: any) {
 }
 .search-container {
     border: 40 40 40 40x;
-}
-.book-info-dialog {
-    padding: 20px;
-}
-.book-cover {
-    text-align: center;
-}
-
-.book-cover .el-image {
-    max-width: 100%;
-    height: auto;
-}
-
-.book-introduction {
-    padding-left: 20px;
-}
-
-.book-introduction h1,
-.book-introduction h2,
-.book-introduction h3 {
-    margin: 5px 0;
-}
-
-.book-introduction p {
-    margin: 10px 0;
-    color: #606266;
-    line-height: 1.6;
 }
 
 .time-container {

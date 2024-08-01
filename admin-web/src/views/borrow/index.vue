@@ -1,7 +1,11 @@
 <template>
     <div id="borrow">
         <div class="show-container">
-            <el-table :data="tableData" row-key="return_time">
+            <el-table
+                :data="tableData"
+                row-key="return_time"
+                :default-sort="{ prop: 'is_completed', order: 'descending' }"
+            >
                 <el-table-column prop="" :label="$t('book.cover')">
                     <template #default="{ row }">
                         <el-image
@@ -26,7 +30,7 @@
                 <el-table-column prop="return_time" :label="$t('book.return_time')" />
                 <el-table-column
                     prop="is_completed"
-                    :label="$t('book.is_complete')"
+                    :label="$t('book.is_complete_status')"
                     :filters="[
                         { text: $t('book.not_complete'), value: $t('book.not_complete') },
                         { text: $t('book.is_complete'), value: $t('book.is_complete') }
@@ -36,42 +40,34 @@
                 <el-table-column prop="Edit" :label="$t('book.edit.name')">
                     <template #default="{ row }">
                         <div class="edit_btn">
-                            <!-- Edit Button Tooltip -->
                             <el-tooltip
-                                :content="$t('book.edit.name')"
+                                :content="$t('book.edit.delay')"
                                 effect="dark"
                                 placement="bottom"
                             >
-                                <el-button type="primary" :icon="Edit" circle />
-                            </el-tooltip>
-
-                            <!-- Delete Button Tooltip -->
-                            <el-tooltip
-                                :content="$t('book.edit.delete')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button type="primary" :icon="Delete" circle />
+                                <el-button
+                                    type="primary"
+                                    :icon="Clock"
+                                    circle
+                                    @click="handleDelayClick(row.borrow_id)"
+                                />
                             </el-tooltip>
 
                             <!-- Return Book Tooltip with Popconfirm -->
-
-                            <el-popconfirm
-                                :title="$t('book.confirm')"
-                                @confirm="handleReturnConfirm(row.borrow_id, row.book_instance_id)"
+                            <el-tooltip
+                                :content="$t('book.edit.return')"
+                                effect="dark"
+                                placement="bottom"
                             >
-                                <template #reference>
-                                    <div>
-                                        <el-tooltip
-                                            :content="$t('book.edit.return')"
-                                            effect="dark"
-                                            placement="bottom"
-                                        >
-                                            <el-button type="primary" :icon="Ticket" circle />
-                                        </el-tooltip>
-                                    </div>
-                                </template>
-                            </el-popconfirm>
+                                <el-button
+                                    type="primary"
+                                    :icon="Ticket"
+                                    @click="
+                                        handleReturnConfirm(row.borrow_id, row.book_instance_id)
+                                    "
+                                    circle
+                                />
+                            </el-tooltip>
                         </div>
                     </template>
                 </el-table-column>
@@ -88,42 +84,21 @@
                 />
             </div>
         </div>
+        <div>
+            <BorrowDelayDialog v-model:visible="borrowDelayVisible" :data="borrowDelayData" />
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Delete, Edit, Search, Ticket } from '@element-plus/icons-vue'
-import { useSettingsStore } from '@/stores'
+import { Clock, Ticket } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores'
 import type { TableColumnCtx } from 'element-plus'
-import BookAPI, { BookInfo } from '@/api/book'
 import BookInstanceAPI from '@/api/bookInstance'
 import BorrowAPI, { BorrowLog } from '@/api/borrow'
-import { get } from 'http'
 const { t } = useI18n()
-const settingsStore = useSettingsStore()
 const userStore = useUserStore()
-
-const layout = computed(() => settingsStore.layout)
-const input = ref('')
-const bookInfoVisible = ref(false)
-const innerBorrowVisible = ref(false)
-const curBookInstance = ref<any>()
-const time1 = ref('')
-const select = ref('book_name')
 const allTableData = ref<BorrowLog[]>([])
-const currentData = ref<BorrowLog>({
-    borrow_id: 0,
-    book_name: '?',
-    book_instance_id: '0',
-    borrow_time: '',
-    should_return_time: '',
-    extra_return_time: '',
-    is_completed: 0
-})
-const borrowListVisible = ref(false)
-const bookInstanceData = ref<any[]>([])
-const totalPages = ref(1)
 
 const state = reactive({
     page: 1,
@@ -146,14 +121,6 @@ function handleCurrentChange(val: number) {
 
 function handleSizeChange(val: number) {
     state.limit = val
-}
-
-function handleReturnTime(row: any) {
-    if (row.extra_return_time !== null) {
-        return row.value.extra_return_time
-    } else {
-        return row.should_return_time
-    }
 }
 
 async function initTable() {
@@ -182,31 +149,21 @@ onMounted(async () => {
     initTable()
 })
 
-async function handleBorrowClick(book_id: number) {
-    console.log(userStore)
-    if (userStore.user.user_instance_id === 0) {
-        ElMessage.error('Please login first')
-    }
-    const res = await BookInstanceAPI.getById(book_id)
-    bookInstanceData.value = res
-    borrowListVisible.value = true
+const borrowDelayVisible = ref(false)
+const borrowDelayData = ref<BorrowLog>()
+function handleDelayClick(borrow_id: number) {
+    const data = allTableData.value.find((item) => item.borrow_id === borrow_id)
+    borrowDelayData.value = data
+    borrowDelayVisible.value = true
 }
 
 async function handleReturnConfirm(borrow_id: number, book_instance_id: string) {
-    console.log(time1.value)
     try {
         await BookInstanceAPI.returnBookInstance(borrow_id, book_instance_id)
-        innerBorrowVisible.value = false
-        borrowListVisible.value = false
+        location.reload()
     } catch (error) {
         console.error(error)
     }
-}
-
-function handleBorrowOpen(id: any) {
-    time1.value = ''
-    innerBorrowVisible.value = true
-    curBookInstance.value = id
 }
 </script>
 

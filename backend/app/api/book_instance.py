@@ -107,6 +107,8 @@ def on_return():
         ret['status'] = -1
         return jsonify(ret) , 200
     
+    sess, ret['results'] = add_stock_num(data.get('book_id'),sess,ret['results'])
+    
     if not submit(sess):
         ret['msg'] = "归还失败，请稍后再试"
         ret['status'] = -2

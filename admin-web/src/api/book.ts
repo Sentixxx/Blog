@@ -31,10 +31,13 @@ class BookAPI {
         })
     }
 
-    static add(): Promise<BookInfo> {
+    static add(data: BookInfo): Promise<BookInfo> {
         return request<any, BookInfo>({
             url: `${BOOK_BASE_URL}/add`,
-            method: 'post'
+            method: 'post',
+            params: {
+                ...data
+            }
         })
     }
 
@@ -45,10 +48,13 @@ class BookAPI {
         })
     }
 
-    static updateBook(book_id: number): Promise<BookInfo[]> {
-        return request<any, BookInfo[]>({
+    static updateBook(book_id: number, data: BookInfo): Promise<BookInfo> {
+        return request<any, BookInfo>({
             url: `${BOOK_BASE_URL}/update/${book_id}`,
-            method: 'put'
+            method: 'put',
+            params: {
+                ...data
+            }
         })
     }
 }
@@ -63,5 +69,6 @@ export interface BookInfo extends BasicAPI {
     book_press?: string
     book_introduce?: string
     book_pic?: string
-    book_cur_stock_num: number
+    book_type?: string
+    book_cur_stock_num?: number
 }

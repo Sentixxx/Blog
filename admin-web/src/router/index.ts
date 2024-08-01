@@ -56,7 +56,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
                 children: [
                     {
                         path: 'info/:id',
-                        component: () => import('@/views/book/components/bookInfo.vue'),
+                        component: () => import('@/views/book/components/bookInfoDialog.vue'),
                         meta: {
                             title: 'default_book_id',
                             affix: true,

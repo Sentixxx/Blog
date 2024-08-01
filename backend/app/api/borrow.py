@@ -99,7 +99,7 @@ def on_info_bi(book_instance_id):
 
     return jsonify(ret)
 
-@borrow.route('/info/borrow_id/book_id/<int:book_id>',methods=['GET'])
+@borrow.route('/info/book_id/<int:book_id>',methods=['GET'])
 def on_info_book(book_id):
     ret = {}
 
@@ -127,7 +127,7 @@ def on_info_book(book_id):
     return jsonify(ret)
 
 @borrow.route('/delay/<int:borrow_id>',methods=['PUT'])
-def on_delay():
+def on_delay(borrow_id):
     data = request.args.to_dict()
 
     sess = db.session()
@@ -135,7 +135,7 @@ def on_delay():
     ret = {}
     ret['results'] = {}
 
-    sess , ret['results'] = delay_borrow(data,sess,ret['results'])
+    sess , ret['results'] = delay_borrow(borrow_id,data,sess,ret['results'])
     if ret['results'].get('error_msg') is not None:
         sess.rollback()
         ret['msg'] = "续借失败：" + ret['results']['error_msg']

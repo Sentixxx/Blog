@@ -25,6 +25,7 @@ module.exports = {
     plugins: ['vue', '@typescript-eslint'],
     rules: {
         // https://eslint.vuejs.org/rules/#priority-a-essential-error-prevention
+        'vue/no-mutating-props': 'off',
         'vue/multi-word-component-names': 'off',
         'vue/no-v-model-argument': 'off',
         'vue/script-setup-uses-vars': 'error',

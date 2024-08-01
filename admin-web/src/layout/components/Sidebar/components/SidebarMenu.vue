@@ -22,7 +22,7 @@
             <el-icon><User /></el-icon>
             <template #title><span>借阅记录</span> </template>
         </el-menu-item>
-        <el-sub-menu index="">
+        <el-sub-menu index="" v-if="isAdmin()">
             <template #title>
                 <el-icon><Setting /></el-icon>
                 <span>管理</span>

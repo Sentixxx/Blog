@@ -27,6 +27,23 @@ class BorrowAPI {
             method: 'get'
         })
     }
+
+    static getByBorrowId(borrow_id: number): Promise<BorrowLog> {
+        return request<any, BorrowLog>({
+            url: `${Borrow_BASE_URL}/info/borrow_id/${borrow_id}`,
+            method: 'get'
+        })
+    }
+
+    static delay(borrow_id: number, extra_return_time: string): Promise<BorrowLog> {
+        return request<any, BorrowLog>({
+            url: `${Borrow_BASE_URL}/delay/${borrow_id}`,
+            method: 'put',
+            params: {
+                extra_return_time: extra_return_time
+            }
+        })
+    }
 }
 
 export default BorrowAPI

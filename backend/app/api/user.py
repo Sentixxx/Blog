@@ -9,6 +9,27 @@ from app.services.user import get_user_info
 
 user = Blueprint('user',__name__)
 
+@user.route('/info/all',methods=['GET'])
+@jwt_required()
+def on_get_all():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "获取用户信息失败：无法识别当前用户"
+        ret['status'] = -3
+        return jsonify(ret), 200
+    
+    ret = {}
+    ret['results'] = []
+
+    results = db.session.query(UserInstance).all()
+
+    ret['results'] = [result.to_dict() for result in results]
+
+    ret['msg'] = "获取用户信息成功"
+    ret['status'] = 200
+    return jsonify(ret) , 200
+
 @user.route('/info/cur',methods=['GET'])
 @jwt_required()
 def on_info():

@@ -1,7 +1,7 @@
 <template>
     <div id="book">
         <div class="search-container">
-            <div>
+            <div class="input-container">
                 <el-input
                     v-model="input"
                     style="width: 100%"
@@ -23,12 +23,12 @@
                         </el-select>
                     </template>
                     <template #append>
-                        <el-button :icon="Search" @click="handleSearch" />
+                        <el-button :icon="Search" @click="handleSearch" round />
                     </template>
                 </el-input>
             </div>
             <div>
-                <el-button type="primary" @click="initTable">{{ $t('book.add') }}</el-button>
+                <el-button type="info" :icon="Plus" @click="addBookInfoVisible = true" />
             </div>
         </div>
         <div class="show-container">
@@ -74,15 +74,26 @@
                                 effect="dark"
                                 placement="bottom"
                             >
-                                <el-button type="primary" :icon="Edit" circle />
+                                <el-button
+                                    type="primary"
+                                    :icon="Edit"
+                                    circle
+                                    @click="handleEditClick(row.book_id)"
+                                />
                             </el-tooltip>
                             <el-tooltip
                                 :content="$t('book.edit.delete')"
                                 effect="dark"
                                 placement="bottom"
                             >
-                                <el-button type="primary" :icon="Delete" circle />
+                                <el-button
+                                    type="primary"
+                                    :icon="Delete"
+                                    @click="handleDeleteConfirm(row.book_id)"
+                                    circle
+                                />
                             </el-tooltip>
+
                             <el-tooltip
                                 :content="$t('book.edit.borrow')"
                                 effect="dark"
@@ -110,99 +121,38 @@
             </div>
         </div>
         <div class="book-info-container">
-            <el-dialog v-model="bookInfoVisible" width="800" :title="currentBookData.book_name">
-                <div class="book-info-dialog">
-                    <el-row>
-                        <!-- 图书封面 -->
-                        <el-col :span="8" class="book-cover">
-                            <el-image
-                                :src="currentBookData.book_pic"
-                                fit="cover"
-                                v-if="currentBookData.book_pic"
-                            />
-                            <el-image
-                                src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                                fit="cover"
-                                preview-teleported
-                                v-else
-                            />
-                            <div>
-                                {{ $t('book.stock') }}: {{ currentBookData.book_cur_stock_num }}
-                            </div>
-                        </el-col>
-
-                        <!-- 图书简介 -->
-                        <el-col :span="16" class="book-introduction">
-                            <p>{{ currentBookData.book_introduce }}</p>
-                            <el-divider />
-                            <h3>{{ $t('book.author') }}: {{ currentBookData.book_author }}</h3>
-                            <h3>{{ $t('book.isbn') }}: {{ currentBookData.book_isbn_code }}</h3>
-                            <h3>{{ $t('book.press') }}: {{ currentBookData.book_press }}</h3>
-                        </el-col>
-                    </el-row>
-                </div>
-            </el-dialog>
+            <book-info-dialog v-model:visible="bookInfoVisible" :data="currentBookData" />
         </div>
         <div class="book-borrow-container">
-            <el-dialog v-model="borrowListVisible" width="800">
-                <el-table :data="bookInstanceData">
-                    <el-table-column type="index" label="No" width="50" />
-                    <el-table-column prop="book_instance_id" label="ID" />
-                    <el-table-column prop="book_instance_location" label="Location" />
-                    <el-table-column label="Borrow">
-                        <template #default="{ row }">
-                            <el-button
-                                type="primary"
-                                @click="handleBorrowOpen(row.book_instance_id)"
-                            >
-                                {{ $t('book.borrow') }}
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-dialog>
-            <el-dialog v-model="innerBorrowVisible" width="500" append-to-body center>
-                <div class="time-container">
-                    <h1>{{ $t('book.return_time') }}</h1>
-                    <el-date-picker
-                        type="datetime"
-                        :placeholder="$t('book.return_time')"
-                        v-model="time1"
-                    />
-                </div>
-                <template #footer>
-                    <div class="dialog-footer">
-                        <el-button @click="innerBorrowVisible = false">
-                            {{ $t('system.cancel') }}
-                        </el-button>
-                        <el-button type="primary" @click="handleBorrowConfirm">
-                            {{ $t('system.confirm') }}
-                        </el-button>
-                    </div>
-                </template>
-            </el-dialog>
+            <book-borrow-dialog
+                v-model:visible="borrowListVisible"
+                :data="bookInstanceData"
+                :userId="userStore.user.user_instance_id"
+            />
+        </div>
+        <div class="add-book-info-container">
+            <add-book-dialog v-model:visible="addBookInfoVisible" />
+        </div>
+
+        <div class="edit-book-info-container">
+            <edit-book-dialog v-model:visible="editBookVisible" :data="currentBookData" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Delete, Edit, Search, Ticket } from '@element-plus/icons-vue'
+import { Delete, Edit, Search, Ticket, Plus } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/stores'
 import { useUserStore } from '@/stores'
 import BookAPI, { BookInfo } from '@/api/book'
 import BookInstanceAPI from '@/api/bookInstance'
 const { t } = useI18n()
-const settingsStore = useSettingsStore()
 const userStore = useUserStore()
-
-const layout = computed(() => settingsStore.layout)
 const input = ref('')
 const bookInfoVisible = ref(false)
-const innerBorrowVisible = ref(false)
-const curBookInstance = ref<any>()
-const time1 = ref('')
 const select = ref('book_name')
 const allTableData = ref<any[]>([])
+const addBookInfoVisible = ref<boolean>(false)
 const currentBookData = ref<BookInfo>({
     book_id: 1,
     book_name: '',
@@ -212,9 +162,6 @@ const currentBookData = ref<BookInfo>({
     book_isbn_code: '',
     book_cur_stock_num: 0
 })
-const borrowListVisible = ref(false)
-const bookInstanceData = ref<any[]>([])
-const totalPages = ref(1)
 
 const state = reactive({
     page: 1,
@@ -271,12 +218,13 @@ watchEffect(() => {
 })
 
 onMounted(() => {
-    console.log('book')
+    // console.log('book')
     initTable()
 })
 
+const borrowListVisible = ref(false)
+const bookInstanceData = ref<any[]>([])
 async function handleBorrowClick(book_id: number) {
-    console.log(userStore)
     if (userStore.user.user_instance_id === 0) {
         ElMessage.error('Please login first')
     }
@@ -285,26 +233,26 @@ async function handleBorrowClick(book_id: number) {
     borrowListVisible.value = true
 }
 
-async function handleBorrowConfirm() {
-    console.log(time1.value)
+const editBookVisible = ref<boolean>(false)
+async function handleEditClick(id: number) {
     try {
-        await BookInstanceAPI.borrow(
-            curBookInstance.value,
-            userStore.user.user_instance_id,
-            time1.value,
-            currentBookData.value.book_id
-        )
-        innerBorrowVisible.value = false
-        borrowListVisible.value = false
+        const res = await BookAPI.get(id)
+        currentBookData.value = res
+        console.log(res)
+        editBookVisible.value = true
     } catch (error) {
         console.error(error)
     }
 }
 
-function handleBorrowOpen(id: any) {
-    time1.value = ''
-    innerBorrowVisible.value = true
-    curBookInstance.value = id
+async function handleDeleteConfirm(book_id: number) {
+    try {
+        await BookAPI.delete(book_id)
+        location.reload()
+    } catch (e) {
+        // ElMessage.error()
+        console.error(e)
+    }
 }
 </script>
 
@@ -315,7 +263,17 @@ function handleBorrowOpen(id: any) {
     margin-left: auto;
     margin-right: auto;
     padding: 0 0 0 0;
-    border: 40 40 40 40x;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: 0 0 0 0;
+    .input-container {
+        border: 40 40 40 40px;
+        flex-grow: 1;
+    }
 }
 .book-info-dialog {
     padding: 20px;
