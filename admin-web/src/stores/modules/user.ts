@@ -9,6 +9,9 @@ import { TOKEN_KEY } from '@/enums/cacheEnum'
 export const useUserStore = defineStore('user', () => {
     const user = ref<UserInfo>({
         user_instance_group_name: 'user',
+        user_instance_name: '访客',
+        user_instance_avatar:
+            'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
         user_instance_id: -1
     })
 
@@ -42,6 +45,10 @@ export const useUserStore = defineStore('user', () => {
                 throw new Error('Verification failed, please Login again.')
             }
             Object.assign(user.value, { ...data })
+            if (user.value.user_instance_avatar === null) {
+                user.value.user_instance_avatar =
+                    'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+            }
         } catch (error) {
             console.error(error)
         }

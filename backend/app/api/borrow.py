@@ -78,19 +78,22 @@ def on_info_borrow(borrow_id):
 def on_info_bi(book_instance_id):
     ret = {}
 
-    result = Borrow.query.filter(Borrow.is_deleted==0,Borrow.book_instance_id==book_instance_id).all()
+    results = Borrow.query.filter(Borrow.is_deleted==0,Borrow.book_instance_id==book_instance_id).all()
 
-    if result:
+    if results:
         ret['results'] = []
-        record = result.to_dict()
-        book_instance = BookInstance.query.filter(BookInstance.is_deleted==0,BookInstance.book_instance_id==borrow.book_instance_id).first()
-        book = Book.query.filter(Book.is_deleted==0,Book.book_id==book_instance.book_id).first()
-        record['book_name'] = book.book_name
-        record['book_author'] = book.book_author
-        record['book_press'] = book.book_press
-        record['book_isbn_code'] = book.book_isbn_code
+        records = to_dict(results)
+        for record in records:
+            book_instance = BookInstance.query.filter(BookInstance.is_deleted==0,BookInstance.book_instance_id==record['book_instance_id']).first()
+            book = Book.query.filter(Book.is_deleted==0,Book.book_id==book_instance.book_id).first()
+            user = UserInstance.query.filter(UserInstance.is_deleted==0,UserInstance.user_instance_id==record['user_instance_id']).first()
+            record['user_instance_name'] = user.user_instance_name
+            record['book_name'] = book.book_name
+            record['book_author'] = book.book_author
+            record['book_press'] = book.book_press
+            record['book_isbn_code'] = book.book_isbn_code
 
-        ret['results'].append(record)
+            ret['results'].append(record)
         ret['msg'] = "获取成功"
         ret['status'] = 200
     else:

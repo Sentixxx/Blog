@@ -28,9 +28,9 @@
             <h1>{{ $t('book.history') }}</h1>
             <el-table :data="historyData">
                 <el-table-column type="index" label="ID" width="50" />
-                <el-table-column prop="user_id" :label="$t('book.user_id')" />
+                <el-table-column prop="user_instance_name" :label="$t('user.name')" />
                 <el-table-column prop="borrow_time" :label="$t('book.borrow_time')" />
-                <el-table-column prop="return_time" :label="$t('book.return_time')" />
+                <el-table-column prop="actual_return_time" :label="$t('book.return_time')" />
             </el-table>
         </div>
     </el-dialog>

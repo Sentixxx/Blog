@@ -115,10 +115,10 @@
                         >{{ $t('login.register') }}
                     </el-button>
                 </div>
-                <div class="mt-10 text-sm">
+                <!-- <div class="mt-10 text-sm">
                     <span>{{ $t('login.username') }}: admin</span>
                     <span class="ml-4"> {{ $t('login.password') }}: 123456</span>
-                </div>
+                </div> -->
             </el-form>
         </el-card>
     </div>
@@ -148,9 +148,9 @@ const isCapslock = ref(false)
 const registFormRef = ref<FormInstance>()
 let curCaptchaCode = ref()
 const registData = ref<RegistData>({
-    username: 'admin',
-    password: '123456',
-    repassword: '123456',
+    username: '',
+    password: '',
+    repassword: '',
     captchaCode: ''
 } as RegistData)
 
@@ -177,36 +177,36 @@ const loginRules = computed(() => {
             {
                 required: true,
                 triggered: 'blur',
-                message: t('login.messgae.username.required')
+                message: t('login.message.username.required')
             }
         ],
         password: [
             {
                 required: true,
                 triggered: 'blur',
-                message: t('login.messgae.password.required')
+                message: t('login.message.password.required')
             },
             {
                 min: 6,
                 triggered: 'blur',
-                message: t('login.messgae.password.min')
+                message: t('login.message.password.min')
             }
         ],
         repassword: [
             {
                 required: true,
                 triggered: 'blur',
-                message: t('login.messgae.password.required')
+                message: t('login.message.password.required')
             },
             {
                 min: 6,
                 triggered: 'blur',
-                message: t('login.messgae.password.min')
+                message: t('login.message.password.min')
             },
             {
                 validator: (rule: any, value: any, callback: any) => {
                     if (value !== registData.value.password) {
-                        callback(new Error(t('login.messgae.password.match')))
+                        callback(new Error(t('login.message.password.match')))
                     } else {
                         callback()
                     }
@@ -243,7 +243,7 @@ function handleRegistSubmit() {
         } else {
             ElMessage({
                 type: 'error',
-                message: t('login.messgae.loginFailed')
+                message: t('login.message.registFailed')
             })
             captcha.value.refreshCode()
         }

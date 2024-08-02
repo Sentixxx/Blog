@@ -15,7 +15,7 @@
                     </div>
                 </el-col>
 
-                <el-col :span="6" :xs="24">
+                <!-- <el-col :span="6" :xs="24">
                     <div class="flex h-full items-center justify-around">
                         <el-statistic
                             v-for="item in statisticData"
@@ -31,7 +31,7 @@
                             <template v-if="item.suffix" #suffix>/100</template>
                         </el-statistic>
                     </div>
-                </el-col>
+                </el-col> -->
             </el-row>
         </el-card>
 

@@ -1,6 +1,9 @@
 export default {
     system: {
-        jump: '跳过'
+        jump: '跳过',
+        visitor: '游客',
+        confirm: '确认',
+        cancel: '取消'
     },
     book: {
         author: '作者',
@@ -73,7 +76,9 @@ export default {
                 required: '请输入验证码',
                 error: '验证码错误'
             },
-            match: '密码不一致'
+            match: '密码不一致',
+            loginFailed: '登录失败',
+            registFailed: '注册失败'
         }
     },
     navbar: {

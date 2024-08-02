@@ -1,63 +1,127 @@
 export default {
+    system: {
+        jump: 'Skip'
+    },
+    book: {
+        author: 'Author',
+        name: 'Book Name',
+        isbn: 'ISBN',
+        cover: 'Cover',
+        introduce: 'Introduction',
+        please_input: 'Please enter search content',
+        edit: {
+            name: 'Edit',
+            add: 'Add',
+            delete: 'Delete',
+            info: 'Details',
+            borrow: 'Borrow',
+            return: 'Return',
+            show: 'Show'
+        },
+        type: 'Type',
+        confirm: 'Confirm',
+        cancel: 'Cancel',
+        code: 'Barcode',
+        borrow_time: 'Borrow Time',
+        return_time: 'Return Time',
+        is_completed: 'Is Returned',
+        is_complete: 'Returned',
+        not_complete: 'Not Returned',
+        press: 'Press',
+        stock: 'Stock',
+        require_name: 'Please enter the book name',
+        require_author: 'Please enter the author',
+        require_isbn: 'Please enter the ISBN',
+        require_press: 'Please enter the Press',
+        require_stock: 'Please enter the stock',
+        require_type: 'Please enter the type',
+        require_introduce: 'Please enter the introduction',
+        invalid_form: 'Form filling error',
+        add_success: 'Add success',
+        add_fail: 'Add fail',
+        location: 'Location',
+        book_instance_id: 'Book Code',
+        is_complete_status: 'Is Returned',
+        borrow: 'Borrow',
+        history: 'Borrow History'
+    },
     route: {
         Home: 'Home',
         Books: 'Books',
-        User: 'Self Page'
+        User: 'User Info',
+        Borrow: 'Borrow',
+        UserManage: 'User Management',
+        BookManage: 'Book Management'
     },
     login: {
         username: 'Username',
         password: 'Password',
         login: 'Login',
-        rigiser: 'Register',
-        capslock: 'Caps Lock is On',
+        register: 'Register',
         back: 'Back',
+        captchaCode: 'Captcha',
+        capslock: 'Caps Lock is on',
         message: {
             username: {
-                required: 'Please enter Username'
+                required: 'Please enter username'
             },
             password: {
-                required: 'Please enter Password',
-                min: 'The password can not be less than 6 digits'
+                required: 'Please enter password',
+                min: 'Password must be at least 6 characters'
             },
             captcha: {
-                required: 'Please enter Captcha',
+                required: 'Please enter captcha',
                 error: 'Captcha error'
-            }
+            },
+            match: 'Passwords do not match'
         }
     },
     navbar: {
-        notice: 'notification',
+        login: 'Login',
+        self: 'Personal Center',
+        notice: 'Message Notification',
         langSelect: {
-            tooltip: 'language select',
+            tooltip: 'Language Selection',
             message: {
-                success: 'Language switch success'
+                success: 'Language switched successfully'
             }
         },
-        fullscreen: 'full screen',
+        fullscreen: 'Fullscreen',
         sizeSelect: {
-            tooltip: 'layout size',
-            default: 'default',
-            large: 'large',
-            small: 'small',
+            tooltip: 'Layout Size',
+            default: 'Default',
+            large: 'Large',
+            small: 'Small',
             message: {
                 success: 'Layout size set successfully'
             }
         },
         settings: {
-            project: 'Book Management System',
-            tooltip: 'system settings',
-            theme: 'theme',
-            interface: 'interface',
-            navigation: 'navigation',
-            themeColor: 'theme color',
-            tagsView: 'tags view',
-            fixedHeader: 'fixed header',
-            sidebarLogo: 'sidebar logo',
+            project: 'Library Management System',
+            tooltip: 'System Settings',
+            theme: 'Theme',
+            interface: 'Interface',
+            navigation: 'Navigation',
+            themeColor: 'Theme Color',
+            tagsView: 'Tags View',
+            fixedHeader: 'Fixed Header',
+            sidebarLogo: 'Sidebar Logo',
             message: {
-                success: 'System settings success'
+                success: 'System settings updated successfully'
             }
         },
-        home: 'home',
-        logout: 'logout'
+        home: 'Home',
+        logout: 'Logout'
+    },
+    user: {
+        nickname: 'Nickname',
+        email: 'Email',
+        mobile: 'Mobile',
+        name: 'Username',
+        password: 'Password',
+        gender: 'Gender',
+        group_name: 'User Group',
+        avatar: 'Avatar',
+        status: 'Status'
     }
 }

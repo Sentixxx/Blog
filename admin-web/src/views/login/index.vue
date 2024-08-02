@@ -93,10 +93,10 @@
                         >{{ $t('login.register') }}
                     </el-button>
                 </div>
-                <div class="mt-10 text-sm">
+                <!-- <div class="mt-10 text-sm">
                     <span>{{ $t('login.username') }}: admin</span>
                     <span class="ml-4"> {{ $t('login.password') }}: 123456</span>
-                </div>
+                </div> -->
             </el-form>
         </el-card>
     </div>
@@ -112,13 +112,11 @@ import { ElMessage, type FormInstance } from 'element-plus'
 import { useSettingsStore, useUserStore } from '@/stores'
 import '@/styles/login.scss'
 import CaptchaCode from '@/components/Captcha/index.vue'
-import { fa } from 'element-plus/es/locale'
 
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const route = useRoute()
 
-const { height } = useWindowSize()
 const captcha = ref()
 
 const { t } = useI18n()
@@ -129,8 +127,8 @@ const isCapslock = ref(false)
 const loginFormRef = ref<FormInstance>()
 let curCaptchaCode = ref()
 const loginData = ref<LoginData>({
-    username: 'admin',
-    password: '123456'
+    username: '',
+    password: ''
 } as LoginData)
 
 const validateCaptchaCode = (rule: any, value: string, callback: any) => {
@@ -152,19 +150,19 @@ const loginRules = computed(() => {
             {
                 required: true,
                 triggered: 'blur',
-                message: t('login.messgae.username.required')
+                message: t('login.message.username.required')
             }
         ],
         password: [
             {
                 required: true,
                 triggered: 'blur',
-                message: t('login.messgae.password.required')
+                message: t('login.message.password.required')
             },
             {
                 min: 6,
                 triggered: 'blur',
-                message: t('login.messgae.password.min')
+                message: t('login.message.password.min')
             }
         ],
         captchaCode: [
@@ -208,7 +206,7 @@ function handleLoginSubmit() {
         } else {
             ElMessage({
                 type: 'error',
-                message: t('login.messgae.loginFailed')
+                message: t('login.message.loginFailed')
             })
             captcha.value.refreshCode()
         }
