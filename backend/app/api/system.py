@@ -38,8 +38,8 @@ def on_login():
         ret['status'] = -1
         return jsonify(ret), 200
 
-@system.route('/register',methods=['POST'])
-def on_register():
+@system.route('/regist',methods=['POST'])
+def on_regist():
     data = request.args.to_dict()
 
     sess = db.session()

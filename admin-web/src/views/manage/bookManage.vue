@@ -95,15 +95,27 @@
                             </el-tooltip>
 
                             <el-tooltip
-                                :content="$t('book.edit.borrow')"
+                                :content="$t('book.edit.add')"
                                 effect="dark"
                                 placement="bottom"
                             >
                                 <el-button
                                     type="primary"
-                                    :icon="Ticket"
+                                    :icon="Plus"
                                     circle
-                                    @click="handleBorrowClick(row.book_id)"
+                                    @click="handleAddClick(row.book_id)"
+                                />
+                            </el-tooltip>
+                            <el-tooltip
+                                :content="$t('book.edit.show')"
+                                effect="dark"
+                                placement="bottom"
+                            >
+                                <el-button
+                                    type="primary"
+                                    :icon="List"
+                                    circle
+                                    @click="handleShowClick(row.book_id)"
                                 />
                             </el-tooltip>
                         </div>
@@ -123,29 +135,28 @@
         <div class="book-info-container">
             <book-info-dialog v-model:visible="bookInfoVisible" :data="currentBookData" />
         </div>
-        <div class="book-borrow-container">
-            <book-borrow-dialog
-                v-model:visible="borrowListVisible"
-                :data="bookInstanceData"
-                :userId="userStore.user.user_instance_id"
-            />
-        </div>
         <div class="add-book-info-container">
-            <add-book-dialog v-model:visible="addBookInfoVisible" />
+            <add-book-dialog v-model:visible="addBookInfoVisible" :book_id="curBookId" />
         </div>
-
+        <div class="add-book-instance-container">
+            <add-book-instance-dialog v-model:visible="addVisible" :book_id="curBookId" />
+        </div>
         <div class="edit-book-info-container">
             <edit-book-dialog v-model:visible="editBookVisible" :data="currentBookData" />
+        </div>
+        <div class="show-list-container">
+            <book-borrow-dialog v-model:visible="showInstanceVisible" :data="bookInstnaceData" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Delete, Edit, Search, Ticket, Plus } from '@element-plus/icons-vue'
+import { Delete, Edit, Search, Ticket, Plus, List } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/stores'
 import { useUserStore } from '@/stores'
 import BookAPI, { BookInfo } from '@/api/book'
 import BookInstanceAPI from '@/api/bookInstance'
+import BorrowAPI from '@/api/borrow'
 const { t } = useI18n()
 const userStore = useUserStore()
 const input = ref('')
@@ -222,15 +233,14 @@ onMounted(() => {
     initTable()
 })
 
-const borrowListVisible = ref(false)
-const bookInstanceData = ref<any[]>([])
-async function handleBorrowClick(book_id: number) {
+const addVisible = ref(false)
+const curBookId = ref<any>()
+async function handleAddClick(book_id: number) {
     if (userStore.user.user_instance_id === 0) {
         ElMessage.error('Please login first')
     }
-    const res = await BookInstanceAPI.getById(book_id)
-    bookInstanceData.value = res
-    borrowListVisible.value = true
+    curBookId.value = book_id
+    addVisible.value = true
 }
 
 const editBookVisible = ref<boolean>(false)
@@ -240,6 +250,18 @@ async function handleEditClick(id: number) {
         currentBookData.value = res
         console.log(res)
         editBookVisible.value = true
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const showInstanceVisible = ref<boolean>(false)
+const bookInstnaceData = ref<any[]>([])
+async function handleShowClick(id: number) {
+    try {
+        const res = await BookInstanceAPI.getById(id)
+        bookInstnaceData.value = res
+        showInstanceVisible.value = true
     } catch (error) {
         console.error(error)
     }

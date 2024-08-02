@@ -189,7 +189,7 @@ def return_book(data:dict, sess:any, ret:dict) -> tuple:
         return sess , ret
 
     borrow_result.is_completed = 1
-    borrow_result.exact_return_time = datetime.now()
+    borrow_result.actual_return_time = datetime.now()
     sess = borrow_result.add(sess)
 
     return sess , ret

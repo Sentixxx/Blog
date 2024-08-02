@@ -17,6 +17,20 @@ class AuthAPI {
             }
         })
     }
+
+    static regist(data: RegistData) {
+        return request<any, any>({
+            url: `${AUTH_BASE_URL}/regist`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            params: {
+                user_instance_name: data.username,
+                user_instance_password: data.password
+            }
+        })
+    }
 }
 
 export default AuthAPI
@@ -24,7 +38,13 @@ export default AuthAPI
 export interface LoginData {
     username: string
     password: string
-    captchaKey: string
+    captchaCode: string
+}
+
+export interface RegistData {
+    username: string
+    password: string
+    repassword: string
     captchaCode: string
 }
 export interface LoginResult {

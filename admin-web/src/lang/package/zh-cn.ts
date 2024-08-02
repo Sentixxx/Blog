@@ -15,7 +15,8 @@ export default {
             delete: '删除',
             info: '详情',
             borrow: '借阅',
-            return: '归还'
+            return: '归还',
+            show: '查看'
         },
         type: '类型',
         confirm: '确认',
@@ -40,12 +41,17 @@ export default {
         add_fail: '添加失败',
         location: '位置',
         book_instance_id: '书籍码',
-        is_complete_status: '是否归还'
+        is_complete_status: '是否归还',
+        borrow: '借阅',
+        history: '借阅历史'
     },
     route: {
         Home: '首页',
         Books: '图书',
-        User: '个人信息'
+        User: '个人信息',
+        Borrow: '借阅',
+        UserManage: '用户管理',
+        BookManage: '图书管理'
     },
     login: {
         username: '用户名',
@@ -66,7 +72,8 @@ export default {
             captcha: {
                 required: '请输入验证码',
                 error: '验证码错误'
-            }
+            },
+            match: '密码不一致'
         }
     },
     navbar: {

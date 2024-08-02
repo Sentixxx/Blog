@@ -52,7 +52,7 @@ import variables from '@/styles/variables.module.scss'
 import { House, Notebook, User, Setting } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
-
+import { isAdmin } from '@/utils/perm'
 const router = useRouter()
 
 const settingsStore = useSettingsStore()
@@ -61,14 +61,6 @@ const appStore = useAppStore()
 const currentRoute = useRoute()
 
 const mode = computed(() => (settingsStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'))
-
-function isAdmin() {
-    if (userStore.user.user_instance_group_name.includes('admin')) {
-        // console.log(userStore.user.user_instance_group_name.includes('admin'))
-        return true
-    }
-    return false
-}
 </script>
 
 <style lang="scss">

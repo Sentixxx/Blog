@@ -108,7 +108,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
                 path: '/manage/user',
                 component: () => import('@/views/manage/userManage.vue'),
                 meta: {
-                    title: 'User Manage',
+                    title: 'UserManage',
                     icon: 'manage',
                     affix: true,
                     KeepAlive: true
@@ -118,7 +118,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
                 path: '/manage/book',
                 component: () => import('@/views/manage/bookManage.vue'),
                 meta: {
-                    title: 'Book Manage',
+                    title: 'BookManage',
                     icon: 'manage',
                     affix: true,
                     KeepAlive: true

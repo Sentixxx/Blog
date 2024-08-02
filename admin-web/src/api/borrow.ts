@@ -14,9 +14,9 @@ class BorrowAPI {
         })
     }
 
-    static getByBookId(book_id: number): Promise<BorrowLog[]> {
+    static getByBookInstanceId(book_instance_id: string): Promise<BorrowLog[]> {
         return request<any, BorrowLog[]>({
-            url: `${Borrow_BASE_URL}/info/book_id/${book_id}`,
+            url: `${Borrow_BASE_URL}/info/book_instance_id/${book_instance_id}`,
             method: 'get'
         })
     }

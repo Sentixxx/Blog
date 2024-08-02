@@ -25,7 +25,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="book_name" :label="$t('book.name')" />
-                <el-table-column prop="book_instance_name" :label="$t('book.code')" />
+                <el-table-column prop="book_instance_id" :label="$t('book.code')" />
                 <el-table-column prop="borrow_time" :label="$t('book.borrow_time')" />
                 <el-table-column prop="return_time" :label="$t('book.return_time')" />
                 <el-table-column

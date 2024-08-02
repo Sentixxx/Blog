@@ -28,10 +28,14 @@ class BookInstanceAPI {
         })
     }
 
-    static add(): Promise<BookInstance> {
+    static add(id: any, data: BookInstance): Promise<BookInstance> {
         return request<any, BookInstance>({
             url: `${BOOK_INSTANCE_BASE_URL}/add`,
-            method: 'post'
+            method: 'post',
+            params: {
+                book_id: id,
+                ...data
+            }
         })
     }
 
@@ -82,9 +86,9 @@ class BookInstanceAPI {
 export default BookInstanceAPI
 
 export interface BookInstance extends BasicAPI {
-    book_id: number
-    book_instance_id: string
-    book_instance_status: number
+    book_id?: number
+    book_instance_id?: string
+    book_instance_status?: number
     borrow_id?: number
     book_instance_location: string
 }

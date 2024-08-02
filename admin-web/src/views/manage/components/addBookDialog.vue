@@ -72,6 +72,7 @@ async function addBook() {
             }
             ElMessage.success(t('book.add_success'))
             visible.value = false
+            location.reload()
         } else {
             ElMessage.error(t('book.invalid_form'))
         }

@@ -2,7 +2,7 @@ import AuthAPI from '@/api/auth'
 import UserAPI from '@/api/user'
 import { resetRouter } from '@/router'
 import { store } from '@/stores'
-import type { LoginData } from '@/api/auth'
+import type { LoginData, RegistData } from '@/api/auth'
 import type { UserInfo } from '@/api/user'
 import { TOKEN_KEY } from '@/enums/cacheEnum'
 
@@ -24,6 +24,13 @@ export const useUserStore = defineStore('user', () => {
             localStorage.setItem(TOKEN_KEY, `${tokenType} ${accessToken}`)
             await getUserInfo()
             // console.log('store sucess')
+        } catch (error) {
+            return Promise.reject(error)
+        }
+    }
+    async function regist(reigstData: RegistData): Promise<void> {
+        try {
+            const data = await AuthAPI.regist(reigstData)
         } catch (error) {
             return Promise.reject(error)
         }
@@ -60,6 +67,7 @@ export const useUserStore = defineStore('user', () => {
     return {
         user,
         login,
+        regist,
         getUserInfo,
         logout,
         resetToken

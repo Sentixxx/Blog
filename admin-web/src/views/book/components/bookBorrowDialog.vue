@@ -4,14 +4,35 @@
             <el-table-column type="index" label="ID" width="50" />
             <el-table-column prop="book_instance_id" :label="$t('book.book_instance_id')" />
             <el-table-column prop="book_instance_location" :label="$t('book.location')" />
-            <el-table-column label="Borrow">
+            <el-table-column :label="$t('book.borrow')" v-if="!isAdmin()">
                 <template #default="{ row }">
                     <el-button type="primary" @click="handleBorrowOpen(row.book_instance_id)">
                         {{ $t('book.borrow') }}
                     </el-button>
                 </template>
             </el-table-column>
+            <el-table-column :label="$t('book.edit.name')" v-else>
+                <template #default="{ row }">
+                    <el-button type="primary" @click="handleHistoryOpen(row.book_instance_id)">
+                        {{ $t('book.history') }}
+                    </el-button>
+                    <el-button type="primary" @click="handleInstanceDelete(row.book_instance_id)">
+                        {{ $t('book.edit.delete') }}
+                    </el-button>
+                </template>
+            </el-table-column>
         </el-table>
+    </el-dialog>
+    <el-dialog v-model="innerVisible2" width="500" append-to-body center>
+        <div class="his-container">
+            <h1>{{ $t('book.history') }}</h1>
+            <el-table :data="historyData">
+                <el-table-column type="index" label="ID" width="50" />
+                <el-table-column prop="user_id" :label="$t('book.user_id')" />
+                <el-table-column prop="borrow_time" :label="$t('book.borrow_time')" />
+                <el-table-column prop="return_time" :label="$t('book.return_time')" />
+            </el-table>
+        </div>
     </el-dialog>
     <el-dialog v-model="innerVisible" width="500" append-to-body center>
         <div class="time-container">
@@ -38,6 +59,8 @@
 <script lang="ts" setup>
 import { BookInfo } from '@/api/book'
 import BookInstanceAPI from '@/api/bookInstance'
+import BorrowAPI from '@/api/borrow'
+import { isAdmin } from '@/utils/perm'
 
 const userId = defineModel<number>('userId')
 const visible = defineModel<boolean>('visible')
@@ -46,7 +69,21 @@ const data = defineModel<BookInfo[]>('data')
 const return_time = ref<string>('')
 
 const innerVisible = ref<boolean>(false)
+const innerVisible2 = ref<boolean>(false)
 const curBookInstanceId = ref<string>('')
+const historyData = ref<any[]>([])
+
+async function handleHistoryOpen(id: string) {
+    const res = await BorrowAPI.getByBookInstanceId(id)
+    historyData.value = res
+    innerVisible2.value = true
+    curBookInstanceId.value = id
+}
+
+async function handleInstanceDelete(id: string) {
+    await BookInstanceAPI.delete(id)
+    location.reload()
+}
 
 function handleBorrowOpen(id: string) {
     return_time.value = ''

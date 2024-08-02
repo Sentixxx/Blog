@@ -52,19 +52,7 @@
                                     type="primary"
                                     :icon="Search"
                                     circle
-                                    @click="handleInfoClick(row.book_id)"
-                                />
-                            </el-tooltip>
-                            <el-tooltip
-                                :content="$t('book.edit.borrow')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Ticket"
-                                    circle
-                                    @click="handleBorrowClick(row.book_id)"
+                                    @click="handleInfoClick(row.user_instance_id)"
                                 />
                             </el-tooltip>
                         </div>
@@ -81,15 +69,10 @@
                 />
             </div>
         </div>
-        <div class="book-info-container">
-            <book-info-dialog v-model:visible="bookInfoVisible" :data="currentBookData" />
-        </div>
-        <div class="book-borrow-container">
-            <book-borrow-dialog
-                v-model:visible="borrowListVisible"
-                :data="bookInstanceData"
-                :userId="userStore.user.user_instance_id"
-            />
+        <div class="borrow-info-container">
+            <el-dialog v-model="borrowInfoVisible" width="1000px">
+                <borrow-info-table :data="borrowData" />
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -99,24 +82,13 @@ import { Delete, Edit, Search, Ticket } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/stores'
 import { useUserStore } from '@/stores'
 import UserAPI, { UserInfo } from '@/api/user'
+import BorrowAPI, { BorrowLog } from '@/api/borrow'
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const userStore = useUserStore()
-
-const layout = computed(() => settingsStore.layout)
 const input = ref('')
 
 const allTableData = ref<any[]>([])
-const currentBookData = ref<UserInfo>({
-    user_instance_id: 0,
-    user_instance_name: '',
-    user_instance_nickname: '',
-    user_instance_email: '',
-    user_instance_mobile: '',
-    user_instance_status: 0,
-    user_instance_group_name: ''
-})
-
 const state = reactive({
     page: 1,
     limit: 10,
@@ -158,6 +130,19 @@ async function initTable() {
     }
 }
 
+const borrowData = ref<BorrowLog[]>([])
+const borrowInfoVisible = ref<boolean>(false)
+async function handleInfoClick(id: number) {
+    try {
+        const res = await BorrowAPI.getByUserId(id)
+        borrowData.value = res
+        console.log(borrowData.value)
+        borrowInfoVisible.value = true
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 watchEffect(() => {
     state.total = allTableData.value.length
 })
@@ -165,16 +150,6 @@ watchEffect(() => {
 onMounted(() => {
     initTable()
 })
-
-async function handleBorrowClick(book_id: number) {
-    console.log(userStore)
-    if (userStore.user.user_instance_id === 0) {
-        ElMessage.error('Please login first')
-    }
-    const res = await BookInstanceAPI.getById(book_id)
-    bookInstanceData.value = res
-    borrowListVisible.value = true
-}
 </script>
 
 <style scoped>
