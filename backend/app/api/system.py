@@ -1,11 +1,12 @@
 
 from flask import Blueprint , request
-from app.models import UserInstance,SysLog
+from app.models import UserInstance,Borrow,SysLog
 from uuid import uuid4
 from flask import jsonify
-from app.utils import submit,hash_password
+from app.utils import submit,hash_password,to_dict
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 from app.extensions import db
+import time
 from app.config import Config
 system = Blueprint('system',__name__)
 
@@ -83,3 +84,64 @@ def on_log():
 
     return 200
 
+@system.route('/info/userBorrow/<int:id>',methods=['GET'])
+def on_user_borrow(id):
+    sess = db.session()
+    ret = {}
+    ret['results'] = {}
+
+    results = Borrow.query.filter_by(user_instance_id=id).all()
+
+    ret['results']['borrow_cnt']  = 0
+    ret['results']['current_borrow_cnt'] = 0
+    read_time = 0
+    ret['results']['read_time'] = 0
+    ret['results']['overdue'] = 0
+
+    if(results):
+        ret['msg'] = "获取成功"
+        ret['status'] = 200
+        dics = to_dict(results)
+        for item in dics:
+            ret['results']['borrow_cnt'] += 1
+            if(item['is_completed'] == 0):
+                ret['results']['current_borrow_cnt'] += 1
+                cur_time = time.time()
+                extra_return_time = item['extra_return_time'].timestamp() if item['extra_return_time'] else None
+                should_return_time = item['should_return_time'].timestamp() if item['should_return_time'] else None
+                if cur_time > (extra_return_time or should_return_time):
+                        ret['results']['overdue'] += 1
+            if item['is_completed'] == 1:
+                actual_return_time = item['actual_return_time'].timestamp() if item['actual_return_time'] else None
+                borrow_time = item['borrow_time'].timestamp() if item['borrow_time'] else None
+                read_time += actual_return_time - borrow_time
+
+        hours, remainder = divmod(read_time, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        ret['results']['read_time'] = f"{int(hours)}小时{int(minutes)}分钟{int(seconds)}秒"
+    else:
+        ret['msg'] = "无借阅记录"
+        ret['status'] = -1
+
+    all_usr = UserInstance.query.filter_by().all()
+    dics = to_dict(all_usr)
+    all_usr_cnt = 0
+    for item in dics:
+        if item['user_instance_group_name'] == 'user':
+            all_usr_cnt += 1
+
+    all_usr_borrow = Borrow.query.filter_by().all()
+    all_usr_time = 0
+    dics = to_dict(all_usr_borrow)
+    for item in dics:
+        if item['is_completed'] == 1:
+            actual_return_time = item['actual_return_time'].timestamp() if item['actual_return_time'] else None
+            borrow_time = item['borrow_time'].timestamp() if item['borrow_time'] else None
+            all_usr_time += actual_return_time - borrow_time
+    
+    avg_read_time = all_usr_time / all_usr_cnt
+    hours, remainder = divmod(avg_read_time, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    ret['results']['avg_read_time'] = f"{int(hours)}小时{int(minutes)}分钟{int(seconds)}秒"
+    
+    return jsonify(ret) , 200

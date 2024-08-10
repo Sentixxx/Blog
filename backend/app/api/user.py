@@ -56,5 +56,46 @@ def on_info():
         ret['status'] = 200
         return jsonify(ret) , 200
     
+@user.route('/info/update/<int:id>',methods=['PUT'])
+@jwt_required()
+def on_update(id):
+    current_user = get_jwt_identity()
 
+    if current_user is None:
+        ret['msg'] = "更新用户信息失败：无法识别当前用户"
+        ret['status'] = -3
+        return jsonify(ret), 200
 
+    ret = {}
+    ret['results'] = {}
+
+    sess = db.session()
+
+    user = sess.query(UserInstance).filter(UserInstance.user_instance_id == id).first()
+
+    if user is None:
+        ret['msg'] = "更新用户信息失败：用户不存在"
+        ret['status'] = -2
+        return jsonify(ret), 200
+
+    data = request.get_json()
+    if data is None:
+        ret['msg'] = "更新用户信息失败：无法识别请求数据"
+        ret['status'] = -4
+        return jsonify(ret), 200
+
+    user.user_instance_name = data.get('user_instance_name') or user.user_instance_name
+    user.user_instance_password = data.get('user_instance_password') or user.user_instance_password
+    user.user_instance_email = data.get('user_instance_email') or user.user_instance_email
+    user.user_instance_phone = data.get('user_instance_phone') or user.user_instance_phone
+
+    if submit(sess):
+        ret['status'] = 200
+        ret['results'] = user.to_dict()
+        ret['msg'] = "更新用户信息成功"
+    
+    else:
+        ret['msg'] = "更新用户信息失败：数据库提交失败"
+        ret['status'] = -5
+
+    return jsonify(ret), 200

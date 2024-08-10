@@ -121,12 +121,23 @@ export default {
     user: {
         nickname: '昵称',
         email: '邮箱',
-        mobile: '手机',
+        phone: '手机',
         name: '用户名',
         password: '密码',
         gender: '性别',
         group_name: '用户组',
         avatar: '头像',
-        status: '状态'
+        status: '状态',
+        edit: '编辑',
+        back: '返回',
+        edit_pass: '修改密码',
+        save: '保存'
+    },
+    settings: {
+        themeColor: '主题色',
+        tagsView: '标签视图',
+        fixedHeader: '固定头部',
+        sidebarLogo: '侧边栏Logo',
+        watermark: '水印'
     }
 }

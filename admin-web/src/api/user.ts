@@ -34,6 +34,13 @@ class UserAPI {
             params
         })
     }
+    static updateInfoCur(data: UserInfo): Promise<void> {
+        return request<UserInfo, void>({
+            url: `${USER_BASE_URL}/info/update/${data.user_instance_id}`,
+            method: 'put',
+            data
+        })
+    }
 }
 
 export default UserAPI
@@ -54,7 +61,7 @@ export interface UserInfo {
     /** 邮箱 */
     user_instance_email?: string
     /** 手机号 */
-    user_instance_mobile?: string
+    user_instance_phone?: string
     /** 性别 */
     user_instance_gender?: string
     user_instance_status?: number

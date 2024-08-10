@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import { UserInfo } from './user'
+import { useUserStore } from '@/stores'
 
 const AUTH_BASE_URL = ''
 
@@ -29,6 +30,12 @@ class AuthAPI {
                 user_instance_name: data.username,
                 user_instance_password: data.password
             }
+        })
+    }
+    static getUserBorrowInfo() {
+        return request<any, any>({
+            url: `${AUTH_BASE_URL}/info/userBorrow/${useUserStore().user.user_instance_id}`,
+            method: 'GET'
         })
     }
 }

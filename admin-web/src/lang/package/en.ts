@@ -116,7 +116,7 @@ export default {
     user: {
         nickname: 'Nickname',
         email: 'Email',
-        mobile: 'Mobile',
+        phone: 'Mobile',
         name: 'Username',
         password: 'Password',
         gender: 'Gender',

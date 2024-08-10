@@ -19,7 +19,7 @@
                         <el-option :label="$t('user.name')" value="user_instance_name" />
                         <el-option :label="$t('user.nickname')" value="user_instance_nickname" />
                         <el-option :label="$t('user.email')" value="user_instance_email" />
-                        <el-option :label="$t('user.mobile')" value="user_instance_mobile" />
+                        <el-option :label="$t('user.phone')" value="user_instance_phone" />
                         <el-option :label="$t('user.status')" value="user_instance_status" />
                         <el-option
                             :label="$t('user.group_name')"
@@ -37,7 +37,7 @@
                 <el-table-column prop="user_instance_name" :label="$t('user.name')" />
                 <el-table-column prop="user_instance_nickname" :label="$t('user.nickname')" />
                 <el-table-column prop="user_instance_email" :label="$t('user.email')" />
-                <el-table-column prop="user_instance_mobile" :label="$t('user.mobile')" />
+                <el-table-column prop="user_instance_phone" :label="$t('user.phone')" />
                 <el-table-column prop="user_instance_status" :label="$t('user.status')" />
                 <el-table-column prop="user_instance_group_name" :label="$t('user.group_name')" />
                 <el-table-column prop="Edit" :label="$t('book.edit.name')">

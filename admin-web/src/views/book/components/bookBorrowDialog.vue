@@ -4,21 +4,33 @@
             <el-table-column type="index" label="ID" width="50" />
             <el-table-column prop="book_instance_id" :label="$t('book.book_instance_id')" />
             <el-table-column prop="book_instance_location" :label="$t('book.location')" />
-            <el-table-column :label="$t('book.borrow')" v-if="!isAdmin()">
+            <el-table-column :label="$t('book.edit.name')">
                 <template #default="{ row }">
-                    <el-button type="primary" @click="handleBorrowOpen(row.book_instance_id)">
-                        {{ $t('book.borrow') }}
-                    </el-button>
-                </template>
-            </el-table-column>
-            <el-table-column :label="$t('book.edit.name')" v-else>
-                <template #default="{ row }">
-                    <el-button type="primary" @click="handleHistoryOpen(row.book_instance_id)">
-                        {{ $t('book.history') }}
-                    </el-button>
-                    <el-button type="primary" @click="handleInstanceDelete(row.book_instance_id)">
-                        {{ $t('book.edit.delete') }}
-                    </el-button>
+                    <div class="btn">
+                        <el-button
+                            type="primary"
+                            size="small"
+                            @click="handleBorrowOpen(row.book_instance_id)"
+                        >
+                            {{ $t('book.borrow') }}
+                        </el-button>
+                        <div v-if="isAdmin()">
+                            <el-button
+                                type="primary"
+                                size="small"
+                                @click="handleHistoryOpen(row.book_instance_id)"
+                            >
+                                {{ $t('book.history') }}
+                            </el-button>
+                            <el-button
+                                type="primary"
+                                size="small"
+                                @click="handleInstanceDelete(row.book_instance_id)"
+                            >
+                                {{ $t('book.edit.delete') }}
+                            </el-button>
+                        </div>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -107,3 +119,15 @@ async function handleBorrowConfirm() {
     }
 }
 </script>
+
+<style scoped>
+.btn {
+    display: flex;
+    justify-content: space-around;
+}
+.time-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+</style>

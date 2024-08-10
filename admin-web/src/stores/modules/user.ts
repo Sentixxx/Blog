@@ -54,6 +54,14 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    async function updateUserInfo(): Promise<void> {
+        try {
+            await UserAPI.updateInfoCur(user.value)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     function logout(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             localStorage.setItem(TOKEN_KEY, '')
@@ -75,6 +83,7 @@ export const useUserStore = defineStore('user', () => {
         user,
         login,
         regist,
+        updateUserInfo,
         getUserInfo,
         logout,
         resetToken
