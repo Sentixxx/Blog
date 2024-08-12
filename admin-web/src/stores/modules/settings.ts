@@ -19,10 +19,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
     const themeMode = useStorage<string>('themeMode', defaultSettings.themeMode)
 
-    const watermarkEnabled = useStorage<boolean>(
-        'waterMarkEnabled',
-        defaultSettings.watermarkEnabled
-    )
 
     watch(
         [themeMode, themeColor],
@@ -56,7 +52,6 @@ export const useSettingsStore = defineStore('settings', () => {
         tagsView,
         sidebarLogo,
         layout,
-        watermarkEnabled
     }
 
     function setSetting({ key, value }: { key: string; value: SettingsValue }) {
@@ -86,7 +81,6 @@ export const useSettingsStore = defineStore('settings', () => {
         layout,
         themeColor,
         themeMode,
-        watermarkEnabled,
         setSetting,
         setThemeMode,
         setThemeColor,

@@ -5,6 +5,7 @@ import { store } from '@/stores'
 import type { LoginData, RegistData } from '@/api/auth'
 import type { UserInfo } from '@/api/user'
 import { TOKEN_KEY } from '@/enums/cacheEnum'
+import { th } from 'element-plus/es/locale'
 
 export const useUserStore = defineStore('user', () => {
     const user = ref<UserInfo>({
@@ -12,7 +13,7 @@ export const useUserStore = defineStore('user', () => {
         user_instance_name: '访客',
         user_instance_avatar:
             'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        user_instance_id: -1
+        user_instance_id: 0
     })
 
     /**
@@ -26,6 +27,18 @@ export const useUserStore = defineStore('user', () => {
             const { tokenType, accessToken } = data
             localStorage.setItem(TOKEN_KEY, `${tokenType} ${accessToken}`)
             await getUserInfo()
+            if (user.value.user_instance_status === 0) {
+                localStorage.setItem(TOKEN_KEY, '')
+                user.value = {
+                    user_instance_group_name: 'user',
+                    user_instance_name: '访客',
+                    user_instance_avatar:
+                        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+                    user_instance_id: 0
+                }
+                ElMessage.error('账号已被禁用，请联系管理员')
+                throw new Error('账号已被禁用，请联系管理员')
+            }
             // console.log('store sucess')
         } catch (error) {
             return Promise.reject(error)
@@ -40,6 +53,9 @@ export const useUserStore = defineStore('user', () => {
     }
     async function getUserInfo(): Promise<void> {
         try {
+            if (!localStorage.getItem(TOKEN_KEY)) {
+                throw new Error('Verification failed, please Login again.')
+            }
             const data = await UserAPI.getInfoCur()
             if (!data) {
                 throw new Error('Verification failed, please Login again.')
@@ -50,7 +66,7 @@ export const useUserStore = defineStore('user', () => {
                     'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
             }
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         }
     }
 

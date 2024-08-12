@@ -16,60 +16,13 @@
             <el-tooltip :content="$t('navbar.langSelect.tooltip')" effect="dark" placement="bottom">
                 <lang-select class="nav-action-item" />
             </el-tooltip>
-
-            <!-- 消息通知 -->
-            <el-tooltip :content="$t('navbar.notice')" effect="dark" placement="bottom">
-                <el-dropdown class="message nav-action-item" trigger="click">
-                    <el-badge is-dot>
-                        <div class="flex-center h100% p10px">
-                            <i-ep-bell />
-                        </div>
-                    </el-badge>
-                    <template #dropdown>
-                        <div class="px-5 py-2">
-                            <el-tabs v-model="activeTab">
-                                <el-tab-pane
-                                    v-for="(label, key) in MessageTypeLabels"
-                                    :label="label"
-                                    :name="key"
-                                    :key="key"
-                                >
-                                    <div
-                                        class="w-[380px] py-2"
-                                        v-for="message in getFilteredMessages(key)"
-                                        :key="message.id"
-                                    >
-                                        <el-link type="primary">
-                                            <el-text class="w-350px" size="default" truncated>
-                                                {{ message.title }}</el-text
-                                            >
-                                        </el-link>
-                                    </div>
-                                </el-tab-pane>
-                            </el-tabs>
-                            <el-divider />
-                            <div class="flex-x-between">
-                                <el-link type="primary" :underline="false">
-                                    <span class="text-xs">查看更多</span
-                                    ><el-icon class="text-xs"><ArrowRight /></el-icon
-                                ></el-link>
-                                <el-link type="primary" :underline="false">
-                                    <span class="text-xs">全部已读</span></el-link
-                                >
-                            </div>
-                        </div>
-                    </template>
-                </el-dropdown>
-            </el-tooltip>
         </template>
 
         <!-- 用户头像 -->
         <el-dropdown class="nav-action-item" trigger="click">
             <div class="flex-center h100% p10px">
-                <img
-                    :src="userStore.user.user_instance_avatar + '?imageView2/1/w/80/h/80'"
-                    class="rounded-full mr-10px w24px w24px"
-                />
+                <img :src="userStore.user.user_instance_avatar + '?imageView2/1/w/80/h/80'"
+                    class="rounded-full mr-10px w24px w24px" />
                 <span>{{ userStore.user.user_instance_name }}</span>
             </div>
             <template #dropdown>

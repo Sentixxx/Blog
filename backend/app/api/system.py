@@ -90,6 +90,13 @@ def on_user_borrow(id):
     ret = {}
     ret['results'] = {}
 
+    # print("__________________________________")
+    # print(id)
+
+    if id == 0:
+        ret['status'] = 200
+        return jsonify(ret) , 200
+
     results = Borrow.query.filter_by(user_instance_id=id).all()
 
     ret['results']['borrow_cnt']  = 0

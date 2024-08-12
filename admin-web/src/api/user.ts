@@ -9,10 +9,10 @@ class UserAPI {
             method: 'get'
         })
     }
-    static getInfCur(): Promise<UserInfo> {
-        return request<any, UserInfo>({
-            url: `${USER_BASE_URL}/info/cur`,
-            method: 'get'
+    static banUser(id: number): Promise<void> {
+        return request<any, void>({
+            url: `${USER_BASE_URL}/ban/${id}`,
+            method: 'put'
         })
     }
     static getInfoCur(): Promise<UserInfo> {

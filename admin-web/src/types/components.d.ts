@@ -23,6 +23,7 @@ declare module 'vue' {
     Breadcrumb: typeof import('./../components/Breadcrumb/index.vue')['default']
     Captcha: typeof import('./../components/Captcha/index.vue')['default']
     EditBookDialog: typeof import('./../views/manage/components/editBookDialog.vue')['default']
+    EditUserDialog: typeof import('./../views/manage/components/editUserDialog.vue')['default']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -110,6 +111,7 @@ declare module 'vue' {
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
     TagsView: typeof import('./../layout/components/TagsView/index.vue')['default']
     ThemeColorPicker: typeof import('./../layout/components/Settings/components/ThemeColorPicker.vue')['default']
+    UserEditDialog: typeof import('./../views/manage/components/userEditDialog.vue')['default']
     UserManage: typeof import('../views/manage/userManage.vue')['default']
   }
 }

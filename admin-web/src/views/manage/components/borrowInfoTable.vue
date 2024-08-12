@@ -62,14 +62,6 @@ const tableData = computed(() => {
     }))
 })
 
-function handleCurrentChange(val: number) {
-    state.page = val
-}
-
-function handleSizeChange(val: number) {
-    state.limit = val
-}
-
 const filterHandler = (value: string, row: BorrowLog, column: TableColumnCtx<BorrowLog>) => {
     const property = column.property as keyof BorrowLog
     if (property in row) {

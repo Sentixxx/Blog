@@ -3,22 +3,14 @@
         <el-divider>{{ $t('navbar.settings.theme') }}</el-divider>
 
         <div class="flex-center">
-            <el-switch
-                v-model="isDark"
-                active-icon="Moon"
-                inactive-icon="Sunny"
-                @change="changeTheme"
-            />
+            <el-switch v-model="isDark" active-icon="Moon" inactive-icon="Sunny" @change="changeTheme" />
         </div>
 
         <el-divider>{{ $t('settings.interface') }}</el-divider>
 
         <div class="setting-item">
             <span class="text-xs">{{ $t('settings.themeColor') }}</span>
-            <ThemeColorPicker
-                v-model="settingsStore.themeColor"
-                @update:model-value="changeThemeColor"
-            />
+            <ThemeColorPicker v-model="settingsStore.themeColor" @update:model-value="changeThemeColor" />
         </div>
 
         <div class="setting-item">
@@ -34,11 +26,6 @@
         <div class="setting-item">
             <span class="text-xs">{{ $t('settings.sidebarLogo') }}</span>
             <el-switch v-model="settingsStore.sidebarLogo" />
-        </div>
-
-        <div class="setting-item">
-            <span class="text-xs">{{ $t('settings.watermark') }}</span>
-            <el-switch v-model="settingsStore.watermarkEnabled" />
         </div>
 
         <el-divider>{{ $t('settings.navigation') }}</el-divider>

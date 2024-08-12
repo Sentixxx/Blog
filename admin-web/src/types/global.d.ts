@@ -52,8 +52,6 @@ declare global {
         themeMode: string
         size: string
         language: string
-        watermarkEnabled: boolean
-        watermarkContent: string
     }
 }
 

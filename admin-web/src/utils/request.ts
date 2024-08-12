@@ -46,6 +46,7 @@ service.interceptors.response.use(
                     location.reload()
                 })
         }
+        console.log(status)
         ElMessage.error(msg || '系统出错')
         return Promise.reject(new Error(msg || 'Error'))
     },
@@ -60,12 +61,12 @@ service.interceptors.response.use(
             // console.log(status == (ResultEnum.TOKEN_INVALID))
             if (status === ResultEnum.TOKEN_INVALID) {
                 // console.log('in')
-                ElMessage.error('您的会话已过期，请重新登录')
-                // ElNotification({
-                //     title: '提示',
-                //     message: '您的会话已过期，请重新登录',
-                //     type: 'info'
-                // })
+                // ElMessage.error('您的会话已过期，请重新登录')
+                ElNotification({
+                    title: '提示',
+                    message: '您的会话已过期，请重新登录',
+                    type: 'info'
+                })
                 useUserStoreHook().resetToken()
             } else {
                 ElMessage.error(msg || '系统出错')

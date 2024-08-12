@@ -5,12 +5,8 @@
         </div>
         <template #dropdown>
             <el-dropdown-menu>
-                <el-dropdown-item
-                    v-for="item in langOptions"
-                    :key="item.value"
-                    :disabled="appStore.language === item.value"
-                    :command="item.value"
-                >
+                <el-dropdown-item v-for="item in langOptions" :key="item.value"
+                    :disabled="appStore.language === item.value" :command="item.value">
                     {{ item.label }}
                 </el-dropdown-item>
             </el-dropdown-menu>
@@ -42,6 +38,6 @@ function handleLanguageChange(lang: string) {
     locale.value = lang
     appStore.setLanguage(lang)
 
-    ElMessage.success(t('langSelect.message.success'))
+    ElMessage.success(t('navbar.langSelect.message.success'))
 }
 </script>

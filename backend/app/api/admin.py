@@ -56,43 +56,6 @@ def on_modify_group():
         ret['status'] = 200
     return jsonify(ret) , 200
 
-@admin.route('/search_user',methods=['GET'])
-def on_search_user():
-    name = request.args.get('user_instance_name','')
-    phone = request.args.get('user_instance_phone','')
-    email = request.args.get('user_instance_email','')
-    nickname = request.args.get('user_instance_nickname','')
-    id = request.args.get('user_instance_id','')
-    ret = {}
-    ret['results'] = []
-
-    if id:
-        result = UserInstance.query.filter(UserInstance.user_instance_id==id).first()
-        if result:
-            ret['results'].append(result.to_dict())
-            return jsonify(ret) , 200
-        else:
-            ret['msg'] = "用户不存在"
-            ret['status'] = -1
-            return jsonify(ret)
-    
-
-    qeury = UserInstance.query.filter(UserInstance.is_deleted==0)
-
-    if name:
-        query = query.filter(UserInstance.user_instance_name.like('%' + name + '%'))
-    if phone:
-        query = query.filter(UserInstance.user_instance_phone.like('%' + phone + '%'))
-    if email:
-        query = query.filter(UserInstance.user_instance_email.like('%' + email + '%'))
-    if nickname:
-        query = query.filter(UserInstance.user_instance_nickname.like('%' + nickname + '%'))
-    
-    results = query.all()
-    for result in results:
-        ret['results'].append(result.to_dict())
-    return jsonify(ret) , 200
-
 
 @admin.route('/show_all_user',methods=['GET'])
 def on_show_all_user():
