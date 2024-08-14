@@ -1,72 +1,51 @@
 <template>
     <div id="borrow">
+        <div class="search-container">
+            <el-input v-model="input" style="width: 100%" :placeholder="$t('book.please_input')"
+                class="input-with-select" size="large" @keyup.enter="handleSearch">
+                <template #prepend>
+                    <el-select v-model="select" placeholder="Select" style="width: 115px" size="large">
+                        <el-option :label="$t('book.name')" value="book_name" />
+                        <el-option :label="$t('book.code')" value="book_instance_id" />
+                    </el-select>
+                </template>
+                <template #append>
+                    <el-button :icon="Search" @click="handleSearch" />
+                </template>
+            </el-input>
+        </div>
         <div class="show-container">
-            <el-table
-                :data="tableData"
-                row-key="return_time"
-                :default-sort="{ prop: 'is_completed', order: 'descending' }"
-            >
+            <el-table :data="tableData" row-key="return_time"
+                :default-sort="{ prop: 'is_completed', order: 'descending' }">
                 <el-table-column prop="" :label="$t('book.cover')">
                     <template #default="{ row }">
-                        <el-image
-                            v-if="row.book_pic"
-                            :src="row.book_pic"
-                            fit="cover"
-                            :preview-src-list="[row.book_pic]"
-                            preview-teleported
-                        />
-                        <el-image
-                            v-else
-                            src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                            fit="cover"
-                            :preview-src-list="[row.book_pic]"
-                            preview-teleported
-                        />
+                        <el-image v-if="row.book_pic" :src="row.book_pic" fit="cover" :preview-src-list="[row.book_pic]"
+                            preview-teleported />
+                        <el-image v-else src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                            fit="cover" :preview-src-list="[row.book_pic]" preview-teleported />
                     </template>
                 </el-table-column>
                 <el-table-column prop="book_name" :label="$t('book.name')" />
                 <el-table-column prop="book_instance_id" :label="$t('book.code')" />
                 <el-table-column prop="borrow_time" :label="$t('book.borrow_time')" />
                 <el-table-column prop="return_time" :label="$t('book.return_time')" />
-                <el-table-column
-                    prop="is_completed"
-                    :label="$t('book.is_complete_status')"
-                    :filters="[
-                        { text: $t('book.not_complete'), value: $t('book.not_complete') },
-                        { text: $t('book.is_complete'), value: $t('book.is_complete') }
-                    ]"
-                    :filter-method="filterHandler"
-                />
+                <el-table-column prop="is_completed" :label="$t('book.is_complete_status')" :filters="[
+                    { text: $t('book.not_complete'), value: $t('book.not_complete') },
+                    { text: $t('book.is_complete'), value: $t('book.is_complete') }
+                ]" :filter-method="filterHandler" />
                 <el-table-column prop="Edit" :label="$t('book.edit.name')">
                     <template #default="{ row }">
-                        <div class="edit_btn">
-                            <el-tooltip
-                                :content="$t('book.edit.delay')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Clock"
-                                    circle
-                                    @click="handleDelayClick(row.borrow_id)"
-                                />
+                        <div class="edit_btn" v-if="row.is_completed == $t('book.not_complete')">
+                            <el-tooltip :content="$t('book.edit.delay')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="Clock" circle
+                                    @click="handleDelayClick(row.borrow_id)" />
                             </el-tooltip>
 
                             <!-- Return Book Tooltip with Popconfirm -->
-                            <el-tooltip
-                                :content="$t('book.edit.return')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Ticket"
-                                    @click="
-                                        handleReturnConfirm(row.borrow_id, row.book_instance_id)
-                                    "
-                                    circle
-                                />
+                            <el-tooltip :content="$t('book.edit.return')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="Ticket" @click="
+                                    handleReturnConfirm(row.borrow_id, row.book_instance_id)
+                                    " circle />
                             </el-tooltip>
                         </div>
                     </template>
@@ -75,13 +54,8 @@
 
             <!-- Pagination Component -->
             <div class="flex justify-center">
-                <el-pagination
-                    background
-                    layout="prev, pager, next"
-                    :total="state.total"
-                    @current-change="handleCurrentChange"
-                    @size-change="handleSizeChange"
-                />
+                <el-pagination background layout="prev, pager, next" :total="state.total"
+                    @current-change="handleCurrentChange" @size-change="handleSizeChange" />
             </div>
         </div>
         <div>
@@ -91,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { Clock, Ticket } from '@element-plus/icons-vue'
+import { Clock, Ticket, Search } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores'
 import type { TableColumnCtx } from 'element-plus'
 import BookInstanceAPI from '@/api/bookInstance'
@@ -99,6 +73,8 @@ import BorrowAPI, { BorrowLog } from '@/api/borrow'
 const { t } = useI18n()
 const userStore = useUserStore()
 const allTableData = ref<BorrowLog[]>([])
+const input = ref('')
+const select = ref('book_name')
 
 const state = reactive({
     page: 1,
@@ -141,6 +117,15 @@ const filterHandler = (value: string, row: BorrowLog, column: TableColumnCtx<Bor
     return false
 }
 
+async function handleSearch() {
+    try {
+        const res = await BorrowAPI.search(select.value, input.value)
+        allTableData.value = res
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 watchEffect(() => {
     state.total = allTableData.value.length
 })
@@ -176,12 +161,15 @@ async function handleReturnConfirm(borrow_id: number, book_instance_id: string) 
     padding: 0 0 0 0;
     border: 0 0 0 0;
 }
+
 .search-container {
     border: 40 40 40 40x;
 }
+
 .book-info-dialog {
     padding: 20px;
 }
+
 .book-cover {
     text-align: center;
 }

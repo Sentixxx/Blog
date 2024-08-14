@@ -7,26 +7,14 @@
             <el-table-column :label="$t('book.edit.name')">
                 <template #default="{ row }">
                     <div class="btn">
-                        <el-button
-                            type="primary"
-                            size="small"
-                            @click="handleBorrowOpen(row.book_instance_id)"
-                        >
+                        <el-button type="primary" size="small" @click="handleBorrowOpen(row.book_instance_id)">
                             {{ $t('book.borrow') }}
                         </el-button>
                         <div v-if="isAdmin()">
-                            <el-button
-                                type="primary"
-                                size="small"
-                                @click="handleHistoryOpen(row.book_instance_id)"
-                            >
+                            <el-button type="primary" size="small" @click="handleHistoryOpen(row.book_instance_id)">
                                 {{ $t('book.history') }}
                             </el-button>
-                            <el-button
-                                type="primary"
-                                size="small"
-                                @click="handleInstanceDelete(row.book_instance_id)"
-                            >
+                            <el-button type="primary" size="small" @click="handleInstanceDelete(row.book_instance_id)">
                                 {{ $t('book.edit.delete') }}
                             </el-button>
                         </div>
@@ -44,16 +32,16 @@
                 <el-table-column prop="borrow_time" :label="$t('book.borrow_time')" />
                 <el-table-column prop="actual_return_time" :label="$t('book.return_time')" />
             </el-table>
+            <div class="flex justify-center">
+                <el-pagination background layout="prev, pager, next" :total="state.total"
+                    @current-change="handleCurrentChange" @size-change="handleSizeChange" />
+            </div>
         </div>
     </el-dialog>
     <el-dialog v-model="innerVisible" width="500" append-to-body center>
         <div class="time-container">
             <h1>{{ $t('book.return_time') }}</h1>
-            <el-date-picker
-                type="datetime"
-                :placeholder="$t('book.return_time')"
-                v-model="return_time"
-            />
+            <el-date-picker type="datetime" :placeholder="$t('book.return_time')" v-model="return_time" />
         </div>
         <template #footer>
             <div class="dialog-footer">
@@ -84,6 +72,19 @@ const innerVisible = ref<boolean>(false)
 const innerVisible2 = ref<boolean>(false)
 const curBookInstanceId = ref<string>('')
 const historyData = ref<any[]>([])
+
+const state = reactive({
+    page: 1,
+    limit: 10,
+    total: historyData.value.length
+})
+
+function handleCurrentChange(val: number) {
+    state.page = val
+}
+function handleSizeChange(val: number) {
+    state.limit = val
+}
 
 async function handleHistoryOpen(id: string) {
     const res = await BorrowAPI.getByBookInstanceId(id)
@@ -125,6 +126,7 @@ async function handleBorrowConfirm() {
     display: flex;
     justify-content: space-around;
 }
+
 .time-container {
     display: flex;
     flex-direction: column;
