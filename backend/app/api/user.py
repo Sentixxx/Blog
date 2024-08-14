@@ -10,7 +10,21 @@ from app.services.user import get_user_info
 user = Blueprint('user',__name__)
 
 @user.route('/search',methods=['GET'])
+@jwt_required()
 def on_search_user():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "查询用户失败：无法识别当前用户"
+        ret['status'] = -3
+        return jsonify(ret), 200
+
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+
+    if cur_user.user_instance_group_name == 'user':
+        ret['msg'] = "查询用户失败：权限不足"
+        ret['status'] = -5
+        return jsonify(ret), 200
     name = request.args.get('user_instance_name','')
     phone = request.args.get('user_instance_phone','')
     email = request.args.get('user_instance_email','')
@@ -111,13 +125,12 @@ def on_ban(id):
 
 
 
-@user.route('/info/all',methods=['GET'])
+@user.route('/all',methods=['GET'])
 @jwt_required()
 def on_get_all():
     current_user = get_jwt_identity()
 
     
-
     if current_user is None:
         ret['msg'] = "获取用户信息失败：无法识别当前用户"
         ret['status'] = -3
@@ -154,7 +167,7 @@ def on_get_all():
     ret['status'] = 200
     return jsonify(ret) , 200
 
-@user.route('/info/cur',methods=['GET'])
+@user.route('/cur',methods=['GET'])
 @jwt_required()
 def on_info():
     current_user = get_jwt_identity()
@@ -182,7 +195,7 @@ def on_info():
         ret['status'] = 200
         return jsonify(ret) , 200
 
-@user.route('/info/get/<int:id>',methods=['GET'])
+@user.route('/<int:id>',methods=['GET'])
 @jwt_required()
 def on_get_info(id):
     current_user = get_jwt_identity()
@@ -228,7 +241,7 @@ def on_get_info(id):
 
     return jsonify(ret), 200
     
-@user.route('/info/update/<int:id>',methods=['PUT'])
+@user.route('/<int:id>',methods=['PUT'])
 @jwt_required()
 def on_update(id):
     current_user = get_jwt_identity()
@@ -267,6 +280,7 @@ def on_update(id):
     user.user_instance_email = data.get('user_instance_email') or user.user_instance_email
     user.user_instance_phone = data.get('user_instance_phone') or user.user_instance_phone
     user.user_instance_avatar = data.get('user_instance_avatar') or user.user_instance_avatar
+    user.user_instance_group_name = data.get('user_instance_group_name') or user.user_instance_group_name
 
     if submit(sess):
         ret['status'] = 200

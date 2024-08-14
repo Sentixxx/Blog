@@ -5,7 +5,7 @@ const USER_BASE_URL = '/user'
 class UserAPI {
     static getAll(): Promise<UserInfo[]> {
         return request<any, UserInfo[]>({
-            url: `${USER_BASE_URL}/info/all`,
+            url: `${USER_BASE_URL}/all`,
             method: 'get'
         })
     }
@@ -17,13 +17,7 @@ class UserAPI {
     }
     static getInfoCur(): Promise<UserInfo> {
         return request<any, UserInfo>({
-            url: `${USER_BASE_URL}/info/cur`,
-            method: 'get'
-        })
-    }
-    static getInfo(): Promise<UserInfo> {
-        return request<any, UserInfo>({
-            url: `${USER_BASE_URL}/info`,
+            url: `${USER_BASE_URL}/cur`,
             method: 'get'
         })
     }
@@ -36,7 +30,7 @@ class UserAPI {
     }
     static updateInfoCur(data: UserInfo): Promise<void> {
         return request<UserInfo, void>({
-            url: `${USER_BASE_URL}/info/update/${data.user_instance_id}`,
+            url: `${USER_BASE_URL}/${data.user_instance_id}`,
             method: 'put',
             data
         })

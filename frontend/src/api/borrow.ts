@@ -7,30 +7,40 @@ class BorrowAPI {
      * @returns 图书信息
      */
 
+    static search(search_option: string, search_value: string): Promise<BorrowLog[]> {
+        return request<any, BorrowLog[]>({
+            url: `${Borrow_BASE_URL}/search`,
+            method: 'get',
+            params: {
+                [search_option]: search_value
+            }
+        })
+    }
+
     static getAll(): Promise<BorrowLog[]> {
         return request<any, BorrowLog[]>({
-            url: `${Borrow_BASE_URL}/info/all`,
+            url: `${Borrow_BASE_URL}/all`,
             method: 'get'
         })
     }
 
     static getByBookInstanceId(book_instance_id: string): Promise<BorrowLog[]> {
         return request<any, BorrowLog[]>({
-            url: `${Borrow_BASE_URL}/info/book_instance_id/${book_instance_id}`,
+            url: `${Borrow_BASE_URL}/book_instance_id/${book_instance_id}`,
             method: 'get'
         })
     }
 
     static getByUserId(user_id: number): Promise<BorrowLog[]> {
         return request<any, BorrowLog[]>({
-            url: `${Borrow_BASE_URL}/info/user_id/${user_id}`,
+            url: `${Borrow_BASE_URL}/user_id/${user_id}`,
             method: 'get'
         })
     }
 
     static getByBorrowId(borrow_id: number): Promise<BorrowLog> {
         return request<any, BorrowLog>({
-            url: `${Borrow_BASE_URL}/info/borrow_id/${borrow_id}`,
+            url: `${Borrow_BASE_URL}/borrow_id/${borrow_id}`,
             method: 'get'
         })
     }

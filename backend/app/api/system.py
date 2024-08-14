@@ -70,7 +70,7 @@ def on_regist():
         ret['status'] = 200
     return jsonify(ret) , 200
 
-@system.route('/info/userBorrow/<int:id>',methods=['GET'])
+@system.route('/userBorrow/<int:id>',methods=['GET'])
 def on_user_borrow(id):
     sess = db.session()
     ret = {}

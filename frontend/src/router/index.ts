@@ -66,7 +66,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
                             try {
                                 console.log(to.params.id)
                                 const res: [any] = await request({
-                                    url: '/book/info',
+                                    url: '/book',
                                     params: { book_id: to.params.id },
                                     method: 'get'
                                 })

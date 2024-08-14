@@ -7,7 +7,7 @@ import { useUserStore } from '@/stores'
 
 export function setupPermission() {
     // 黑名单路由
-    const blackList = ['/borrow', '/info']
+    const blackList = ['/borrow', '/','/user','/manage']
     console.log(blackList)
     router.beforeEach(async (to, from, next) => {
         NProgress.start()

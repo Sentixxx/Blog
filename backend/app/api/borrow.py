@@ -1,4 +1,5 @@
 from flask import Blueprint , request
+from flask_jwt_extended import jwt_required , get_jwt_identity
 from app.extensions import db
 from app.models import *
 from app.utils import to_dict , submit
@@ -7,8 +8,23 @@ from app.services.borrow import delay_borrow
 
 borrow = Blueprint('borrow',__name__)
 
-@borrow.route('/info/all',methods=['GET'])
+
+@borrow.route('/all',methods=['GET'])
+@jwt_required()
 def on_info_all():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name == 'user':
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
+    
     ret = {}
 
     results = Borrow.query.filter_by(is_deleted=0).all()
@@ -23,8 +39,22 @@ def on_info_all():
     
     return jsonify(ret)
 
-@borrow.route('/info/user_id/<int:user_id>',methods=['GET'])
+@borrow.route('/user_id/<int:user_id>',methods=['GET'])
+@jwt_required()
 def on_info_user(user_id):
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name == 'user' and cur_user.user_instance_id != user_id:
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
+
     ret = {}
 
     results = Borrow.query.filter(Borrow.is_deleted==0,Borrow.user_instance_id==user_id).all()
@@ -49,8 +79,21 @@ def on_info_user(user_id):
 
     return jsonify(ret)
 
-@borrow.route('/info/borrow_id/<int:borrow_id>',methods=['GET'])
+@borrow.route('/borrow_id/<int:borrow_id>',methods=['GET'])
+@jwt_required()
 def on_info_borrow(borrow_id):
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name == 'user':
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
     ret = {}
 
     result = Borrow.query.filter(Borrow.is_deleted==0,Borrow.borrow_id==borrow_id).first()
@@ -74,8 +117,22 @@ def on_info_borrow(borrow_id):
 
     return jsonify(ret)
 
-@borrow.route('/info/book_instance_id/<string:book_instance_id>',methods=['GET'])
+@borrow.route('/book_instance_id/<string:book_instance_id>',methods=['GET'])
+@jwt_required()
 def on_info_bi(book_instance_id):
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name == 'user':
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
+
     ret = {}
 
     results = Borrow.query.filter(Borrow.is_deleted==0,Borrow.book_instance_id==book_instance_id).all()
@@ -102,7 +159,38 @@ def on_info_bi(book_instance_id):
 
     return jsonify(ret)
 
-@borrow.route('/info/book_id/<int:book_id>',methods=['GET'])
+@borrow.route('/search',methods=['GET'])
+@jwt_required()
+def on_search():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    data = request.args.to_dict()
+
+
+    ret = {}
+
+    query = Borrow.query.filter(Borrow.is_deleted == 0,Borrow.user_instance_id==current_user)
+
+    if data.get('book_name') is not None:
+        query = query.join(BookInstance,BookInstance.book_instance_id == Borrow.book_instance_id).join(Book,Book.book_id == BookInstance.book_id).filter(Book.book_name.like('%'+data['book_name']+'%'))
+
+    if data.get('book_instance_id') is not None:
+        query = query.filter(Borrow.book_instance_id == data['book_instance_id'])
+
+    results = query.all()
+
+    ret['results'] = to_dict(results)
+    ret['status'] = 200
+    ret['msg'] = "查询成功"
+
+    return jsonify(ret)
+
+@borrow.route('/book_id/<int:book_id>',methods=['GET'])
 def on_info_book(book_id):
     ret = {}
 

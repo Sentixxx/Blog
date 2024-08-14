@@ -7,14 +7,14 @@ class BookAPI {
      */
     static getAll(): Promise<BookInfo[]> {
         return request<any, BookInfo[]>({
-            url: `${BOOK_BASE_URL}/info/all`,
+            url: `${BOOK_BASE_URL}/all`,
             method: 'get'
         })
     }
 
     static get(book_id: number): Promise<BookInfo> {
         return request<any, BookInfo>({
-            url: `${BOOK_BASE_URL}/info/${book_id}`,
+            url: `${BOOK_BASE_URL}/${book_id}`,
             method: 'get'
         })
     }
@@ -33,7 +33,7 @@ class BookAPI {
 
     static add(data: BookInfo): Promise<BookInfo> {
         return request<any, BookInfo>({
-            url: `${BOOK_BASE_URL}/add`,
+            url: `${BOOK_BASE_URL}`,
             method: 'post',
             params: {
                 ...data
@@ -43,14 +43,14 @@ class BookAPI {
 
     static delete(book_id: number): Promise<BookInfo[]> {
         return request<any, BookInfo[]>({
-            url: `${BOOK_BASE_URL}/delete/${book_id}`,
+            url: `${BOOK_BASE_URL}/${book_id}`,
             method: 'delete'
         })
     }
 
     static updateBook(book_id: number, data: BookInfo): Promise<BookInfo> {
         return request<any, BookInfo>({
-            url: `${BOOK_BASE_URL}/update/${book_id}`,
+            url: `${BOOK_BASE_URL}/${book_id}`,
             method: 'put',
             params: {
                 ...data

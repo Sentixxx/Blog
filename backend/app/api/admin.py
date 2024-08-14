@@ -1,4 +1,5 @@
 from flask import Blueprint , request ,jsonify
+from flask_jwt_extended import jwt_required , get_jwt_identity
 from app.extensions import db
 from app.models.user_group import add_group , update_group , delete_group , UserGroup
 from app.models import UserInstance
@@ -6,8 +7,21 @@ from app.utils import submit
 
 admin = Blueprint('admin',__name__)
 
-@admin.route('/add_group',methods=['POST'])
+@admin.route('/group',methods=['POST'])
+@jwt_required()
 def on_add_group():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name != 'super_admin':
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
     data = request.args.to_dict()
 
     sess = db.session()
@@ -31,8 +45,21 @@ def on_add_group():
         ret['status'] = 200
     return jsonify(ret) , 200
 
-@admin.route('/modify_group',methods=['POST'])
+@admin.route('/group',methods=['POST'])
+@jwt_required()
 def on_modify_group():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name != 'super_admin':
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
     data = request.args.to_dict()
 
     sess = db.session()
@@ -58,7 +85,21 @@ def on_modify_group():
 
 
 @admin.route('/show_all_user',methods=['GET'])
+@jwt_required()
 def on_show_all_user():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "用户不存在"
+        ret['status'] = -1
+        return jsonify(ret), 200
+    
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+    if cur_user.user_instance_group_name == 'user':
+        ret['msg'] = "无权限"
+        ret['status'] = -5
+        return jsonify(ret), 200
+
     ret = {}
     ret['results'] = []
 

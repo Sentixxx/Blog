@@ -9,28 +9,28 @@ class BookInstanceAPI {
 
     static getAll(): Promise<BookInstance[]> {
         return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_BASE_URL}/info/all`,
+            url: `${BOOK_INSTANCE_BASE_URL}/all`,
             method: 'get'
         })
     }
 
     static getById(book_id: number): Promise<BookInstance[]> {
         return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_BASE_URL}/info/book_id/${book_id}`,
+            url: `${BOOK_INSTANCE_BASE_URL}/book_id/${book_id}`,
             method: 'get'
         })
     }
 
     static get(book_instance_id: string): Promise<BookInstance[]> {
         return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_BASE_URL}/info/book_instance/${book_instance_id}`,
+            url: `${BOOK_INSTANCE_BASE_URL}/book_instance_id/${book_instance_id}`,
             method: 'get'
         })
     }
 
     static add(id: any, data: BookInstance): Promise<BookInstance> {
         return request<any, BookInstance>({
-            url: `${BOOK_INSTANCE_BASE_URL}/add`,
+            url: `${BOOK_INSTANCE_BASE_URL}`,
             method: 'post',
             params: {
                 book_id: id,
@@ -41,14 +41,14 @@ class BookInstanceAPI {
 
     static delete(book_instance_id: string): Promise<BookInstance[]> {
         return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_BASE_URL}/delete/${book_instance_id}`,
+            url: `${BOOK_INSTANCE_BASE_URL}/${book_instance_id}`,
             method: 'delete'
         })
     }
 
     static update(book_instance_id: string): Promise<BookInstance[]> {
         return request<any, BookInstance[]>({
-            url: `${BOOK_INSTANCE_BASE_URL}/update/${book_instance_id}`,
+            url: `${BOOK_INSTANCE_BASE_URL}/${book_instance_id}`,
             method: 'put'
         })
     }
