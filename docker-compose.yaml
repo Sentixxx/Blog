@@ -1,0 +1,61 @@
+version: '3'
+services:
+  frontend:
+    container_name: frontend
+    build: 
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - database
+    depends_on:
+      - app
+    volumes:
+      - frontend:/vue
+
+  app:
+    container_name: app
+    build: 
+      context: .
+    ports:
+      - "8091:8091"
+      - "8090:8090"
+    networks:
+      - database
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=my
+      - DB_USER=root
+      - DB_NAME=book_admin
+      - DB_PORT=5432
+    volumes:
+      - .:/app
+
+  mysql:
+    image: mysql:latest
+    container_name: db
+    restart: always
+    networks:
+      - database
+    ports:
+      - "5432:5432"
+    environment:
+      MYSQL_DATABASE: book_admin
+      MYSQL_ROOT_PASSWORD: my
+
+    volumes:
+      - data:/var/lib/mysql
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+    user: mysql
+
+volumes:
+  data:
+
+networks:
+  database:
+    driver: bridge
+    external: true
+
+#https://juejin.cn/post/6844903847383547911
