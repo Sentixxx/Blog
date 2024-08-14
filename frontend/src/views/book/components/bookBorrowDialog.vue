@@ -60,6 +60,7 @@
 import { BookInfo } from '@/api/book'
 import BookInstanceAPI from '@/api/bookInstance'
 import BorrowAPI from '@/api/borrow'
+import { useUserStore } from '@/stores';
 import { isAdmin } from '@/utils/perm'
 
 const userId = defineModel<number>('userId')
@@ -108,7 +109,7 @@ async function handleBorrowConfirm() {
     try {
         await BookInstanceAPI.borrow(
             curBookInstanceId.value,
-            userId.value as number,
+            useUserStore().user.user_instance_id,
             return_time.value,
             data.value?.[0].book_id ?? 0
         )

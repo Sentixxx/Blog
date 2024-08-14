@@ -183,10 +183,25 @@ def on_search():
         query = query.filter(Borrow.book_instance_id == data['book_instance_id'])
 
     results = query.all()
+    if results:
+        ret['results'] = []
+        records = to_dict(results)
+        for record in records:
+            book_instance = BookInstance.query.filter(BookInstance.is_deleted==0,BookInstance.book_instance_id==record['book_instance_id']).first()
+            book = Book.query.filter(Book.is_deleted==0,Book.book_id==book_instance.book_id).first()
+            user = UserInstance.query.filter(UserInstance.is_deleted==0,UserInstance.user_instance_id==record['user_instance_id']).first()
+            record['user_instance_name'] = user.user_instance_name
+            record['book_name'] = book.book_name
+            record['book_author'] = book.book_author
+            record['book_press'] = book.book_press
+            record['book_isbn_code'] = book.book_isbn_code
 
-    ret['results'] = to_dict(results)
-    ret['status'] = 200
-    ret['msg'] = "查询成功"
+            ret['results'].append(record)
+        ret['msg'] = "获取成功"
+        ret['status'] = 200
+    else:
+        ret['msg'] = "借阅记录不存在"
+        ret['status'] = -2
 
     return jsonify(ret)
 

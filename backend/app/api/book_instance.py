@@ -136,7 +136,7 @@ def on_add():
         ret['status'] = -1
         return jsonify(ret) , 200
     
-    sess, ret['results'] = add_stock_num(data.get('book_id'),sess,ret['results'])
+    sess, ret['results'] = add_stock_num(ret['results']['book_instance_id'],sess,ret['results'])
 
     if ret['results'].get('error_msg') is not None:
         sess.rollback()
