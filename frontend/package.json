@@ -16,14 +16,10 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@types/color": "^3.0.6",
-    "@types/cors": "^2.8.17",
-    "@vue/cli": "^5.0.8",
     "@vueuse/core": "^10.11.0",
     "animate.css": "^4.1.1",
     "axios": "^1.7.2",
     "color": "^4.2.3",
-    "cors": "^2.8.5",
-    "echarts": "^5.5.1",
     "element-plus": "^2.7.6",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^7.1.0",
@@ -33,20 +29,12 @@
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
-    "@iconify-json/ep": "^1.1.15",
-    "@rushstack/eslint-patch": "^1.10.3",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.10",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/test-utils": "^2.4.6",
-    "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.27.0",
-    "fast-glob": "^3.3.2",
     "jsdom": "^24.1.0",
     "npm-run-all2": "^6.2.2",
     "prettier": "^3.3.2",
@@ -60,6 +48,10 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-devtools": "^7.3.5",
     "vitest": "^1.6.0",
-    "vue-tsc": "^2.0.26"
+    "vue-tsc": "^2.0.26",
+    "vue-eslint-parser": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0"
   }
 }
