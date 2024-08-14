@@ -122,6 +122,13 @@ def on_get_all():
         ret['msg'] = "获取用户信息失败：无法识别当前用户"
         ret['status'] = -3
         return jsonify(ret), 200
+
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+
+    if cur_user.user_instance_group_name == 'user':
+        ret['msg'] = "获取用户信息失败：权限不足"
+        ret['status'] = -5
+        return jsonify(ret,200)
     
     ret = {}
     ret['results'] = []
@@ -174,6 +181,52 @@ def on_info():
         ret['msg'] = "获取用户信息成功"
         ret['status'] = 200
         return jsonify(ret) , 200
+
+@user.route('/info/get/<int:id>',methods=['GET'])
+@jwt_required()
+def on_get_info(id):
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        ret['msg'] = "获取用户信息失败：无法识别当前用户"
+        ret['status'] = -3
+        return jsonify(ret), 200
+
+    cur_user = UserInstance.query.filter(UserInstance.user_instance_id == current_user).first()
+
+    if cur_user.user_instance_group_name != 'admin' and cur_user.user_instance_group_name != 'super_admin':
+        if cur_user.user_instance_id != id:
+            ret['msg'] = "获取用户信息失败：无权限"
+            ret['status'] = -5
+            return jsonify(ret), 200
+    
+    ret = {}
+    ret['results'] = []
+
+    user = UserInstance.query.filter(UserInstance.user_instance_id == id).first()
+
+    if user is None:
+        ret['msg'] = "获取用户信息失败：用户不存在"
+        ret['status'] = -2
+        return jsonify(ret), 200
+
+    if user.user_instance_group_name == 'super_admin':
+        ret['msg'] = "获取用户信息失败：权限不足"
+        ret['status'] = -5
+        return jsonify(ret), 200
+    
+    if user.user_instance_group_name != 'user' and cur_user.user_instance_group_name != 'super_admin':
+        ret['msg'] = "获取用户信息失败：权限不足"
+        ret['status'] = -5
+        return jsonify(ret), 200
+
+
+    ret['msg'] = "获取用户信息成功"
+    ret['status'] = 200
+    ret['results'] = user.to_dict()
+
+
+    return jsonify(ret), 200
     
 @user.route('/info/update/<int:id>',methods=['PUT'])
 @jwt_required()
@@ -209,10 +262,11 @@ def on_update(id):
         ret['status'] = -5
         return jsonify(ret), 200
 
-    user.user_instance_name = data.get('user_instance_name') or user.user_instance_name
     user.user_instance_password = data.get('user_instance_password') or user.user_instance_password
+    user.user_instance_nickname = data.get('user_instance_nickname') or user.user_instance_nickname
     user.user_instance_email = data.get('user_instance_email') or user.user_instance_email
     user.user_instance_phone = data.get('user_instance_phone') or user.user_instance_phone
+    user.user_instance_avatar = data.get('user_instance_avatar') or user.user_instance_avatar
 
     if submit(sess):
         ret['status'] = 200

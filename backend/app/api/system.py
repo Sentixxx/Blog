@@ -20,7 +20,7 @@ def on_login():
     ret['results'] = {}
 
     result = UserInstance.query.filter_by(user_instance_name=name).first()
-    print(name)
+    # print(name)
     
     if(result):
         if(result.user_instance_password == password):
@@ -69,20 +69,6 @@ def on_regist():
         ret['msg'] = "注册成功"
         ret['status'] = 200
     return jsonify(ret) , 200
-
-@system.route('/log',methods=['POST'])
-def on_log():
-    data = request.args.to_dict()
-
-    sess = db.session()
-
-    newlog = SysLog(log_module = data.get('log_module'),log_content = data.get('log_content'),log_user = data.get('log_user'),log_level = data.get('log_level'),log_time = data.get('log_time'),log_browser = data.get('log_browser'),log_browser_version = data.get('log_browser_version'),log_ip = data.get('log_ip'),log_create_by = data.get('log_create_by'),log_create_time = data.get('log_create_time'),log_update_by = data.get('log_update_by'),log_request_url = data.get('log_request_url'))
-
-    newlog.add(sess)
-
-    submit(sess)
-
-    return 200
 
 @system.route('/info/userBorrow/<int:id>',methods=['GET'])
 def on_user_borrow(id):

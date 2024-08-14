@@ -16,7 +16,7 @@ services:
   app:
     container_name: app
     build: 
-      context: .
+      context: ./backend
     ports:
       - "8091:8091"
       - "8090:8090"
@@ -31,7 +31,7 @@ services:
       - DB_NAME=book_admin
       - DB_PORT=5432
     volumes:
-      - .:/app
+      - backend:/app
 
   mysql:
     image: mysql:latest
@@ -46,16 +46,23 @@ services:
       MYSQL_ROOT_PASSWORD: my
 
     volumes:
-      - data:/var/lib/mysql
+      - ./backend/data:/var/lib/mysql
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
     user: mysql
 
 volumes:
   data:
+  frontend:
+  backend:
 
 networks:
   database:
     driver: bridge
     external: true
-
-#https://juejin.cn/post/6844903847383547911
+  backend:
+    driver: bridge
+    external: true
+  frontend:
+    driver: bridge
+    external: true
+  
