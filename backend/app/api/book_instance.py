@@ -8,7 +8,7 @@ from app.services.book import reduce_stock_num, add_stock_num
 
 book_instance = Blueprint('book_instance',__name__)
 
-@book_instance.route('/info/all',methods=['GET'])
+@book_instance.route('/all',methods=['GET'])
 def on_info_all():
     ret = {}
 
@@ -24,10 +24,9 @@ def on_info_all():
     
     return jsonify(ret)
 
-@book_instance.route('/info/book_id/<int:book_id>',methods=['GET'])
+@book_instance.route('/book_id/<int:book_id>',methods=['GET'])
 def on_info_book(book_id):
     ret = {}
-
     results = BookInstance.query.filter(BookInstance.is_deleted==0,BookInstance.book_instance_status==0,BookInstance.book_id==book_id).all()
 
     if results:
@@ -40,7 +39,7 @@ def on_info_book(book_id):
 
     return jsonify(ret)
 
-@book_instance.route('/info/book_instance/<string:book_instance_id>',methods=['GET'])
+@book_instance.route('/book_instance_id/<string:book_instance_id>',methods=['GET'])
 def on_info_bi(book_instance_id):
     ret = {}
 
@@ -107,7 +106,7 @@ def on_return():
         ret['status'] = -1
         return jsonify(ret) , 200
     
-    sess, ret['results'] = add_stock_num(data.get('book_id'),sess,ret['results'])
+    sess, ret['results'] = add_stock_num(data.get('book_instance_id'),sess,ret['results'])
     
     if not submit(sess):
         ret['msg'] = "归还失败，请稍后再试"
@@ -119,7 +118,7 @@ def on_return():
     return jsonify(ret) , 200
     
 
-@book_instance.route('/add',methods=['POST'])
+@book_instance.route('',methods=['POST'])
 def on_add():
     data = request.args.to_dict()
 
@@ -155,7 +154,7 @@ def on_add():
     ret['status'] = 200
     return jsonify(ret) , 200
 
-@book_instance.route('/delete/<string:book_instance_id>',methods=['DELETE'])
+@book_instance.route('/<string:book_instance_id>',methods=['DELETE'])
 def on_delete(book_instance_id):
     data = request.args.to_dict()
 
@@ -181,7 +180,7 @@ def on_delete(book_instance_id):
     ret['status'] = 200
     return jsonify(ret) , 200
 
-@book_instance.route('/update/<string:book_instance_id>',methods=['PUT'])
+@book_instance.route('/<string:book_instance_id>',methods=['PUT'])
 def on_update(book_instance_id):
     data = request.args.to_dict()
 

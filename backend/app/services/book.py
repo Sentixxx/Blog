@@ -1,4 +1,4 @@
-from app.models import Book
+from app.models import Book, BookInstance
 
 def add_book(data, sess, ret):
     optional_attrs = ['book_pic','book_type']
@@ -29,7 +29,15 @@ def add_book(data, sess, ret):
     return sess , ret
     
     
-def add_stock_num(book_id,sess,ret):
+def add_stock_num(book_instance_id,sess,ret):
+    book = BookInstance.query.filter(BookInstance.is_deleted==0,BookInstance.book_instance_id==book_instance_id).first()
+
+    if book is None:
+        ret['error_msg'] = "图书实例ID不存在"
+        return sess , ret
+
+    book_id = book.book_id
+
     result = Book.query.filter(Book.is_deleted==0,Book.book_id==book_id).first()
     
     if result is None:
@@ -86,13 +94,14 @@ def update_book(book_id,data,sess,ret):
     
     optional_attrs = ['book_pic','book_type']
     must_attrs = ['book_name','book_author','book_press','book_isbn_code','book_introduce']
-
+    ok = False
     for attr in must_attrs:
         if data.get(attr) is not None:
             setattr(result,attr,data.get(attr))
-        else:
-            ret['error_msg'] = "缺少必要信息"
-            return sess , ret
+            ok = True
+    if not ok:
+        ret['error_msg'] = "缺少必要信息"
+        return sess , ret
     for attr in optional_attrs:
         if data.get(attr) is not None:
             setattr(result,attr,data.get(attr))
