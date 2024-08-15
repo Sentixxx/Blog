@@ -2,21 +2,10 @@
     <div id="book">
         <div class="search-container">
             <div class="input-container">
-                <el-input
-                    v-model="input"
-                    style="width: 100%"
-                    :placeholder="$t('book.please_input')"
-                    class="input-with-select"
-                    size="large"
-                    @keyup.enter="handleSearch"
-                >
+                <el-input v-model="input" style="width: 100%" :placeholder="$t('book.please_input')"
+                    class="input-with-select" size="large" @keyup.enter="handleSearch">
                     <template #prepend>
-                        <el-select
-                            v-model="select"
-                            placeholder="Select"
-                            style="width: 115px"
-                            size="large"
-                        >
+                        <el-select v-model="select" placeholder="Select" style="width: 115px" size="large">
                             <el-option :label="$t('book.name')" value="book_name" />
                             <el-option :label="$t('book.isbn')" value="book_isbn_code" />
                             <el-option :label="$t('book.author')" value="book_author" />
@@ -35,20 +24,10 @@
             <el-table :data="tableData">
                 <el-table-column prop="" :label="$t('book.cover')">
                     <template #default="{ row }">
-                        <el-image
-                            :src="row.book_pic"
-                            fit="cover"
-                            :preview-src-list="[row.book_pic]"
-                            preview-teleported
-                            v-if="row.book_pic"
-                        />
-                        <el-image
-                            src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                            fit="cover"
-                            :preview-src-list="[row.book_pic]"
-                            preview-teleported
-                            v-else
-                        />
+                        <el-image :src="row.book_pic" fit="cover" :preview-src-list="[row.book_pic]" preview-teleported
+                            v-if="row.book_pic" />
+                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                            fit="cover" :preview-src-list="[row.book_pic]" preview-teleported v-else />
                     </template>
                 </el-table-column>
                 <el-table-column prop="book_name" :label="$t('book.name')" />
@@ -57,79 +36,30 @@
                 <el-table-column prop="Edit" :label="$t('book.edit.name')">
                     <template #default="{ row }">
                         <div class="edit_btn">
-                            <el-tooltip
-                                :content="$t('book.edit.info')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Search"
-                                    circle
-                                    @click="handleInfoClick(row.book_id)"
-                                />
+                            <el-tooltip :content="$t('book.edit.info')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="Search" circle @click="handleInfoClick(row.book_id)" />
                             </el-tooltip>
-                            <el-tooltip
-                                :content="$t('book.edit.name')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Edit"
-                                    circle
-                                    @click="handleEditClick(row.book_id)"
-                                />
+                            <el-tooltip :content="$t('book.edit.name')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="Edit" circle @click="handleEditClick(row.book_id)" />
                             </el-tooltip>
-                            <el-tooltip
-                                :content="$t('book.edit.delete')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Delete"
-                                    @click="handleDeleteConfirm(row.book_id)"
-                                    circle
-                                />
+                            <el-tooltip :content="$t('book.edit.delete')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="Delete" @click="handleDeleteConfirm(row.book_id)"
+                                    circle />
                             </el-tooltip>
 
-                            <el-tooltip
-                                :content="$t('book.edit.add')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="Plus"
-                                    circle
-                                    @click="handleAddClick(row.book_id)"
-                                />
+                            <el-tooltip :content="$t('book.edit.add')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="Plus" circle @click="handleAddClick(row.book_id)" />
                             </el-tooltip>
-                            <el-tooltip
-                                :content="$t('book.edit.show')"
-                                effect="dark"
-                                placement="bottom"
-                            >
-                                <el-button
-                                    type="primary"
-                                    :icon="List"
-                                    circle
-                                    @click="handleShowClick(row.book_id)"
-                                />
+                            <el-tooltip :content="$t('book.edit.show')" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="List" circle @click="handleShowClick(row.book_id)" />
                             </el-tooltip>
                         </div>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="flex justify-center">
-                <el-pagination
-                    background
-                    layout="prev, pager, next"
-                    :total="state.total"
-                    @current-change="handleCurrentChange"
-                    @size-change="handleSizeChange"
-                />
+                <el-pagination background layout="prev, pager, next" :total="state.total"
+                    @current-change="handleCurrentChange" @size-change="handleSizeChange" />
             </div>
         </div>
         <div class="book-info-container">
@@ -281,7 +211,7 @@ async function handleDeleteConfirm(book_id: number) {
 <style scoped>
 .search-container {
     width: calc(80%);
-    margin-top: 40px;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     padding: 0 0 0 0;
@@ -289,17 +219,19 @@ async function handleDeleteConfirm(book_id: number) {
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    background-color: transparent;
     border-color: transparent;
     box-shadow: 0 0 0 0;
+
     .input-container {
         border: 40 40 40 40px;
         flex-grow: 1;
     }
 }
+
 .book-info-dialog {
     padding: 20px;
 }
+
 .book-cover {
     text-align: center;
 }

@@ -17,6 +17,9 @@
                             <el-button type="primary" size="small" @click="handleInstanceDelete(row.book_instance_id)">
                                 {{ $t('book.edit.delete') }}
                             </el-button>
+                            <el-button type="primary" size="small" @click="handleInstanceEdit(row.book_instance_id)">
+                                {{ $t('book.edit.name') }}
+                            </el-button>
                         </div>
                     </div>
                 </template>
@@ -54,11 +57,27 @@
             </div>
         </template>
     </el-dialog>
+    <el-dialog v-model="innerVisible3" width="500" append-to-body center>
+        <div class="location-container">
+            <h1>{{ $t('book.location') }}</h1>
+            <el-input :placeholder="$t('book.location')" v-model="Location" />
+        </div>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="innerVisible3 = false">
+                    {{ $t('system.cancel') }}
+                </el-button>
+                <el-button type="primary" @click="handleLocationConfirm">
+                    {{ $t('system.confirm') }}
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { BookInfo } from '@/api/book'
-import BookInstanceAPI from '@/api/bookInstance'
+import BookInstanceAPI, { BookInstance } from '@/api/bookInstance'
 import BorrowAPI from '@/api/borrow'
 import { useUserStore } from '@/stores';
 import { isAdmin } from '@/utils/perm'
@@ -71,6 +90,7 @@ const return_time = ref<string>('')
 
 const innerVisible = ref<boolean>(false)
 const innerVisible2 = ref<boolean>(false)
+const innerVisible3 = ref<boolean>(false)
 const curBookInstanceId = ref<string>('')
 const historyData = ref<any[]>([])
 
@@ -85,6 +105,21 @@ function handleCurrentChange(val: number) {
 }
 function handleSizeChange(val: number) {
     state.limit = val
+}
+const curBookInstance = ref<BookInstance>() as any
+async function handleInstanceEdit(id: string) {
+    curBookInstanceId.value = id
+    curBookInstance.value = await BookInstanceAPI.get(id)
+    Location.value = curBookInstance.value.book_instance_location
+    innerVisible3.value = true
+}
+
+const Location = ref<string>('')
+async function handleLocationConfirm() {
+    curBookInstance.value.book_instance_location = Location.value
+    await BookInstanceAPI.update(curBookInstanceId.value, curBookInstance.value)
+    innerVisible3.value = false
+    location.reload()
 }
 
 async function handleHistoryOpen(id: string) {
@@ -123,9 +158,16 @@ async function handleBorrowConfirm() {
 </script>
 
 <style scoped>
+.location-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .btn {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .time-container {

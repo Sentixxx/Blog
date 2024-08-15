@@ -21,8 +21,8 @@ class BookInstanceAPI {
         })
     }
 
-    static get(book_instance_id: string): Promise<BookInstance[]> {
-        return request<any, BookInstance[]>({
+    static get(book_instance_id: string): Promise<BookInstance> {
+        return request<any, BookInstance>({
             url: `${BOOK_INSTANCE_BASE_URL}/book_instance_id/${book_instance_id}`,
             method: 'get'
         })
@@ -46,10 +46,13 @@ class BookInstanceAPI {
         })
     }
 
-    static update(book_instance_id: string): Promise<BookInstance[]> {
+    static update(book_instance_id: string, data: BookInstance): Promise<BookInstance[]> {
         return request<any, BookInstance[]>({
             url: `${BOOK_INSTANCE_BASE_URL}/${book_instance_id}`,
-            method: 'put'
+            method: 'put',
+            params: {
+                ...data
+            }
         })
     }
 

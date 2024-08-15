@@ -9,34 +9,23 @@
                             <el-col :span="24">
                                 <el-form :model="userStore.user" label-width="80px">
                                     <el-form-item :label="$t('user.name')">
-                                        <el-input
-                                            v-model="userStore.user.user_instance_name"
-                                            disabled
-                                        />
+                                        <el-input v-model="userStore.user.user_instance_name" disabled />
                                     </el-form-item>
                                     <el-form-item :label="$t('user.email')">
-                                        <el-input
-                                            v-model="userStore.user.user_instance_email"
-                                            :disabled="editable === false"
-                                        />
+                                        <el-input v-model="userStore.user.user_instance_email"
+                                            :disabled="editable === false" />
                                     </el-form-item>
                                     <el-form-item :label="$t('user.phone')">
-                                        <el-input
-                                            v-model="userStore.user.user_instance_phone"
-                                            :disabled="editable === false"
-                                        />
+                                        <el-input v-model="userStore.user.user_instance_phone"
+                                            :disabled="editable === false" />
                                     </el-form-item>
                                     <el-form-item :label="$t('user.nickname')">
-                                        <el-input
-                                            v-model="userStore.user.user_instance_nickname"
-                                            :disabled="editable === false"
-                                        />
+                                        <el-input v-model="userStore.user.user_instance_nickname"
+                                            :disabled="editable === false" />
                                     </el-form-item>
                                     <el-form-item :label="$t('user.gender')">
-                                        <el-input
-                                            v-model="userStore.user.user_instance_gender"
-                                            :disabled="editable === false"
-                                        />
+                                        <el-input v-model="userStore.user.user_instance_gender"
+                                            :disabled="editable === false" />
                                     </el-form-item>
                                 </el-form>
                             </el-col>
@@ -46,13 +35,13 @@
                 <div class="btn">
                     <el-button type="primary" @click="editable = true" v-if="editable === false">{{
                         t('user.edit')
-                    }}</el-button>
+                        }}</el-button>
                     <el-button type="primary" @click="onSave" v-else>{{
                         t('user.save')
-                    }}</el-button>
+                        }}</el-button>
                     <el-button type="primary">{{ t('user.back') }}</el-button>
                     <el-button type="primary">{{ t('user.edit_pass') }}</el-button>
-                    {{ editable }}
+                    <!-- {{ editable }} -->
                 </div>
             </el-main>
             <!-- <el-footer>Footer</el-footer> -->

@@ -3,12 +3,13 @@ import { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vu
 import NProgress from '@/utils/nprogress'
 import { TOKEN_KEY } from '@/enums/cacheEnum'
 import router from '@/router'
-import { useUserStore } from '@/stores'
+import { useUserStore, useUserStoreHook } from '@/stores'
+import { isAdmin } from '@/utils/perm'
 
 export function setupPermission() {
     // 黑名单路由
-    const blackList = ['/borrow', '/','/user','/manage']
-    console.log(blackList)
+    const blackList = ['/borrow','/user','/manage/book','/manage/user']
+    const adminList = ['/manage/book','/manage/user']
     router.beforeEach(async (to, from, next) => {
         NProgress.start()
         const hasToken = localStorage.getItem(TOKEN_KEY)
@@ -19,32 +20,23 @@ export function setupPermission() {
                 next({ path: '/' })
                 NProgress.done()
             } else {
-                const userStore = useUserStore()
-                const hasgroup = userStore.user.user_instance_group_name !== 'user'
-
-                if (hasgroup) {
-                    // 如果未匹配到任何路由，跳转到404页面
-                    if (to.matched.length === 0) {
-                        next(from.name ? { name: from.name } : '/404')
-                    } else {
-                        // 如果路由参数中有 title，覆盖路由元信息中的 title
-                        const title = (to.params.title as string) || (to.query.title as string)
-                        if (title) {
-                            to.meta.title = title
-                        }
-                        next()
-                    }
-                } else {
-                    try {
-                        await userStore.getUserInfo()
-                        next({ ...to, replace: true })
-                    } catch (error) {
-                        // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
-                        await userStore.resetToken()
-                        redirectToLogin(to, next)
-                        NProgress.done()
-                    }
+                // console.log(useUserStoreHook().user.user_instance_group_name)
+                // console.log(to.path)
+                await useUserStoreHook().getUserInfo()
+                if(!isAdmin() && adminList.includes(to.path)){
+                    next('/401')
                 }
+                // 如果未匹配到任何路由，跳转到404页面
+                if (to.matched.length === 0) {
+                    next(from.name ? { name: from.name } : '/404')
+                } else {
+                    // 如果路由参数中有 title，覆盖路由元信息中的 title
+                    const title = (to.params.title as string) || (to.query.title as string)
+                    if (title) {
+                        to.meta.title = title
+                    }
+                    next()
+                } 
             }
         } else {
             // 未登录

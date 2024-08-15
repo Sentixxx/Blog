@@ -53,6 +53,8 @@ def on_info_bi(book_instance_id):
         ret['msg'] = "图书不存在"
         ret['status'] = -2
 
+    return jsonify(ret)
+
 @book_instance.route('/borrow',methods=['POST'])
 def on_borrow():
     data = request.args.to_dict()
