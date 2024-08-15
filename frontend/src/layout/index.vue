@@ -1,11 +1,8 @@
 <template>
     <div class="wh-full" :class="classObj">
         <!--遮罩-->
-        <div
-            v-if="isMobile && isOpenSidebar"
-            class="wh-full fixed-lt z-999 bg-black bg-opacity-30"
-            @click="handleOutsideClick"
-        ></div>
+        <div v-if="isMobile && isOpenSidebar" class="wh-full fixed-lt z-999 bg-black bg-opacity-30"
+            @click="handleOutsideClick"></div>
 
         <!--侧边栏-->
         <Sidebar class="sidebar-container" />
@@ -45,7 +42,7 @@ const activeTopMenuPath = computed(() => appStore.activeTopMenuPath) // 顶部�
 
 watch(
     () => activeTopMenuPath.value,
-    (newVal) => {},
+    (newVal) => { },
     {
         deep: true,
         immediate: true
@@ -57,6 +54,7 @@ const classObj = computed(() => ({
     openSidebar: appStore.sidebar.opened,
     mobile: appStore.device === DeviceEnum.MOBILE,
     [`layout-${settingsStore.layout}`]: true
+
 }))
 
 watchEffect(() => {

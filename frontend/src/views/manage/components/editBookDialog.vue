@@ -1,15 +1,8 @@
 <template>
     <el-dialog v-model="visible">
         <div class="form-container full-w">
-            <el-form
-                ref="editBookFormRef"
-                style="max-width: 600px"
-                :model="editBookData"
-                :rules="editRules"
-                :size="formSize"
-                label-width="auto"
-                status-icon
-            >
+            <el-form ref="editBookFormRef" style="max-width: 600px" :model="editBookData" :rules="editRules"
+                :size="formSize" label-width="auto" status-icon>
                 <el-form-item :label="$t('book.name')" prop="book_name">
                     <el-input v-model="editBookData.book_name" />
                 </el-form-item>
@@ -68,7 +61,7 @@ async function editBook() {
         if (valid) {
             try {
                 const book_id = data.value?.book_id ?? -1
-                await BookAPI.updateBook(book_id, editBookData.value)
+                await BookAPI.update(book_id, editBookData.value)
             } catch (error) {
                 ElMessage.error(t('book.edit_fail'))
                 return

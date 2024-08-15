@@ -9,12 +9,12 @@ services:
     networks:
       - database
     depends_on:
-      - app
-    volumes:
-      - frontend:/vue
+      - backend
+    # volumes:
+    #   - frontend:/frontend
 
-  app:
-    container_name: app
+  backend:
+    container_name: backend
     build: 
       context: ./backend
     ports:
@@ -30,8 +30,8 @@ services:
       - DB_USER=root
       - DB_NAME=book_admin
       - DB_PORT=5432
-    volumes:
-      - backend:/app
+    # volumes:
+    #   - backend:/backend
 
   mysql:
     image: mysql:latest
@@ -44,16 +44,15 @@ services:
     environment:
       MYSQL_DATABASE: book_admin
       MYSQL_ROOT_PASSWORD: my
-
     volumes:
-      - ./backend/data:/var/lib/mysql
+    #   - ./backend/data:/var/lib/mysql
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
     user: mysql
 
-volumes:
-  data:
-  frontend:
-  backend:
+# volumes:
+  # data:
+  # frontend:
+  # backend:
 
 networks:
   database:

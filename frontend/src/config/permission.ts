@@ -20,7 +20,7 @@ export function setupPermission() {
                 NProgress.done()
             } else {
                 const userStore = useUserStore()
-                const hasgroup = userStore.user.user_instance_id
+                const hasgroup = userStore.user.user_instance_group_name !== 'user'
 
                 if (hasgroup) {
                     // 如果未匹配到任何路由，跳转到404页面
@@ -49,7 +49,7 @@ export function setupPermission() {
         } else {
             // 未登录
             if (!blackList.includes(to.path)) {
-                next() // 在白名单，直接进入
+                next()
             } else {
                 redirectToLogin(to, next)
                 NProgress.done()

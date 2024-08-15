@@ -30,7 +30,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response: AxiosResponse) => {
         const { status, results, msg } = response.data
-        // console.log(results)
         if (status === ResultEnum.SUCCESS) {
             ElMessage.success(msg || '操作成功')
             return results
@@ -51,17 +50,10 @@ service.interceptors.response.use(
         return Promise.reject(new Error(msg || 'Error'))
     },
     (error) => {
-        // console.log('err' + error)
-        // 异常处理
-        // console.log('error')
         if (error.response.data) {
             const { msg } = error.response.data
             const { status } = error.response
-            // console.log(error.response.status)
-            // console.log(status == (ResultEnum.TOKEN_INVALID))
             if (status === ResultEnum.TOKEN_INVALID) {
-                // console.log('in')
-                // ElMessage.error('您的会话已过期，请重新登录')
                 ElNotification({
                     title: '提示',
                     message: '您的会话已过期，请重新登录',

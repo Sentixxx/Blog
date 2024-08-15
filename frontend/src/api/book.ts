@@ -48,7 +48,7 @@ class BookAPI {
         })
     }
 
-    static updateBook(book_id: number, data: BookInfo): Promise<BookInfo> {
+    static update(book_id: number, data: BookInfo): Promise<BookInfo> {
         return request<any, BookInfo>({
             url: `${BOOK_BASE_URL}/${book_id}`,
             method: 'put',

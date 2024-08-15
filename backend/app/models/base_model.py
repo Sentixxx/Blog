@@ -23,3 +23,14 @@ class BaseModel(db.Model):
     
     def to_dict(self):
         return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
+
+    def soft_delete(self, session):
+        try:
+            self.is_deleted = 1
+            self.update_at = datetime.now()
+            session.add(self)
+        except Exception as e:
+            traceback.print_exc()
+            session.rollback()
+            return session
+        return session

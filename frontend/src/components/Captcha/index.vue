@@ -87,15 +87,13 @@ const drawPic = () => {
     const ctx = canvas.getContext('2d')
     if (ctx) {
         ctx.textBaseline = 'bottom'
-        // 绘制背景
-        ctx.fillStyle = randomColor(props.backgroundColorMin, props.backgroundColorMax)
+        ctx.fillStyle = randomColor(props.backgroundColorMin, props.backgroundColorMax) // 随机颜色
         ctx.fillRect(0, 0, props.contentWidth, props.contentHeight)
-        // 绘制文字
         for (let i = 0; i < curCaptchaCode.value.length; i++) {
             drawText(ctx, curCaptchaCode.value[i], i)
         }
-        drawLine(ctx)
-        drawDot(ctx)
+        drawLine(ctx) // 绘制干扰线
+        drawDot(ctx) // 绘制干扰点
     } else {
         console.error('unable to get 2d context')
     }
@@ -141,7 +139,7 @@ const drawDot = (ctx: CanvasRenderingContext2D) => {
 }
 
 const refreshCode = () => {
-    console.log('refreshCode')
+    // console.log('refreshCode')
     curCaptchaCode.value = ''
     makeCode(props.captchaCode, 4)
 }
