@@ -157,14 +157,13 @@ def on_ai(id):
 
     # ret['results']['book_name'] = book_name
     
-    print('_________________________________________')
     chat_comp = qianfan.ChatCompletion()
     resp = chat_comp.do(model="Yi-34B-Chat", messages=[{
     "role": "user",
     "content": "作为一位图书推荐专家，根据用户提供的书名，使用网络搜索信息，并提供相关的阅读建议。建议应基于用户的兴趣和口味，同时考虑书籍的主题、作者、出版日期和评价等因素。建议应清晰和具体，以便用户更好地理解每本书的主要内容和特点，并做出明智的选择。请注意，回答应包括相关的详细信息和评价，以帮助用户更好地了解图书，并提供独特的推荐理由和背景信息。让我们一步一步来思考" + f"现在，请你给我介绍一下关于《{book_name}》这本书的信息，包括主题、作者、出版日期和评价等方面的内容。"
     }])
 
-    print(resp['body'])
+    # print(resp['body'])
     ret['status'] = 200
     ret['results'] = resp['body']['result']
     ret['msg'] = "获取成功"
