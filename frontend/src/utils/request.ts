@@ -6,7 +6,7 @@ import { useUserStoreHook } from '@/stores'
 import { ResultEnum } from '@/enums/resultEnum'
 const service = axios.create({
     baseURL: import.meta.env.VITE_APP_BASE_API,
-    timeout: 5000,
+    timeout: 100000,
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
     }
@@ -30,6 +30,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response: AxiosResponse) => {
         const { status, results, msg } = response.data
+        console.log(response.data)
         if (status === ResultEnum.SUCCESS) {
             ElMessage.success(msg || '操作成功')
             return results
@@ -45,11 +46,12 @@ service.interceptors.response.use(
                     location.reload()
                 })
         }
-        console.log(status)
+        // console.log(status)
         ElMessage.error(msg || '系统出错')
         return Promise.reject(new Error(msg || 'Error'))
     },
     (error) => {
+        console.log(error)
         if (error.response.data) {
             const { msg } = error.response.data
             const { status } = error.response

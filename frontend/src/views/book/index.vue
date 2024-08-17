@@ -38,6 +38,10 @@
                                 <el-button type="primary" :icon="Ticket" circle
                                     @click="handleBorrowClick(row.book_id)" />
                             </el-tooltip>
+                            <el-tooltip content="AI" effect="dark" placement="bottom">
+                                <el-button type="primary" :icon="MagicStick" circle
+                                    @click="handleAIClick(row.book_id)" />
+                            </el-tooltip>
                         </div>
                     </template>
                 </el-table-column>
@@ -54,16 +58,21 @@
             <book-borrow-dialog v-model:visible="borrowListVisible" :data="bookInstanceData"
                 :userId="userStore.user.user_instance_id" />
         </div>
+
+        <el-dialog title="AI" v-model="aiVisible" width="30%" center>
+            {{ aiData }}
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Delete, Edit, Search, Ticket } from '@element-plus/icons-vue'
+import { Delete, Edit, Search, Ticket, MagicStick } from '@element-plus/icons-vue'
 import { useSettingsStore } from '@/stores'
 import { useUserStore } from '@/stores'
 import BookAPI, { BookInfo } from '@/api/book'
 import BookInstanceAPI from '@/api/bookInstance'
 import router from '@/router'
+import AuthAPI from '@/api/auth'
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const userStore = useUserStore()
@@ -106,6 +115,16 @@ async function handleSearch() {
     } catch (error) {
         console.error(error)
     }
+}
+
+const aiData = ref('Thinking...')
+const aiVisible = ref(false)
+async function handleAIClick(book_id: number) {
+    aiData.value = 'Thinking...'
+    aiVisible.value = true
+    const results = await AuthAPI.getAI(book_id)
+    // console.log(results)
+    aiData.value = results
 }
 
 function handleCurrentChange(val: number) {

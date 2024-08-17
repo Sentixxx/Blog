@@ -38,6 +38,13 @@ class AuthAPI {
             method: 'GET'
         })
     }
+
+    static getAI(id: number) {
+        return request<any, any>({
+            url: `${AUTH_BASE_URL}/AI/${id}`,
+            method: 'GET'
+        })
+    }
 }
 
 export default AuthAPI
