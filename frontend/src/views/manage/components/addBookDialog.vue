@@ -1,19 +1,14 @@
 <template>
     <el-dialog v-model="visible">
         <div class="form-container full-w">
-            <el-form
-                ref="addBookFormRef"
-                style="max-width: 600px"
-                :model="addBookData"
-                :rules="addRules"
-                :size="formSize"
-                label-width="auto"
-                status-icon
-            >
+            <el-form ref="addBookFormRef" style="max-width: 600px" :model="addBookData" :rules="addRules"
+                :size="formSize" label-width="auto" status-icon>
                 <el-form-item :label="$t('book.name')" prop="book_name">
                     <el-input v-model="addBookData.book_name" />
                 </el-form-item>
-
+                <el-form-item :label="$t('book.pic')" prop="book_pic">
+                    <el-input v-model="addBookData.book_pic" />
+                </el-form-item>
                 <el-form-item :label="$t('book.author')" prop="book_author">
                     <el-input v-model="addBookData.book_author" />
                 </el-form-item>

@@ -45,6 +45,7 @@ export default {
             borrow_info: '借阅历史',
             ban: '禁用',
         },
+        pic: '封面(资源地址)',
         type: '类型',
         confirm: '确认',
         cancel: '取消',
